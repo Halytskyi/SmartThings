@@ -73,7 +73,7 @@
 
 | Name | Schema / Photo |
 | --- | --- |
-| Switch | [<img src="images/Switch.jpg" alt="Switch" width="250"/>](images/Switch.jpg) [<img src="images/IRF4905.jpg" alt="IRF4905" width="202"/>](images/IRF4905.jpg) [<img src="images/BC547.jpg" alt="BC547" width="225"/>](images/BC547.jpg) |
+| Switch | <a href="images/Switch.jpg" target="_blank"><img src="images/Switch.jpg" alt="Switch" width="250"/></a> [<img src="images/IRF4905.jpg" alt="IRF4905" width="202"/>](images/IRF4905.jpg) [<img src="images/BC547.jpg" alt="BC547" width="225"/>](images/BC547.jpg) |
 | INA219 | [<img src="images/INA219_1.jpg" alt="INA219" width="150"/>](images/INA219_1.jpg) [<img src="images/INA219_2.jpg" alt="INA219" width="168"/>](images/INA219_2.jpg) [<img src="images/INA219_addrs.jpg" alt="INA219" width="162"/>](images/INA219_addrs.jpg) |
 | HW-613 | [<img src="images/HW-613_1.jpg" alt="HW-613" width="130"/>](images/HW-613_1.jpg) [<img src="images/HW-613_2.jpg" alt="HW-613" width="152"/>](images/HW-613_2.jpg) |
 | USB HUB | [<img src="images/USB_HUB1.jpg" alt="USB_HUB" width="150"/>](images/USB_HUB1.jpg) [<img src="images/USB_HUB2.jpg" alt="USB_HUB" width="155"/>](images/USB_HUB2.jpg) |
