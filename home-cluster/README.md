@@ -11,4 +11,4 @@
 - 6 nodes
   - 2 x x64
   - 4 x arm64
-- [Power Supply modules](home-cluster/power-supply-usb-hubs) - for remote cluster control
+- [Power Supply modules](power-supply-usb-hubs) - for remote cluster control

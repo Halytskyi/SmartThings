@@ -10,9 +10,9 @@
   - 2 USB HUBs (with external power supply)
   - 2 IP KVM devices (can be extended up to 5)
 
-- Remote devices control: *On*, *Off* and *Reboot*
+- Remote devices control: *On*, *Off* (state save in EEPROM) and *Reboot* (5 seconds)
 - Button devices control: Turn On devices by buttons (on case if remote control for some reasons not available)
-- Remote reading voltage and current for single board computers and mini PCs
+- Remote reading voltage, current and power for single board computers and mini PCs
 
 ### Specification
 
@@ -73,10 +73,10 @@
 
 | Name | Schema / Photo |
 | --- | --- |
-| Switch | [<img src="images/Switch.png" alt="Switch" width="250"/>](images/Switch.png) [<img src="images/IRF4905.png" alt="IRF4905" width="202"/>](images/IRF4905.png) [<img src="images/BC547.png" alt="BC547" width="225"/>](images/BC547.png) |
-| INA219 | [<img src="images/INA219_1.png" alt="INA219" width="150"/>](images/INA219_1.png) [<img src="images/INA219_2.png" alt="INA219" width="168"/>](images/INA219_2.png) [<img src="images/INA219_addrs.png" alt="INA219" width="162"/>](images/INA219_addrs.png) |
-| HW-613 | [<img src="images/HW-613_1.png" alt="HW-613" width="130"/>](images/HW-613_1.png) [<img src="images/HW-613_2.png" alt="HW-613" width="152"/>](images/HW-613_2.png) |
-| USB HUB | [<img src="images/USB_HUB1.png" alt="USB_HUB" width="150"/>](images/USB_HUB1.png) [<img src="images/USB_HUB2.png" alt="USB_HUB" width="155"/>](images/USB_HUB2.png) |
+| Switch | [<img src="images/Switch.jpg" alt="Switch" width="250"/>](images/Switch.jpg) [<img src="images/IRF4905.jpg" alt="IRF4905" width="202"/>](images/IRF4905.jpg) [<img src="images/BC547.jpg" alt="BC547" width="225"/>](images/BC547.jpg) |
+| INA219 | [<img src="images/INA219_1.jpg" alt="INA219" width="150"/>](images/INA219_1.jpg) [<img src="images/INA219_2.jpg" alt="INA219" width="168"/>](images/INA219_2.jpg) [<img src="images/INA219_addrs.jpg" alt="INA219" width="162"/>](images/INA219_addrs.jpg) |
+| HW-613 | [<img src="images/HW-613_1.jpg" alt="HW-613" width="130"/>](images/HW-613_1.jpg) [<img src="images/HW-613_2.jpg" alt="HW-613" width="152"/>](images/HW-613_2.jpg) |
+| USB HUB | [<img src="images/USB_HUB1.jpg" alt="USB_HUB" width="150"/>](images/USB_HUB1.jpg) [<img src="images/USB_HUB2.jpg" alt="USB_HUB" width="155"/>](images/USB_HUB2.jpg) |
 
 ## Commands
 
@@ -95,7 +95,7 @@
 | s6 | read voltage/current/power | - | Worker02 (Rock64) |
 | s7 | read voltage/current/power | - | Worker03 (Rock64) |
 
-***EEPROM*** - memory whose values are kept when the board is turned off
+***EEPROM*** - memory values are kept when the board is turned off
 
 ## Device Photos
 
