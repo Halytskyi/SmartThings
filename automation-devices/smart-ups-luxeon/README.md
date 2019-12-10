@@ -77,7 +77,7 @@ Commands need copy-paste to serial-terminal
 
 | Name | Schema / Photo |
 | --- | --- |
-| Switch | [<img src="images/switch_irlr2905.jpg" alt="Switch" width="300"/>](images/switch_irlr2905.jpg) [<img src="images/irlr2905-pinout.jpg" alt="irlr2905" width="180"/>](images/irlr2905-pinout.jpg) |
+| Switch | [<img src="images/Switch_irlr2905.jpg" alt="Switch" width="300"/>](images/Switch_irlr2905.jpg) [<img src="images/irlr2905-pinout.jpg" alt="irlr2905" width="180"/>](images/irlr2905-pinout.jpg) |
 | Voltmeter | [<img src="images/voltmeter.jpg" alt="Voltmeter" width="170"/>](images/voltmeter.jpg) |
 | DS18B20 | [<img src="images/DS18B20.jpg" alt="DS18B20" width="330"/>](images/DS18B20.jpg) |
 | ACS758LCB | [<img src="images/ACS758-Arduino-Tutorial-Connections.png" alt="ACS758LCB" width="219"/>](images/ACS758-Arduino-Tutorial-Connections.png) [<img src="images/ACS758LCB_50A.jpg" alt="ACS758LCB" width="200"/>](images/ACS758LCB_50A.jpg) |
