@@ -116,7 +116,7 @@
 | V-l-h=[11.5-14] | Define voltage high limit | + | - | V value from 11.5 to 14 (default 12.0)|
 
 ***EEPROM*** - memory values are kept when the board is turned off<br/>
-***Auto push*** - send data to server
+***Autopush*** - send data to server
 
 ## Device Photos
 
