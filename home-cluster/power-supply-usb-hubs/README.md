@@ -45,7 +45,8 @@
 - 4 x BC547 transistors
 - 4 x 1k resistors
 - 2 x INA219 current/voltage sensors
-- 8 x 10k resistors
+- 10 x 10k resistors
+- 2 x buttons
 - 2 x USB HUB modules (added external power supply)
 
 | Cmd | Arduino PIN | Component | Notes |
@@ -110,19 +111,22 @@
 [<img src="images/ps-board1_7.jpg" alt="Board-1" width="414"/>](images/ps-board1_7.jpg)
 
 ### Board #2
-[<img src="images/ps-board2_1.jpg" alt="Board-2" width="206"/>](images/ps-board2_1.jpg)
-[<img src="images/ps-board2_2.jpg" alt="Board-2" width="209"/>](images/ps-board2_2.jpg)
-[<img src="images/ps-board2_3.jpg" alt="Board-2" width="196"/>](images/ps-board2_3.jpg)
-[<img src="images/ps-board2_4.jpg" alt="Board-2" width="241"/>](images/ps-board2_4.jpg)
+[<img src="images/ps-board2_1.jpg" alt="Board-2" width="189"/>](images/ps-board2_1.jpg)
+[<img src="images/ps-board2_2.jpg" alt="Board-2" width="410"/>](images/ps-board2_2.jpg)
+[<img src="images/ps-board2_3.jpg" alt="Board-2" width="245"/>](images/ps-board2_3.jpg)
+[<img src="images/ps-board2_4.jpg" alt="Board-2" width="354"/>](images/ps-board2_4.jpg)
 [<img src="images/ps-board2_5.jpg" alt="Board-2" width="262"/>](images/ps-board2_5.jpg)
-[<img src="images/ps-board2_6.jpg" alt="Board-2" width="210"/>](images/ps-board2_6.jpg)
-[<img src="images/ps-board2_7.jpg" alt="Board-2" width="214"/>](images/ps-board2_7.jpg)
-[<img src="images/ps-board2_8.jpg" alt="Board-2" width="194"/>](images/ps-board2_8.jpg)
-[<img src="images/ps-board2_9.jpg" alt="Board-2" width="187"/>](images/ps-board2_9.jpg)
-[<img src="images/ps-board2_10.jpg" alt="Board-2" width="206"/>](images/ps-board2_10.jpg)
-[<img src="images/ps-board2_11.jpg" alt="Board-2" width="237"/>](images/ps-board2_11.jpg)
+[<img src="images/ps-board2_6.jpg" alt="Board-2" width="324"/>](images/ps-board2_6.jpg)
+[<img src="images/ps-board2_7.jpg" alt="Board-2" width="236"/>](images/ps-board2_7.jpg)
+[<img src="images/ps-board2_8.jpg" alt="Board-2" width="160"/>](images/ps-board2_8.jpg)
+[<img src="images/ps-board2_9.jpg" alt="Board-2" width="360"/>](images/ps-board2_9.jpg)
+[<img src="images/ps-board2_10.jpg" alt="Board-2" width="204"/>](images/ps-board2_10.jpg)
+[<img src="images/ps-board2_11.jpg" alt="Board-2" width="296"/>](images/ps-board2_11.jpg)
 [<img src="images/ps-board2_12.jpg" alt="Board-2" width="204"/>](images/ps-board2_12.jpg)
-[<img src="images/ps-board2_13.jpg" alt="Board-2" width="191"/>](images/ps-board2_13.jpg)
+[<img src="images/ps-board2_13.jpg" alt="Board-2" width="204"/>](images/ps-board2_13.jpg)
+
+### Boards
+[<img src="images/ps-boards.jpg" alt="Boards" width="191"/>](images/ps-boards.jpg)
 
 ## URLs
 
