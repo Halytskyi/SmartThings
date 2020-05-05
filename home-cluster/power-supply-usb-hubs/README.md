@@ -113,20 +113,20 @@
 ### Board #2
 [<img src="images/ps-board2_1.jpg" alt="Board-2" width="189"/>](images/ps-board2_1.jpg)
 [<img src="images/ps-board2_2.jpg" alt="Board-2" width="410"/>](images/ps-board2_2.jpg)
-[<img src="images/ps-board2_3.jpg" alt="Board-2" width="245"/>](images/ps-board2_3.jpg)
-[<img src="images/ps-board2_4.jpg" alt="Board-2" width="354"/>](images/ps-board2_4.jpg)
-[<img src="images/ps-board2_5.jpg" alt="Board-2" width="262"/>](images/ps-board2_5.jpg)
-[<img src="images/ps-board2_6.jpg" alt="Board-2" width="324"/>](images/ps-board2_6.jpg)
-[<img src="images/ps-board2_7.jpg" alt="Board-2" width="236"/>](images/ps-board2_7.jpg)
-[<img src="images/ps-board2_8.jpg" alt="Board-2" width="160"/>](images/ps-board2_8.jpg)
-[<img src="images/ps-board2_9.jpg" alt="Board-2" width="360"/>](images/ps-board2_9.jpg)
-[<img src="images/ps-board2_10.jpg" alt="Board-2" width="204"/>](images/ps-board2_10.jpg)
-[<img src="images/ps-board2_11.jpg" alt="Board-2" width="296"/>](images/ps-board2_11.jpg)
-[<img src="images/ps-board2_12.jpg" alt="Board-2" width="204"/>](images/ps-board2_12.jpg)
-[<img src="images/ps-board2_13.jpg" alt="Board-2" width="204"/>](images/ps-board2_13.jpg)
+[<img src="images/ps-board2_3.jpg" alt="Board-2" width="319"/>](images/ps-board2_3.jpg)
+[<img src="images/ps-board2_4.jpg" alt="Board-2" width="460"/>](images/ps-board2_4.jpg)
+[<img src="images/ps-board2_5.jpg" alt="Board-2" width="295"/>](images/ps-board2_5.jpg)
+[<img src="images/ps-board2_6.jpg" alt="Board-2" width="364"/>](images/ps-board2_6.jpg)
+[<img src="images/ps-board2_7.jpg" alt="Board-2" width="245"/>](images/ps-board2_7.jpg)
+[<img src="images/ps-board2_8.jpg" alt="Board-2" width="166"/>](images/ps-board2_8.jpg)
+[<img src="images/ps-board2_9.jpg" alt="Board-2" width="472"/>](images/ps-board2_9.jpg)
+[<img src="images/ps-board2_10.jpg" alt="Board-2" width="267"/>](images/ps-board2_10.jpg)
+[<img src="images/ps-board2_11.jpg" alt="Board-2" width="458"/>](images/ps-board2_11.jpg)
+[<img src="images/ps-board2_12.jpg" alt="Board-2" width="314"/>](images/ps-board2_12.jpg)
+[<img src="images/ps-board2_13.jpg" alt="Board-2" width="182"/>](images/ps-board2_13.jpg)
 
 ### Boards
-[<img src="images/ps-boards.jpg" alt="Boards" width="191"/>](images/ps-boards.jpg)
+[<img src="images/ps-boards.jpg" alt="Boards" width="350"/>](images/ps-boards.jpg)
 
 ## URLs
 
