@@ -30,3 +30,10 @@ Total costs for entire cluster about **$770**
 - [Power Supply modules](power-supply-usb-hubs) - for remote cluster control, controled from `mgmt01` node
 - HA Kubernetes (runs on all nodes)
 - LXD virtualization in cluster mode (on `master01-03` + `worker01`)
+
+## Device Photos
+
+[<img src="images/home-cluster_1.jpg" alt="Photo-1" width="300"/>](images/home-cluster_1.jpg)
+[<img src="images/home-cluster_2.jpg" alt="Photo-2" width="279"/>](images/home-cluster_2.jpg)
+[<img src="images/home-cluster_3.jpg" alt="Photo-3" width="322"/>](images/home-cluster_3.jpg)
+[<img src="images/home-cluster_4.jpg" alt="Photo-4" width="324"/>](images/home-cluster_4.jpg)
