@@ -101,12 +101,12 @@
 
 ## Device Photos
 
-### Board #1 (V2)
+### Board #1 (version 2)
 
 [<img src="images/ps-board1_1_v2.jpg" alt="Board-1" width="250"/>](images/ps-board1_1_v2.jpg)
 [<img src="images/ps-board1_2_v2.jpg" alt="Board-1" width="245"/>](images/ps-board1_2_v2.jpg)
 
-### Board #1 (V1)
+### Board #1 (version 1)
 
 [<img src="images/ps-board1_1.jpg" alt="Board-1" width="200"/>](images/ps-board1_1.jpg)
 [<img src="images/ps-board1_2.jpg" alt="Board-1" width="213"/>](images/ps-board1_2.jpg)
@@ -137,7 +137,7 @@
 ### MOSFET key (if need replace mini PC by single board computer or vise versa)
 
 [<img src="images/mosfet_key_1.jpg" alt="MOSFET Key" width="450"/>](images/mosfet_key_1.jpg)
-[<img src="images/mosfet_key_2.jpg" alt="MOSFET Key" width="450"/>](images/mosfet_key_2.jpg)
+[<img src="images/mosfet_key_2.jpg" alt="MOSFET Key" width="436"/>](images/mosfet_key_2.jpg)
 
 ## URLs
 
