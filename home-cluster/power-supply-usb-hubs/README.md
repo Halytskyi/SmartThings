@@ -134,6 +134,11 @@
 ### Boards
 [<img src="images/ps-boards.jpg" alt="Boards" width="350"/>](images/ps-boards.jpg)
 
+### MOSFET key (if need replace mini PC by single board computer or vise versa)
+
+[<img src="images/mosfet_key_1.jpg" alt="MOSFET Key" width="450"/>](images/mosfet_key_1.jpg)
+[<img src="images/mosfet_key_2.jpg" alt="MOSFET Key" width="450"/>](images/mosfet_key_2.jpg)
+
 ## URLs
 
 [Raspberry Pi INA219 Tutorial](https://www.rototron.info/raspberry-pi-ina219-tutorial)
