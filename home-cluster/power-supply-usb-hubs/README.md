@@ -13,6 +13,7 @@
 - Remote devices control: *On*, *Off* (state save in EEPROM) and *Reboot* (5 seconds)
 - Button devices control: Turn On devices by buttons (on case if remote control for some reasons not available)
 - Remote reading voltage, current and power for single board computers and mini PCs
+- 2 x 5V power lines (see board #1 photos of version 2): one line from backup power source for Raspberry Pi, USB HUBs and these modules, another one - for rest single board computers
 
 ### Specification
 
@@ -100,7 +101,12 @@
 
 ## Device Photos
 
-### Board #1
+### Board #1 (V2)
+
+[<img src="images/ps-board1_1_v2.jpg" alt="Board-1" width="250"/>](images/ps-board1_1_v2.jpg)
+[<img src="images/ps-board1_2_v2.jpg" alt="Board-1" width="245"/>](images/ps-board1_2_v2.jpg)
+
+### Board #1 (V1)
 
 [<img src="images/ps-board1_1.jpg" alt="Board-1" width="200"/>](images/ps-board1_1.jpg)
 [<img src="images/ps-board1_2.jpg" alt="Board-1" width="213"/>](images/ps-board1_2.jpg)
