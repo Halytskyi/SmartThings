@@ -6,7 +6,7 @@
 
 - send messages to server (via [PJON protocol](https://github.com/gioblu/PJON)) when detect smoke or flame
 - send "status" message to server each 1 minute
-- send message and signal (within 1 minute after last sensor triggered) to air-conditioner system for turn off it
+- send message to server and HIGH signal (within 1 minute after last sensor triggered) to air-conditioner system for turn off it
 
 ### PJON Specification
 
@@ -20,7 +20,10 @@
 - 9 x flame sensor modules
 - 6 x MQ-2 smoke sensor modules
 - 1 x buzzer
+- 1 x 1MOm resistor
+- 1 x 1N4001 diode
 - HW-613 Mini DC-DC 3A Step Down Power Supply Module (for Arduino and sensors, 5V output)
+- 1 x 0.5A fuse
 
 | Arduino PIN | Component | Notes |
 | --- | --- | --- |
@@ -34,7 +37,7 @@
 | D9 (PWM) | flame sensor ||
 | D10 (PWM) | buzzer ||
 | D11 (PWM) | flame sensor ||
-| D12 | [PJON v12.0](https://github.com/gioblu/PJON/tree/12.0/src/strategies/SoftwareBitBang) | Communication with Server (TX only) |
+| D12 | [PJON v12.1](https://github.com/gioblu/PJON/tree/12.1/src/strategies/SoftwareBitBang) | Communication with Server (TX only) |
 | D13 | signal output ||
 | A0 | MQ-2 smoke sensor ||
 | A1 | MQ-2 smoke sensor ||
@@ -60,6 +63,6 @@
 
 ## Device Photos
 
-[<img src="images/fire-alarm_1.jpg" alt="fire-alarm_1" width="250"/>](images/fire-alarm_1.jpg)
-[<img src="images/fire-alarm_2.jpg" alt="fire-alarm_2" width="340"/>](images/fire-alarm_2.jpg)
-[<img src="images/fire-alarm_3.jpg" alt="fire-alarm_3" width="300"/>](images/fire-alarm_3.jpg)
+[<img src="images/fire-alarm_1.jpg" alt="fire-alarm_1" width="306"/>](images/fire-alarm_1.jpg)
+[<img src="images/fire-alarm_2.jpg" alt="fire-alarm_2" width="300"/>](images/fire-alarm_2.jpg)
+[<img src="images/fire-alarm_3.jpg" alt="fire-alarm_3" width="311"/>](images/fire-alarm_3.jpg)

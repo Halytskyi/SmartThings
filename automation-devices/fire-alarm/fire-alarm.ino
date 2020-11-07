@@ -55,6 +55,7 @@ void alarm()  {
   delay(500); //wait 500 millis
   tone(buzzer, 650, 500); //the buzzer emit sound at 650 MHz for 500 millis
   delay(500); //wait 500 millis
+  digitalWrite(buzzer, HIGH); // for turn off buzzer
 }
 
 void bus_send(String msgStr) {
@@ -147,6 +148,7 @@ void setup() {
     digitalWrite(smokeSensor[i][1].toInt(), HIGH); // turn on pullup resistor
   }
   pinMode(buzzer, OUTPUT);
+  digitalWrite(buzzer, HIGH); // for turn off buzzer
   pinMode(signalOutput, OUTPUT);
 
   bus.strategy.set_pin(pinBus);
