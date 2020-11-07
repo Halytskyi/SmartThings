@@ -6,7 +6,6 @@
 *
 */
 
-#define PJON_MAX_PACKETS 2
 #define PJON_INCLUDE_PACKET_ID
 #include <PJONSoftwareBitBang.h>
 #include <EEPROM.h>
@@ -128,44 +127,6 @@ byte temperatureControl[tSensorsNum] = {1, 1, 1};
 const byte eepromTemperatureControlAddr[tSensorsNum] = {20, 21, 22};
 
 
-/* --- for debug only START --- */
-void error_handlerA(uint8_t code, uint16_t data, void *custom_pointer) {
-  if(code == PJON_CONNECTION_LOST) {
-    Serial.print("A: Connection with device ID ");
-    Serial.print(busA.packets[data].content[0], DEC);
-    Serial.println(" is lost.");
-  }
-  if(code == PJON_PACKETS_BUFFER_FULL) {
-    Serial.print("A: Packet buffer is full, has now a length of ");
-    Serial.println(data, DEC);
-    Serial.println("Possible wrong bus configuration!");
-    Serial.println("higher PJON_MAX_PACKETS if necessary.");
-  }
-  if(code == PJON_CONTENT_TOO_LONG) {
-    Serial.print("A: Content is too long, length: ");
-    Serial.println(data);
-  }
-};
-
-void error_handlerB(uint8_t code, uint16_t data, void *custom_pointer) {
-  if(code == PJON_CONNECTION_LOST) {
-    Serial.print("B: Connection with device ID ");
-    Serial.print(busB.packets[data].content[0], DEC);
-    Serial.println(" is lost.");
-  }
-  if(code == PJON_PACKETS_BUFFER_FULL) {
-    Serial.print("B: Packet buffer is full, has now a length of ");
-    Serial.println(data, DEC);
-    Serial.println("Possible wrong bus configuration!");
-    Serial.println("higher PJON_MAX_PACKETS if necessary.");
-  }
-  if(code == PJON_CONTENT_TOO_LONG) {
-    Serial.print("B: Content is too long, length: ");
-    Serial.println(data);
-  }
-};
-/* --- for debug only END --- */
-
 float get_voltage(const char command[]) {
   float voltageValue = 0.0;
   byte voltagePin = 0;
@@ -276,9 +237,7 @@ void busA_reply(const char request[], const char response[]) {
   strcpy(responseFull, request);
   strcat(responseFull, ">");
   strcat(responseFull, response);
-  uint16_t result = busA.reply_blocking(responseFull, strlen(responseFull));
-  Serial.print(F("Reply result: "));
-  Serial.println(result);
+  busA.reply_blocking(responseFull, strlen(responseFull));
 }
 
 void busB_send(const char command[], const char response[]) {
@@ -286,10 +245,7 @@ void busB_send(const char command[], const char response[]) {
   strcpy(responseFull, command);
   strcat(responseFull, "<");
   strcat(responseFull, response);
-  uint16_t result = busB.send_packet_blocking(masterIdBusB, responseFull, strlen(responseFull));
-  Serial.println(responseFull);
-  Serial.print(F("Send result: "));
-  Serial.println(result);
+  busB.send_packet_blocking(masterIdBusB, responseFull, strlen(responseFull));
 }
 
 void receiver_function(uint8_t *payload, uint16_t length, const PJON_Packet_Info &packet_info) {
@@ -1040,9 +996,6 @@ void loop() {
 }
 
 void setup() {
-  // for debug only
-  Serial.begin(9600);
-
   if (EEPROM.read(ADDR_VERSION) != CURRENT_EEPROM_VERSION) { //EEprom is wrong version or was not programmed, write default values to the EEprom
     EEPROM.update(eepromChargerAutomodeAddr, chargerAutomode);
     EEPROM.update(eepromChargerAutomodeMessagesAddr, chargerAutomodeMessages);
@@ -1106,7 +1059,6 @@ void setup() {
     sensors.setResolution(tSensorAddr[i], 11);
   }
 
-  busA.set_error(error_handlerA);
   busA.strategy.set_pin(pinBusA);
   busA.set_receiver(receiver_function);
   busA.set_acknowledge(true);
@@ -1114,7 +1066,6 @@ void setup() {
   busA.set_packet_id(true);
   busA.begin();
 
-  busB.set_error(error_handlerB);
   busB.strategy.set_pin(pinBusB);
   busB.set_acknowledge(true);
   busB.set_crc_32(true);

@@ -133,6 +133,7 @@ where,<br>
 [<img src="images/slvu_module1_2_v2.jpg" alt="Module 1 v2" width="276"/>](images/slvu_module1_2_v2.jpg)
 [<img src="images/slvu_module1_3_v2.jpg" alt="Module 1 v2" width="314"/>](images/slvu_module1_3_v2.jpg)
 [<img src="images/slvu_module1_4_v2.jpg" alt="Module 1 v2" width="344"/>](images/slvu_module1_4_v2.jpg)
+[<img src="images/slvu_module1_5_v2.jpg" alt="Module 1 v2" width="320"/>](images/slvu_module1_5_v2.jpg)
 
 ### Board version 1
 
