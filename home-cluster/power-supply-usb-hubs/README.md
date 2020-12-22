@@ -54,13 +54,13 @@
 | --- | --- | --- | --- |
 | c\|2 | D2 (Ext. Int.) | IRF4905 + BC547 (Switch) | USB module #1 |
 | c\|3 | D3 (PWM) | IRF4905 + BC547 (Switch) | USB module #2, for serial console's (IP KVM) |
-| c\|4 | D4 | IRF4905 + BC547 (Switch) | Master01 (mini PC) |
+| c\|4 | D4 | IRF4905 + BC547 (Switch) | Worker02 (mini PC) |
 | c\|7 | D5 (PWM) | IRF4905 + BC547 (Switch) | Worker01 (mini PC) |
 | c\|1 | D6 (PWM) | IRF4905 + BC547 (Switch) | Raspberry Pi |
 | c\|9 | D7 | IRF4905 + BC547 (Switch) | Worker03 (Rock64) |
-| c\|8 | D8 | IRF4905 + BC547 (Switch) | Worker02 (Rock64) |
-| c\|6 | D9 (PWM) | IRF4905 + BC547 (Switch) | Master03 (Rock64) |
-| c\|5 | D10 (PWM) | IRF4905 + BC547 (Switch) | Master02 (Rock64) |
+| c\|8 | D8 | IRF4905 + BC547 (Switch) | Master03 (Rock64) |
+| c\|6 | D9 (PWM) | IRF4905 + BC547 (Switch) | Master02 (Rock64) |
+| c\|5 | D10 (PWM) | IRF4905 + BC547 (Switch) | Master01 (Rock64) |
 | i\|1 | D11 (PWM) | Output 1 | IP KVM #1 |
 | i\|2 | D12 | Output 2 | IP KVM #2 |
 | i\|3 | D13 | Output 3 | - |
@@ -90,11 +90,11 @@
 | i[e\|d\|v][1-5] | enable/disable/status for IP KVM device | + (for e\|d) | see mapping in "Cmd" column |
 | s0 | read voltage/current/power for cluster devices | - ||
 | s1 | read voltage/current/power | - | Raspberry Pi |
-| s2 | read voltage/current/power | - | Master01 (mini PC) |
+| s2 | read voltage/current/power | - | Master01 (Rock64) |
 | s3 | read voltage/current/power | - | Master02 (Rock64) |
 | s4 | read voltage/current/power | - | Master03 (Rock64) |
 | s5 | read voltage/current/power | - | Worker01 (mini PC) |
-| s6 | read voltage/current/power | - | Worker02 (Rock64) |
+| s6 | read voltage/current/power | - | Worker02 (mini PC) |
 | s7 | read voltage/current/power | - | Worker03 (Rock64) |
 
 ***EEPROM*** - memory values are kept when the board is turned off

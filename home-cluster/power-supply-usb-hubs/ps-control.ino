@@ -11,32 +11,32 @@
 
 #define SLAVE_ADDRESS 0x03
 #define ADDR_VERSION 255         // Location of the software version in EEPROM
-#define CURRENT_EEPROM_VERSION 1 // We are on revision 1 of the EEPROM storage structure (0xFF or 255 is never a valid value for version)
+#define CURRENT_EEPROM_VERSION 2 // We are on revision 1 of the EEPROM storage structure (0xFF or 255 is never a valid value for version)
 
 // Cluster outputs
 #define num_cluster_outputs 9
 // {<output pin>, <status>, <status_eeprom_addr>}
 int cluster_outputs[num_cluster_outputs][3] = {
-  {6, 0, 0},
-  {2, 0, 1},
-  {3, 0, 2},
-  {4, 0, 3},
+  {6, 0, 1},
+  {2, 0, 2},
+  {3, 0, 3},
   {10, 0, 4},
   {9, 0, 5},
-  {5, 0, 6},
-  {8, 0, 7},
-  {7, 0, 8}
+  {8, 0, 6},
+  {5, 0, 7},
+  {4, 0, 8},
+  {7, 0, 9}
 };
 
 // IP KVM outputs
 #define num_ipkvm_outputs 5
 // {<output pin>, <status>, <status_eeprom_addr>}
 int ipkvm_outputs[num_ipkvm_outputs][3] = {
-  {11, 0, 9},
-  {12, 0, 10},
-  {13, 0, 11},
-  {14, 0, 12},
-  {15, 0, 13}
+  {11, 0, 10},
+  {12, 0, 11},
+  {13, 0, 12},
+  {14, 0, 13},
+  {15, 0, 14}
 };
 
 const int buttonClusterPin = 16;

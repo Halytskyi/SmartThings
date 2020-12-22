@@ -15,18 +15,18 @@ cluster_devices = [
   "Raspberry Pi",
   "USB module #1",
   "USB module #2, for serial console's (IP KVM)",
-  "Master01 (mini PC)",
+  "Master01 (Rock64)",
   "Master02 (Rock64)",
   "Master03 (Rock64)",
   "Worker01 (mini PC)",
-  "Worker02 (Rock64)",
+  "Worker02 (mini PC)",
   "Worker03 (Rock64)"
 ]
 
 # IP KVM devices
 ipkvm_devices = [
-  "IP KVM for Master01",
   "IP KVM for Worker01",
+  "IP KVM for Worker02",
   "D13",
   "A0",
   "A1"
@@ -36,11 +36,11 @@ ipkvm_devices = [
 shunt_ohms = 0.1
 ina219_sensors = [
   {"Raspberry Pi": 0x40},
-  {"Master01 (mini PC)": 0x46},
-  {"Master02 (Rock64)": 0x44},
-  {"Master03 (Rock64)": 0x43},
+  {"Master01 (Rock64)": 0x44},
+  {"Master02 (Rock64)": 0x43},
+  {"Master03 (Rock64)": 0x42},
   {"Worker01 (mini PC)": 0x45},
-  {"Worker02 (Rock64)": 0x42},
+  {"Worker02 (mini PC)": 0x46},
   {"Worker03 (Rock64)": 0x41}
 ]
 
