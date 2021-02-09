@@ -13,6 +13,7 @@ Repository for storing code, schemas and docs for smart devices
   - [Fire Alarm System](automation-devices/fire-alarm)
   - [Server Rack Cooling System](automation-devices/server-rack-cooling)
   - [Smart Hallway](automation-devices/smart-hallway)
+  - [Cameras and lamps control](automation-devices/cameras-lamps-control)
   - [Smart UPS Luxeon 1000ZD](automation-devices/smart-ups-luxeon)
 - [Tools](tools)
   - [Arduino](tools/arduino)
