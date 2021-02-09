@@ -47,6 +47,7 @@ Entire control box consists from 3 modules:
 - 4 x 1A (lamps and cameras)
 - 1 x 5A (common fuse)
 - 1 x thermal fuse 10A 65°C
+- 1 x ABS Plastic IP65 Waterproof (150x110x70mm)
 
 | Arduino PIN | Component | Notes |
 | --- | --- | --- |
