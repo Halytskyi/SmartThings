@@ -8,6 +8,7 @@ Repository for storing code, schemas and docs for smart devices
   - [Power supply boards and USB HUBs](home-cluster/power-supply-usb-hubs)
 - [Automation devices](automation-devices)
   - [PJON routers](automation-devices/pjon-routers)
+  - [Security Lamp](automation-devices/security-lamp)
   - [Power Supply Monitoring](automation-devices/ps-monitoring)
   - [Low voltage UPS for smart home](automation-devices/smart-low-voltage-ups)
   - [Fire Alarm System](automation-devices/fire-alarm)
