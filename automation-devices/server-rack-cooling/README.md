@@ -62,7 +62,7 @@ Server Rack Cooling System was developed for rack fans control depends from temp
 
 | Name | Schema / Photo |
 | --- | --- |
-| Fan switch | [<img src="images/Fan_Switch.jpg" alt="Switch" width="200"/>](images/Fan_Switch.jpg) [<img src="images/irlr2905-pinout.jpg" alt="irlr2905" width="223"/>](images/irlr2905-pinout.jpg) |
+| Fan switch | [<img src="images/MosfetN_Switch.png" alt="Switch" width="200"/>](images/MosfetN_Switch.png) [<img src="images/irlr2905-pinout.jpg" alt="irlr2905" width="261"/>](images/irlr2905-pinout.jpg) |
 | DS18B20 | [<img src="images/DS18B20.jpg" alt="DS18B20" width="330"/>](images/DS18B20.jpg) |
 | HW-613 | [<img src="images/HW-613_1.jpg" alt="HW-613" width="130"/>](images/HW-613_1.jpg) [<img src="images/HW-613_2.jpg" alt="HW-613" width="152"/>](images/HW-613_2.jpg) |
 | DHT22 | [<img src="images/arduino_dht22.png" alt="DHT22" width="220"/>](images/arduino_dht22.png) [<img src="images/DHT22-PinOut.png" alt="DHT22" width="152"/>](images/DHT22-PinOut.png) |
@@ -80,10 +80,10 @@ Server Rack Cooling System was developed for rack fans control depends from temp
 | F-[1-4]-tl | Read value for "temperature low limit" of temperature sensors | - | - | °C, if temperature is less than defined value - correspond fan is stopped |
 | F-[1-4]-tl=[20-25] | Define "temperature low limit" for temperature sensors | + | - | °C, value from 20 to 25 (default: 22) |
 | F-[1-4]-th | Read value for "temperature high limit" of temperature sensors | - | - | °C, if temperature is greater than defined value - correspond fan speed is 100% |
-| F-[1-4]-th=[26-39] | Define "temperature high limit" for temperature sensor 1 (transformer) | + | - | °C, value from 26 to 39 (default: 30) |
+| F-[1-4]-th=[26-39] | Define "temperature high limit" for temperature sensors | + | - | °C, value from 26 to 39 (default: 30) |
 | T-[1-4] | Read temperature of sensors 1-4 | - | + (auto push every 1 minute) | °C |
 | T-[1-4]-a | Read value of "auto push" for 1-4 sensors | - | - | 0 - disabled<br>1 - enabled |
-| T-[1-4]-a=[0,1] | Disable/Enable "auto push" for 1-3 sensors | + | - | 0 - disable (default)<br>1 - enable |
+| T-[1-4]-a=[0,1] | Disable/Enable "auto push" for 1-4 sensors | + | - | 0 - disable (default)<br>1 - enable |
 | O-[t,h] | Read temperature, humidity outside sensor | - | + (auto push every 1 minute) | °C, % |
 | O-[t,h]-a | Read value of "auto push" for outside temperature, humidity sensor | - | - | 0 - disabled<br>1 - enabled |
 | O-[t,h]-a=[0,1] | Disable/Enable "auto push" for outside temperature, humidity sensor | + | - | 0 - disable (default)<br>1 - enable |
