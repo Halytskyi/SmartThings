@@ -68,7 +68,7 @@ Module for control power for IP-KVM, Master (SBC) nodes and USB switch selector 
 - 4 x 2k (1-2W) resistors
 - 8 x 10k resistors
 - 4 x 12V Zener diodes
-- 2 x SR240 diodes
+- 6 x SR240 diodes
 - 5 x INA219 current/voltage sensors
 - 4 x DC-DC Step Down Converter XL4015E1 -> 5.2V, 1.5A (up to 3A)
 - 1 x DC-DC Step Down Converter LM2596 -> 5.2V, 1A (up to 2A)
@@ -83,7 +83,7 @@ Module for control power for Worker (Mini PC) nodes and USB switch selector #2
 - 3 x 2k (1-2W) resistors
 - 6 x 10k resistors
 - 3 x 12V Zener diodes
-- 2 x SR240 diodes
+- 5 x SR240 diodes
 - 4 x INA219 current/voltage sensors
 - 3 x DC-DC Step Down Converter XL4016E1 -> 12.5V, 3A (up to 5A)
 - 1 x DC-DC Step Down Converter LM2596 -> 5.2V, 1A (up to 2A)
@@ -99,6 +99,7 @@ Module for control power for Ethernet switch (internal) and 3 external devices (
 - 4 x 2k (1-2W) resistors
 - 8 x 10k resistors
 - 4 x 12V Zener diodes
+- 4 x SR240 diodes
 - 4 x INA219 current/voltage sensors
 - 1 x DC-DC Step Down Converter LM2596 -> 9V, 1A (up to 2A)
 - 2 x DC-DC Step Down Converter LM2596 -> 5..12V, 1A (up to 2A)
@@ -131,7 +132,7 @@ Module for control power for Ethernet switch (internal) and 3 external devices (
 
 | Name | Schema / Photo |
 | --- | --- |
-| Switch | [<img src="images/Transistor_Switch.png" alt="Transistor Switch" width="250"/>](images/Transistor_Switch.png) [<img src="images/IRF4905.jpg" alt="IRF4905" width="214"/>](images/IRF4905.jpg) [<img src="images/BC547.jpg" alt="BC547" width="238"/>](images/BC547.jpg) |
+| Switch | [<img src="images/Transistor_Switch.png" alt="Transistor Switch" width="250"/>](images/Transistor_Switch.png) [<img src="images/IRF4905.jpg" alt="IRF4905" width="214"/>](images/IRF4905.jpg) [<img src="images/BC547.jpg" alt="BC547" width="238"/>](images/BC547.jpg)<br> **Note:** DC-DC inverters - this is inductive load, therefore flyback diode (SR240) is necessary for protect Mosfet transistor!|
 | INA219 | [<img src="images/INA219_1.jpg" alt="INA219" width="150"/>](images/INA219_1.jpg) [<img src="images/INA219_2.jpg" alt="INA219" width="168"/>](images/INA219_2.jpg) [<img src="images/INA219_addrs.jpg" alt="INA219" width="162"/>](images/INA219_addrs.jpg) |
 | HW-613 | [<img src="images/HW-613_1.jpg" alt="HW-613" width="130"/>](images/HW-613_1.jpg) [<img src="images/HW-613_2.jpg" alt="HW-613" width="152"/>](images/HW-613_2.jpg) |
 | USB HUB | [<img src="images/USB_HUB1.jpg" alt="USB_HUB" width="150"/>](images/USB_HUB1.jpg) [<img src="images/USB_HUB2.jpg" alt="USB_HUB" width="155"/>](images/USB_HUB2.jpg) |
