@@ -65,10 +65,11 @@ Module for control power for IP-KVM, Master (SBC) nodes and USB switch selector 
 - 4 x IRF4905 transistors (input: 15V, output: 5.2V, 3A (~15.5W) - 35℃)
 - 4 x BC547 transistors
 - 4 x 1k resistors
-- 4 x 2k (1-2W) resistors
+- 4 x 2k (2W) resistors
 - 8 x 10k resistors
 - 4 x 12V Zener diodes
-- 6 x SR240 diodes
+- 4 x SR240 diodes
+- 2 x SR340 diodes
 - 5 x INA219 current/voltage sensors
 - 4 x DC-DC Step Down Converter XL4015E1 -> 5.2V, 1.5A (up to 3A)
 - 1 x DC-DC Step Down Converter LM2596 -> 5.2V, 1A (up to 2A)
@@ -80,10 +81,11 @@ Module for control power for Worker (Mini PC) nodes and USB switch selector #2
 - 3 x IRF4905 transistors
 - 3 x BC547 transistors
 - 3 x 1k resistors
-- 3 x 2k (1-2W) resistors
+- 3 x 2k (2W) resistors
 - 6 x 10k resistors
 - 3 x 12V Zener diodes
-- 5 x SR240 diodes
+- 3 x SR240 diodes
+- 2 x SR340 diodes
 - 4 x INA219 current/voltage sensors
 - 3 x DC-DC Step Down Converter XL4016E1 -> 12.5V, 3A (up to 5A)
 - 1 x DC-DC Step Down Converter LM2596 -> 5.2V, 1A (up to 2A)
@@ -96,7 +98,7 @@ Module for control power for Ethernet switch (internal) and 3 external devices (
 - 4 x IRF4905 transistors
 - 4 x BC547 transistors
 - 4 x 1k resistors
-- 4 x 2k (1-2W) resistors
+- 4 x 2k (2W) resistors
 - 8 x 10k resistors
 - 4 x 12V Zener diodes
 - 4 x SR240 diodes
@@ -117,9 +119,9 @@ Module for control power for Ethernet switch (internal) and 3 external devices (
 | c*\|6 | D7 | IRF4905 + BC547 (Switch) | Worker02 (mini PC) |
 | c*\|7 | D8 | IRF4905 + BC547 (Switch) | Worker03 (mini PC) |
 | c*\|8 | D9 (PWM) | IRF4905 + BC547 (Switch) | Ethernet switch |
-| c*\|9 | D10 (PWM) | IRF4905 + BC547 (Switch) | External device #1 |
+| c*\|9 | D10 (PWM) | IRF4905 + BC547 (Switch) | External device #3 |
 | c*\|10 | D11 (PWM) | IRF4905 + BC547 (Switch) | External device #2 |
-| c*\|11 | D12 | IRF4905 + BC547 (Switch) | External device #3 |
+| c*\|11 | D12 | IRF4905 + BC547 (Switch) | External device #1 |
 | ue\|1 | D13 | OMRON G3VM-61A1 | USB switch selector #1 Button |
 | ue\|2 | A0 | OMRON G3VM-61A1 | USB switch selector #2 Button |
 | us\|1 | A1 | OMRON G3VM-61A1 | USB switch selector #1 Led #1 |

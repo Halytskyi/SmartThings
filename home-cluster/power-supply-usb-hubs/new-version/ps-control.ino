@@ -20,7 +20,7 @@ const char endReply[] = ";";
 // Control outputs
 const byte controlOutputsNum = 11;
 // {"pin"}
-const byte controlOutputsPin[controlOutputsNum] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+const byte controlOutputsPin[controlOutputsNum] = {2, 3, 4, 5, 6, 7, 8, 9, 12, 11, 10};
 // {"EEProm control outputs state"}
 const byte eepromControlOutputsStateAddr[controlOutputsNum] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 // Reboot params

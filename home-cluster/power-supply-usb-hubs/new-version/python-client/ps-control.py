@@ -37,21 +37,20 @@ usbSwitchSelectors = [
 ]
 
 # Params for INA219 sensors
-shunt_ohms = 0.1
 ina219Sensors = [
-  {"IP-KVM (Raspberry Pi)": 0x40},
-  {"Master01 (SBC) + USB module": 0x41},
-  {"USB switch selector #1": 0x42},
-  {"Master02 (SBC) + USB module": 0x43},
-  {"Master03 (SBC)": 0x44},
-  {"Worker01 (mini PC)": 0x45},
-  {"USB switch selector #2": 0x46},
-  {"Worker02 (mini PC)": 0x47},
-  {"Worker03 (mini PC)": 0x48},
-  {"Ethernet switch": 0x49},
-  {"External device #1": 0x4A},
-  {"External device #2": 0x4B},
-  {"External device #3": 0x4C}
+  {"name": "IP-KVM (Raspberry Pi)", "addr": 0x40, "shuntOhm": 0.1},
+  {"name": "Master01 (SBC) + USB module", "addr": 0x41, "shuntOhm": 0.1},
+  {"name": "USB switch selector #1", "addr": 0x42, "shuntOhm": 0.1},
+  {"name": "Master02 (SBC) + USB module", "addr": 0x43, "shuntOhm": 0.1},
+  {"name": "Master03 (SBC)", "addr": 0x44, "shuntOhm": 0.1},
+  {"name": "Worker01 (mini PC)", "addr": 0x45, "shuntOhm": 0.05},
+  {"name": "USB switch selector #2", "addr": 0x46, "shuntOhm": 0.1},
+  {"name": "Worker02 (mini PC)", "addr": 0x47, "shuntOhm": 0.05},
+  {"name": "Worker03 (mini PC)", "addr": 0x48, "shuntOhm": 0.05},
+  {"name": "Ethernet switch", "addr": 0x49, "shuntOhm": 0.1},
+  {"name": "External device #1", "addr": 0x4A, "shuntOhm": 0.1},
+  {"name": "External device #2", "addr": 0x4B, "shuntOhm": 0.1},
+  {"name": "External device #3", "addr": 0x4C, "shuntOhm": 0.1}
 ]
 
 # Output statuses
@@ -63,45 +62,45 @@ statuses = {
 
 
 # This function converts a string to an array of bytes
-def ConvertStringToBytes(src):
+def convert_string_to_bytes(src):
   converted = []
   for b in src:
     converted.append(ord(b))
   return converted
 
-def getStatus(command, value):
+def get_status(command, value):
   status = ""
   bus = SMBus(i2cBusAddr)
-  BytesToSend = ConvertStringToBytes(value)
+  BytesToSend = convert_string_to_bytes(value)
   bus.write_i2c_block_data(arduinoSlaveAddress, ord(command), BytesToSend)
   time.sleep(0.001)
   for i in range (0, 11):
-    status_chr = chr(bus.read_byte(arduinoSlaveAddress))
-    if status_chr != ";":
-      status += status_chr
+    statusChr = chr(bus.read_byte(arduinoSlaveAddress))
+    if statusChr != ";":
+      status += statusChr
     else:
       break
   bus.close()
   return status
 
-def psControl(command, value):
-  response = getStatus(command, value)
+def ps_control(command, value):
+  response = get_status(command, value)
   if response == "err":
     print("Wrong command!\n")
     help()
     sys.exit(1)
   if value[0] == "s":
-    answer_mid = "-"
+    answerMid = "-"
   else:
-    answer_mid = "has been"
+    answerMid = "has been"
   answer_end = statuses[response[0]]
 
   if command == "c":
     if value[1].isdigit():
-      value_int = int(value[1])
+      valueInt = int(value[1])
       if len(value) == 3:
         if value[2].isdigit():
-          value_int = int(value[1]+value[2])
+          valueInt = int(value[1]+value[2])
         else:
           print("Wrong command!\n")
           help()
@@ -112,24 +111,24 @@ def psControl(command, value):
       sys.exit(1)
     if value == "s0":
       for i in range(0, len(controlOutputs)):
-        print(controlOutputs[i], answer_mid, statuses[response[i]])
+        print(controlOutputs[i], answerMid, statuses[response[i]])
     else:
-      output = controlOutputs[value_int - 1]
+      output = controlOutputs[valueInt - 1]
       if value[0] == "r":
         if response[0] != "1":
-          answer_mid = "is"
+          answerMid = "is"
         else:
-          answer_mid = "- started"
+          answerMid = "- started"
           answer_end = "reboot process"
       if response[0] == "2":
-        answer_mid = "- some output still in reboot process"
-      print(output, answer_mid, answer_end)
+        answerMid = "- some output still in reboot process"
+      print(output, answerMid, answer_end)
   elif command == "u":
     if value[1].isdigit():
-      value_int = int(value[1])
+      valueInt = int(value[1])
       if len(value) == 3:
         if value[2].isdigit():
-          value_int2 = int(value[2])
+          valueInt2 = int(value[2])
         else:
           print("Wrong command!\n")
           help()
@@ -140,51 +139,54 @@ def psControl(command, value):
       sys.exit(1)
     if value == "s0":
       for i in range(0, len(usbSwitchSelectors)):
-        print(usbSwitchSelectors[i], "output #1", answer_mid, statuses[response[i]])
+        print(usbSwitchSelectors[i], "output #1", answerMid, statuses[response[i]])
     else:
-      usbSwitchSelector = usbSwitchSelectors[value_int - 1]
+      usbSwitchSelector = usbSwitchSelectors[valueInt - 1]
       if value[0] == "e":
         answer_end = "enabled"
         if response[0] == "0":
-          answer_mid = "already"
+          answerMid = "already"
         time.sleep(0.3)
-        response = getStatus(command, "s" + value[1])
+        response = get_status(command, "s" + value[1])
         if response[0] == "2":
-          answer_mid = "-"
+          answerMid = "-"
           answer_end = "something wrong, not enabled"
       else:
-        value_int2 = 1
-      print(usbSwitchSelector, "output #" + str(value_int2), answer_mid, answer_end)
+        valueInt2 = 1
+      print(usbSwitchSelector, "output #" + str(valueInt2), answerMid, answer_end)
 
-def readSensor(ina219_sensor, ina219_address):
-    ina = INA219(shunt_ohms, address=ina219_address)
-    ina.configure()
+def read_sensor(ina219Sensor, ina219Address, shuntOhm):
+    ina = INA219(shuntOhm, address=ina219Address)
+    try:
+      ina.configure()
+    except:
+      print("%s:" % ina219Sensor)
+      print("Can't get data from sensor!\n")
+      return
 
-    print("%s:" % ina219_sensor)
+    print("%s:" % ina219Sensor)
     print("Voltage: %.3f V" % ina.voltage())
     try:
-        print("Current: %.3f mA" % ina.current())
-        print("Power: %.3f mW\n" % ina.power())
-        #print("Shunt voltage: %.3f mV" % ina.shunt_voltage())
+      print("Current: %.3f mA" % ina.current())
+      print("Power: %.3f mW\n" % ina.power())
+      #print("Shunt voltage: %.3f mV" % ina.shunt_voltage())
     except DeviceRangeError as e:
-        # Current out of device range with specified shunt resister
-        print(e)
+      # Current out of device range with specified shunt resister
+      print(e)
 
-def readSensors(command):
+def read_sensors(command):
   try:
-    cmd_int = int(command)
+    cmdInt = int(command)
   except:
     print("Wrong command!")
     help()
     sys.exit(1)
 
-  if cmd_int >= 1 and cmd_int <= len(ina219Sensors):
-    for ina219_sensor, ina219_address in ina219Sensors[cmd_int - 1].items():
-      readSensor(ina219_sensor, ina219_address)
-  elif cmd_int == 0:
+  if cmdInt >= 1 and cmdInt <= len(ina219Sensors):
+    read_sensor(ina219Sensors[cmdInt - 1]["name"], ina219Sensors[cmdInt - 1]["addr"], ina219Sensors[cmdInt - 1]["shuntOhm"])
+  elif cmdInt == 0:
     for i in range(0, len(ina219Sensors)):
-      for ina219_sensor, ina219_address in ina219Sensors[i].items():
-        readSensor(ina219_sensor, ina219_address)
+      read_sensor(ina219Sensors[i]["name"], ina219Sensors[i]["addr"], ina219Sensors[i]["shuntOhm"])
   else:
     print("Wrong command!")
     help()
@@ -206,8 +208,7 @@ def help():
   print("  [Voltage/current/power sensors]")
   print("    s0 - read all sensors")
   for i in range(0, len(ina219Sensors)):
-    for ina219_sensor, _ in ina219Sensors[i].items():
-      print("    s%s - %s" % (i + 1, ina219_sensor))
+    print("    s%s - %s" % (i + 1, ina219Sensors[i]["name"]))
   print("")
   print("Description:")
   print("  e - enable")
@@ -222,14 +223,14 @@ def main():
     sys.exit(1)
   else:
     if sys.argv[1][0] == "s":
-      if len(sys.argv[1]) == 2:
-        readSensors(sys.argv[1][1])
+      if len(sys.argv[1]) <= 3:
+        read_sensors(sys.argv[1][1:])
       else:
         print("Wrong command!")
         help()
         sys.exit(1)
     elif sys.argv[1][0] == "c" or sys.argv[1][0] == "u":
-      psControl(sys.argv[1][:1], sys.argv[1][1:])
+      ps_control(sys.argv[1][:1], sys.argv[1][1:])
     else:
       print("Wrong command!")
       help()
