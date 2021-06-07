@@ -282,14 +282,14 @@ Where to buy: https://www.aliexpress.com/item/32967000523.html?spm=a2g0s.9042311
 ### Assembled
 
 [<img src="images/assembled_1.jpeg" width="320"/>](images/assembled_1.jpeg)
-[<img src="images/assembled_2.jpeg" width="357"/>](images/assembled_2.jpeg)
-[<img src="images/assembled_3.jpeg" width="351"/>](images/assembled_3.jpeg)
+[<img src="images/assembled_2.jpeg" width="347"/>](images/assembled_2.jpeg)
+[<img src="images/assembled_3.jpeg" width="340"/>](images/assembled_3.jpeg)
 
 ### Board #1
 
 [<img src="images/board1_1.jpeg" width="260"/>](images/board1_1.jpeg)
 [<img src="images/board1_2.jpeg" width="324"/>](images/board1_2.jpeg)
-[<img src="images/board1_3.jpeg" width="340"/>](images/board1_3.jpeg)
+[<img src="images/board1_3.jpeg" width="341"/>](images/board1_3.jpeg)
 [<img src="images/board1_4.jpeg" width="358"/>](images/board1_4.jpeg)
 [<img src="images/board1_5.jpeg" width="352"/>](images/board1_5.jpeg)
 [<img src="images/board1_6.jpeg" width="290"/>](images/board1_6.jpeg)

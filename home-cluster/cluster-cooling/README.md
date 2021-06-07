@@ -31,7 +31,7 @@ Cluster Cooling was developed for fans control depends from temperature with abi
 - 2 x 1 MOm resistors (pull-down resistors for PJON)
 - 8 x DS18B20
 - 1 x HW-613 Mini DC-DC 3A Step Down Power Supply Module
-- 1 x 2A fuse
+- 1 x 1.5A fuse
 
 | Arduino PIN | Component | Notes |
 | --- | --- | --- |
@@ -87,4 +87,10 @@ Cluster Cooling was developed for fans control depends from temperature with abi
 
 ## Device Photos
 
-[<img src="images/server-rack-cooling_1.jpg" alt="server-rack-cooling_1" width="252"/>](images/server-rack-cooling_1.jpg)
+[<img src="images/cluster-cooling_1.jpeg" width="300"/>](images/cluster-cooling_1.jpeg)
+[<img src="images/cluster-cooling_2.jpeg" width="288"/>](images/cluster-cooling_2.jpeg)
+[<img src="images/cluster-cooling_3.jpeg" width="300"/>](images/cluster-cooling_3.jpeg)
+[<img src="images/cluster-cooling_4.jpeg" width="310"/>](images/cluster-cooling_4.jpeg)
+[<img src="images/cluster-cooling_5.jpeg" width="326"/>](images/cluster-cooling_5.jpeg)
+[<img src="images/cluster-cooling_6.jpeg" width="279"/>](images/cluster-cooling_6.jpeg)
+[<img src="images/cluster-cooling_7.jpeg" width="278"/>](images/cluster-cooling_7.jpeg)
