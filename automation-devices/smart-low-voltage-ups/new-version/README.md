@@ -1,10 +1,26 @@
 # Low voltage UPS for smart home
 
-This is version 2 for 18-24 input voltage
+- [Low voltage UPS for smart home](#low-voltage-ups-for-smart-home)
+  - [Description](#description)
+  - [Main functions](#main-functions)
+  - [Components photos and schematics](#components-photos-and-schematics)
+  - [Tests](#tests)
+    - [DC-DC 400W 15A Step-up Boost Converter](#dc-dc-400w-15a-step-up-boost-converter)
+      - [Load tests](#load-tests)
+      - [Voltage tests](#voltage-tests)
+      - [Heatmap photos (5A output current)](#heatmap-photos-5a-output-current)
+    - [DC-DC 1200W 20A Step-up Boost Converter](#dc-dc-1200w-20a-step-up-boost-converter)
+      - [Load tests](#load-tests-1)
+      - [Voltage tests](#voltage-tests-1)
+      - [Heatmap photos (9A output current)](#heatmap-photos-9a-output-current)
+  - [Device circuit](#device-circuit)
+  - [Assembled device photos](#assembled-device-photos)
+
+This is version 2 for input voltage 18-24V
 
 ## Description
 
-This UPS was designed for smart home with separate two power supply lines and batteries for each line which include two chargers for each battery. For almost on each inputs and outputs has been implemented measuring voltage, current and power consumption with ability to send data to server via [PJON protocol](https://github.com/gioblu/PJON).
+This UPS was designed for smart home with separate two power supply lines and batteries for each line which include two chargers for each battery. For almost each inputs and outputs has been implemented measuring voltage, current and power consumption with ability to send data to server via [PJON protocol](https://github.com/gioblu/PJON).
 
 ## Main functions
 
@@ -19,7 +35,7 @@ UPS consists from 3 modules
 | Name | Schema / Photo |
 | --- | --- |
 | DC-DC 400W 15A Step-up Boost Converter | [<img src="images/400W-15A-Step-up-Boost-Converter_1.jpeg" width="300"/>](images/400W-15A-Step-up-Boost-Converter_1.jpeg) [<img src="images/400W-15A-Step-up-Boost-Converter_2.jpeg" width="284"/>](images/400W-15A-Step-up-Boost-Converter_2.jpeg) |
-| DC-DC 1200W 20A Step-up Boost Converter | [<img src="images/DC-DC-1200W-20A-Step-up-Boost-Converter_1.jpeg" width="261"/>](images/DC-DC-1200W-20A-Step-up-Boost-Converter_1.jpeg) [<img src="images/DC-DC-1200W-20A-Step-up-Boost-Converter_2.jpeg" width="370"/>](images/DC-DC-1200W-20A-Step-up-Boost-Converter_2.jpeg) |
+| DC-DC 1200W 20A Step-up Boost Converter | [<img src="images/DC-DC-1200W-20A-Step-up-Boost-Converter_1.jpeg" width="261"/>](images/DC-DC-1200W-20A-Step-up-Boost-Converter_1.jpeg) [<img src="images/DC-DC-1200W-20A-Step-up-Boost-Converter_2.jpeg" width="300"/>](images/DC-DC-1200W-20A-Step-up-Boost-Converter_2.jpeg) |
 
 ## Tests
 
@@ -91,6 +107,6 @@ Where to buy: https://www.aliexpress.com/item/1005001354297652.html?spm=a2g0s.90
 
 [<img src="images/slvu_circuit.jpg" alt="Device circuit" width="300"/>](images/slvu_circuit.jpg)
 
-## Devices Photos
+## Assembled device photos
 
 [<img src="images/slvu.jpg" alt="Device" width="300"/>](images/slvu.jpg)
