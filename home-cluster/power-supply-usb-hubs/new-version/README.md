@@ -89,7 +89,7 @@ Module for control power for IP-KVM, Master (SBC) nodes and USB switch selector 
 - 6 x SR240 diodes
 - 5 x INA219 current/voltage sensors (address: 0x40 - 0x44)
 - 5 x DC-DC Step Down Converter XL4015E1 -> 5.2V, 1.5A (up to 3A)
-- 5 x 9x9x5mm aluminum heat sinks
+- 5 x 9x9x5mm aluminum heatsinks
 
 ### Board #3
 
@@ -122,7 +122,7 @@ Module for control power for Ethernet switch (internal) and 3 external devices (
 - 4 x INA219 current/voltage sensors (address: 0x49 - 0x4C)
 - 1 x DC-DC Step Down Converter XL4015E1 -> 9V, 1.5A (up to 3A)
 - 3 x DC-DC Step Down Converter XL4015E1 -> 5..12V, 1.5A (up to 3A)
-- 4 x 9x9x5mm aluminum heat sinks
+- 4 x 9x9x5mm aluminum heatsinks
 
 ### Board #5
 

@@ -9,7 +9,7 @@ Repository for storing code, schemas and docs for smart devices
 - [Automation devices](automation-devices)
   - [PJON routers](automation-devices/pjon-routers)
   - [Security Lamp](automation-devices/security-lamp)
-  - [Power Supply Monitoring](automation-devices/ps-monitoring)
+  - [Power Supply with Monitoring](automation-devices/ps-with-monitoring)
   - [Low voltage UPS for smart home](automation-devices/smart-low-voltage-ups)
   - [Fire Alarm System](automation-devices/fire-alarm)
   - [Server Rack Cooling System](automation-devices/server-rack-cooling)

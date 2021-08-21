@@ -6,7 +6,7 @@ Automation devices for home
 |---|---|---|---|
 | [PJON routers](pjon_routers) | PJON | 1, 6 ||
 | [Security Lamp](security-lamp) | PJON | 15 ||
-| [Power Supply Monitoring](ps-monitoring) | PJON | 15 ||
+| [Power Supply with Monitoring](ps-with-monitoring) | PJON | 15 ||
 | [Low voltage UPS for smart home](smart-low-voltage-ups) | PJON | 16, 17, 18 ||
 | [Fire Alarm System](fire-alarm)| PJON | 19 ||
 | [Server Rack Cooling System](server-rack-cooling) | PJON | 20 ||

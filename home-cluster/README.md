@@ -21,7 +21,7 @@ On front side plate was placed [UPS](../automation-devices/smart-low-voltage-ups
 [<img src="images/rack_inside_front_3.jpg" alt="Rack" width="322"/>](images/rack_inside_front_3.jpg)
 [<img src="images/rack_inside_front_4.jpg" alt="Rack" width="370"/>](images/rack_inside_front_4.jpg)
 
-On back side plate was placed Power supply modules with 5 x 50mm 12V fans and [ps-monitoring](../automation-devices/ps-monitoring) module.
+On back side plate was placed Power supply modules with 5 x 50mm 12V fans and [monitoring](../automation-devices/ps-with-monitoring) module.
 
 [<img src="images/rack_inside_back_1.jpg" alt="Rack" width="330"/>](images/rack_inside_back_1.jpg)
 [<img src="images/rack_inside_back_2.jpg" alt="Rack" width="300"/>](images/rack_inside_back_2.jpg)

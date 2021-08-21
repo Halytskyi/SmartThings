@@ -5,7 +5,7 @@
 - control charge process for 2 batteries from DC or Solar chargers;
 - two batteries can be charged simultaneously;
 - start batteries charge if voltage >5V and <12.5V;
-- charging will be enabled if input voltage on charger >=16.0V;
+- charging will be enabled if input voltage on charger >=15.0V;
 - stop charge batteries if current consumption from them >0.1A;
 - stop charge batteries if charging current <0.15A or was received signal from charger status LED;
 - measuring batteries temperature, don't start batteries charge if temperature >42°C and stop charge if >45°C;
@@ -27,7 +27,10 @@
 - 1 x Arduino Pro Mini 328 - 5V/16MHz
 - 2 x IRF4905 transistors
 - 2 x BC547 transistors
+- 2 x 12v Zener diode (1N4742A)
+- 2 x SR240 diodes
 - 2 x 1k resistors
+- 2 x 2k 2W resistors
 - 7 x 10k resistors
 - 1 x 100k resistors
 - 2 x 390 Ohm resistors
@@ -36,6 +39,7 @@
 - 2 x 1 MOm resistors
 - 1 x 1N4001 diode
 - 1 x HW-613 Mini DC-DC 3A Step Down Power Supply Module (for ACS712 and Arduino devices, 5V output)
+- 2 x 9x9x5mm aluminum heatsinks (19.1V -> 18.4V, 3A (~55W) - 40℃; 22.6V -> 21.8V, 3A (~65W) - 42℃)
 - 1 x 0.5A fuse (arduino, ammeter, etc)
 - 1 x 2A fuse (DC charger #1)
 - 1 x 2A fuse (DC charger #2)
@@ -67,18 +71,22 @@
 
 ## Requirements and components for module #1.2
 
+To avoid increase temperature above 100℃ on transistors and work with load up to 150W is required 2 transistors per channel with related heatsinks.
+
 - 8 x IRF4905 transistors
 - 4 x BC547 transistors
 - 4 x 1k resistors
 - 10 x 10k resistors
 - 2 x 100k resistors
 - 4 x ACS712-20A modules
+- 4 x 34x12x30mm heatsink for IRF4905, output 2 and 3 (12V -> 11.3V, 13.5A (~153W) - 89℃ on transistor and 101℃ on heatsink)
+- 4 x 34x12x38mm heatsink for IRF4905, output 1 and 4 (12V -> 11.3V, 13.5A (~153W) - 83℃ on transistor and 93℃ on heatsink)
 
 ## Components photos and schematics
 
 | Name | Schema / Photo |
 | --- | --- |
-| Switch (for module #1.1) | [<img src="images/Switch.jpg" alt="Switch" width="250"/>](images/Switch.jpg) [<img src="images/IRF4905.jpg" alt="IRF4905" width="202"/>](images/IRF4905.jpg) [<img src="images/BC547.jpg" alt="BC547" width="225"/>](images/BC547.jpg) |
+| Switch (for module #1.1) | [<img src="images/Switch_24V.jpeg" alt="Switch" width="250"/>](images/Switch_24V.jpeg) [<img src="images/IRF4905.jpg" alt="IRF4905" width="202"/>](images/IRF4905.jpg) [<img src="images/BC547.jpg" alt="BC547" width="225"/>](images/BC547.jpg) |
 | Switch (for module #1.2) | [<img src="images/Switch_two_IRF4905.jpeg" alt="Switch" width="300"/>](images/Switch_two_IRF4905.jpeg) |
 | Voltmeter | [<img src="../images_common/voltmeter.jpg" alt="Voltmeter" width="170"/>](../images_common/voltmeter.jpg) |
 | ACS712 | [<img src="../images_common/ACS712_1.jpg" alt="ACS712_1" width="170"/>](../images_common/ACS712_1.jpg) [<img src="../images_common/ACS712_2.jpg" alt="ACS712_2" width="294"/>](../images_common/ACS712_2.jpg) |
