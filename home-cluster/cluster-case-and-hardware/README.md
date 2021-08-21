@@ -34,16 +34,16 @@
   - 60 x [M3 nuts](https://www.aliexpress.com/item/32796990429.html?spm=a2g0o.cart.0.0.299c3c00CW7ceW&mp=1)
   - 36 x [M4 nuts](https://www.aliexpress.com/item/32796990429.html?spm=a2g0o.cart.0.0.299c3c00CW7ceW&mp=1)
 - USB cables
-  - 4 x 25cm mini M-USB to M-USB (for Arduinos)
+  - 4 x 25cm mini M-USB to M-USB (for Arduinos) - can be replaced by self-soldered
   - 4 x 50cm M-USB3.0 to M-USB3.0 (for Switch Selectors)
-  - 1 x 10cm M-USB to F-USB (Master01 -> USB switch)
-  - 1 x 30cm M-USB to F-USB (Master02 -> USB switch)
-  - 2 x 50cm USB-C to USB (IPKVM)
-  - 1 x 100cm USB-C to USB (IPKVM)
+  - 1 x 10cm M-USB to F-USB (Master01 -> USB switch) - can be replaced by self-soldered
+  - 1 x 30cm M-USB to F-USB (Master02 -> USB switch) - can be replaced by self-soldered
+  - 2 x 50cm USB-C to USB (IPKVM) - can be replaced by self-soldered
+  - 1 x 100cm USB-C to USB (IPKVM) - can be replaced by self-soldered
   - 2 x 50cm HDMI to HDMI (IPKVM)
-  - 1 x 90cm HDMI to HDMI (IPKVM)
-  - 1 x 50cm micro USB to M-USB (IPKVM keyboard/mouse)
-  - 2 x 40cm SATA cables
+  - 2 x 90cm HDMI to HDMI (IPKVM)
+  - 1 x 50cm micro USB to M-USB (IPKVM keyboard/mouse) - can be replaced by self-soldered
+  - 2 x 40cm SATA cables - not sure if needed
 
 - 18 x [Nylon L--Angle Drawer Guides](https://www.homedepot.com/p/Prime-Line-Nylon-L-Angle-Drawer-Guides-10-pack-R-7153/100110945) (for mount Fans)
 

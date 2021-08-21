@@ -16,11 +16,11 @@
   - [Device circuit](#device-circuit)
   - [Assembled device photos](#assembled-device-photos)
 
-This is version 2 for input voltage 18-24V
+This is version 2 for input voltage 18-24V.
 
 ## Description
 
-This UPS was designed for smart home with separate two power supply lines and batteries for each line which include two chargers for each battery. For almost each inputs and outputs has been implemented measuring voltage, current and power consumption with ability to send data to server via [PJON protocol](https://github.com/gioblu/PJON).
+This UPS was designed for smart home with two separate power supply lines and batteries for each line which include two chargers for each battery. Maximum continuous output for each line about 150W. For almost each inputs and outputs has been implemented measuring voltage, current and power consumption with ability to send data to server via [PJON protocol](https://github.com/gioblu/PJON).
 
 ## Main functions
 
