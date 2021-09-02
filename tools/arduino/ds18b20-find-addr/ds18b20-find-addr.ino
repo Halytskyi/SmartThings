@@ -55,5 +55,11 @@ void setup(void)
     Serial.print(" : ");
     sensors.getAddress(Thermometer, i);
     printAddress(Thermometer);
+    sensors.requestTemperaturesByAddress(Thermometer);
+    delay(100);
+    float tempC = sensors.getTempC(Thermometer);
+    Serial.print("");
+    Serial.print("Temperature: ");
+    Serial.println(tempC);
   }
 }

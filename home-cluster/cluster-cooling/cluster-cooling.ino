@@ -12,7 +12,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-const byte deviceID = 21;
+const byte deviceID = 22;
 PJONSoftwareBitBang busA(deviceID); // TxRx bus
 PJONSoftwareBitBang busB(deviceID); // Tx bus
 const byte pinBusA = 7;
@@ -77,14 +77,14 @@ unsigned long tSensorAutoPushLU[tSensorsNum] = {0, 0, 0, 0, 0, 0, 0, 0};
 // {"EEProm auto-push"}
 const byte eepromTSensorAutoPushAddr[tSensorsNum] = {21, 22, 23, 24, 25, 26, 27, 28};
 const DeviceAddress tSensorAddr[tSensorsNum] = {
-  {0x28, 0xA0, 0x17, 0x16, 0xA8, 0x01, 0x3C, 0x54},
-  {...},
-  {...},
-  {...},
-  {...},
-  {...},
-  {...},
-  {...}};
+  {0x28, 0xCD, 0xF8, 0x19, 0x39, 0x19, 0x01, 0xA8},
+  {0x28, 0x3E, 0xD8, 0x76, 0xE0, 0x01, 0x3C, 0x3F},
+  {0x28, 0x76, 0x44, 0x76, 0xE0, 0x01, 0x3C, 0x7D},
+  {0x28, 0x57, 0xDB, 0x76, 0xE0, 0x01, 0x3C, 0x24},
+  {0x28, 0xC7, 0x92, 0x76, 0xE0, 0x01, 0x3C, 0x8F},
+  {0x28, 0xB9, 0xE0, 0x76, 0xE0, 0x01, 0x3C, 0xEA},
+  {0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+  {0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};
 
 // External alarm status
 const byte alarmExternalPin = 10;
@@ -361,29 +361,15 @@ void autopush() {
   unsigned long curMillis = millis(); // time now in ms
   if (curMillis - prevMillisAutoPush >= minAutoPushInterval) {
     byte msgPushed = 0;
-    for (byte i = 0; i < fansNum; i += 1) {
-      if (fanAutoPush[i] == 1) {
-        if (curMillis - fanAutoPushLU[i] >= autoPushInterval and curMillis - lastUpdateMillisAutoPush >= minAutoPushInterval) {
-          char tmpBuf[4];
-          itoa(fanSpeedPercent[i], tmpBuf, 10);
-          busB_send(fanCmd[i], tmpBuf);
-          fanAutoPushLU[i] = curMillis;
+    for (byte i = 0; i < tSensorsNum; i += 1) {
+      if (tSensorAutoPush[i] == 1) {
+        if (curMillis - tSensorAutoPushLU[i] >= autoPushInterval and curMillis - lastUpdateMillisAutoPush >= minAutoPushInterval) {
+          char tmpBuf[8];
+          dtostrf(get_temperature(i), 0, 2, tmpBuf);
+          busB_send(tSensorCmd[i], tmpBuf);
+          tSensorAutoPushLU[i] = curMillis;
           lastUpdateMillisAutoPush = curMillis;
           msgPushed = 1;
-        }
-      }
-    }
-    if (msgPushed == 0) {
-      for (byte i = 0; i < tSensorsNum; i += 1) {
-        if (tSensorAutoPush[i] == 1) {
-          if (curMillis - tSensorAutoPushLU[i] >= autoPushInterval and curMillis - lastUpdateMillisAutoPush >= minAutoPushInterval) {
-            char tmpBuf[8];
-            dtostrf(get_temperature(i), 0, 2, tmpBuf);
-            busB_send(tSensorCmd[i], tmpBuf);
-            tSensorAutoPushLU[i] = curMillis;
-            lastUpdateMillisAutoPush = curMillis;
-            msgPushed = 1;
-          }
         }
       }
     }
@@ -412,19 +398,37 @@ void fan_auto_control() {
       float tempC2 = get_temperature(tempSensorPos2);
       if (tempC1 != tSensorAutomodeValue[tempSensorPos1] or tempC2 != tSensorAutomodeValue[tempSensorPos2]) {
         if (tempC1 < fanTempLowLimit[i] and tempC2 < fanTempLowLimit[i]) { // temp low limit
-          fanSpeedPercent[i] = 0; // fan speed in %
-          digitalWrite(fanPin[i], LOW);
+          if (fanSpeedPercent[i] != 0) {
+            fanSpeedPercent[i] = 0; // fan speed in %
+            digitalWrite(fanPin[i], LOW);
+            if (fanAutoPush[i] == 1) {
+              busB_send(fanCmd[i], "0");
+            }
+          }
         } else if (tempC1 > fanTempHighLimit[i] or tempC2 > fanTempHighLimit[i]) { // temp high limit
-          fanSpeedPercent[i] = 100; // fan speed in %
-          digitalWrite(fanPin[i], HIGH);
-        } else if (fanAutoMode[i] == 2 and (tempC1 >= fanTempLowLimit[i] and tempC1 <= fanTempHighLimit[i] or tempC2 >= fanTempLowLimit[i] and tempC2 <= fanTempHighLimit[i])) {
+          if (fanSpeedPercent[i] != 100) {
+            fanSpeedPercent[i] = 100; // fan speed in %
+            digitalWrite(fanPin[i], HIGH);
+            if (fanAutoPush[i] == 1) {
+              busB_send(fanCmd[i], "100");
+            }
+          }
+        } else if (fanAutoMode[i] == 2 and ((tempC1 >= fanTempLowLimit[i] and tempC1 <= fanTempHighLimit[i]) or (tempC2 >= fanTempLowLimit[i] and tempC2 <= fanTempHighLimit[i]))) {
           float tempC = tempC1;
           if (tempC2 > tempC1) {
             tempC = tempC2;
           }
           byte fanSpeed = map(tempC, fanTempLowLimit[i], fanTempHighLimit[i], 90, 200); // define fan speed in analog value
-          fanSpeedPercent[i] = map(fanSpeed, 90, 200, 1, 99); // fan speed in %
-          analogWrite(fanPin[i], fanSpeed); // spin the fan at the fanSpeed speed
+          byte fanSpeedPercentCurrent = map(fanSpeed, 90, 200, 1, 99); // fan speed in %
+          if (fanSpeedPercent[i] != fanSpeedPercentCurrent) {
+            fanSpeedPercent[i] = map(fanSpeed, 90, 200, 1, 99); // fan speed in %
+            analogWrite(fanPin[i], fanSpeed); // spin the fan at the fanSpeed speed
+            if (fanAutoPush[i] == 1) {
+              char tmpBuf[4];
+              itoa(fanSpeedPercent[i], tmpBuf, 10);
+              busB_send(fanCmd[i], tmpBuf);
+            }
+          }
         }
       }
       tSensorAutomodeValue[tempSensorPos1] = tempC1;
@@ -461,9 +465,9 @@ void loop() {
   autopush();
   external_alarm();
 
-  // run each 10 seconds
+  // run each 60 seconds
   unsigned long curMillis = millis(); // time now in ms
-  if (curMillis - prevMillisFanAutoControl >= 10000) {
+  if (curMillis - prevMillisFanAutoControl >= 60000) {
     busA.receive(receiveTimeBusA);
     fan_auto_control();
     prevMillisFanAutoControl = curMillis;

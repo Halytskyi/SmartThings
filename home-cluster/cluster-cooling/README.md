@@ -8,16 +8,16 @@ Cluster Cooling was developed for fans control depends from temperature with abi
 
 - 4 PWM outputs for fans;
 - fans control by commands from server;
-- fans control automatically in depends from temperature. Can be chosen 1 of 2 modes: fan on/off without speed control and with speed control (fan speed will be gradually changed by PWM and depends from temperature sensors (check every 10 sec.) and defined low/high limits);
+- fans control automatically in depends from temperature. Can be chosen 1 of 2 modes: fan on/off without speed control and with speed control (fan speed will be gradually changed by PWM and depends from temperature sensors (check every 60 sec.) and defined low/high limits);
 - measure temperature in 2x4 (8) zones;
-- turn off all fans by external 5V HIGH signal (for example from fire alarm) or by command (A). Normal functionality after that can be resumed only by command via PJON;
+- turn off all fans by external 5V HIGH signal (for example from fire alarm) or by command (A) and sending message to server. Normal functionality (include automode configuration) after that can be resumed only by command via PJON;
 - control and send data from/to server via [PJON protocol](https://github.com/gioblu/PJON)
 
 ## PJON Specification
 
 - PJON TxRx Bus Server ID: _1_
-- PJON Tx Bus Server ID: _2_
-- PJON Bus Device ID: _21_
+- PJON Tx Bus Server ID: _6_
+- PJON Bus Device ID: _22_
 - PJON Strategy: _SoftwareBitBang_
 
 ## Requirements and components
@@ -42,7 +42,7 @@ Cluster Cooling was developed for fans control depends from temperature with abi
 | D6 (PWM) | IRLZ44N fan switch | Fan 3: 3 x 80x80 |
 | D7 | [PJON v13.0](https://github.com/gioblu/PJON/tree/13.0/src/strategies/SoftwareBitBang) | Communication with Server (TxRx) |
 | D8 | - | - |
-| D9 (PWM) | IRLZ44N fan switch | Fan 4: 3 x 30x30 |
+| D9 (PWM) | IRLZ44N fan switch | Fan 4: reserved |
 | D10 (PWM) | Alarm input | For external 5V HIGH signal |
 | D11 (PWM) | 1-Wire | Temperature sensors |
 | D12 | [PJON v13.0](https://github.com/gioblu/PJON/tree/13.0/src/strategies/SoftwareBitBang) | Communication with Server (TX only) |
@@ -64,7 +64,7 @@ Cluster Cooling was developed for fans control depends from temperature with abi
 
 | Command | Description | EEPROM | Auto-push | Notes |
 | --- | --- | --- | --- | --- |
-| F-[1-4] | Read value of fan speed | - | + (auto push every 1 minute) | 0 - fan disabled<br>1-100 - fan speed (%) |
+| F-[1-4] | Read value of fan speed | - | + (auto push when status changed) | 0 - fan disabled<br>1-100 - fan speed (%) |
 | F-[1-4]=[0-100] | Define fan speed | + | - | 0 - disable fan (default)<br>1-100 - fan speed (%) |
 | F-[1-4]-a | Read value of "auto push" for fan speed | - | - | 0 - disabled<br>1 - enabled |
 | F-[1-4]-a=[0,1] | Disable/Enable "auto push" for fan speed (useful for automatic mode) | + | - | 0 - disable (default)<br>1 - enable |
