@@ -4,13 +4,19 @@
   - [Description](#description)
     - [Main functions](#main-functions)
   - [Requirements and components](#requirements-and-components)
-    - [Board #1](#board-1)
-    - [Board #2](#board-2)
+    - [Raspberry Pi](#raspberry-pi)
+    - [Board](#board)
     - [Other components](#other-components)
+    - [Pinout](#pinout)
   - [4 Ports HDMI KVM Switcher](#4-ports-hdmi-kvm-switcher)
+    - [Switching channels](#switching-channels)
+    - [Power supply](#power-supply)
   - [Hardware Arduino HID instead of the OTG](#hardware-arduino-hid-instead-of-the-otg)
     - [Switch IP-KVM to Hardware Arduino HID](#switch-ip-kvm-to-hardware-arduino-hid)
     - [Flash the Arduino HID (TTL Firmware)](#flash-the-arduino-hid-ttl-firmware)
+  - [Photos](#photos)
+    - [Complete device photos](#complete-device-photos)
+    - [Board photos](#board-photos)
 
 ## Description
 
@@ -29,31 +35,63 @@ IP-KVM based on Raspberry Pi, for x64 architecture uses PI-KVM: [https://github.
 
 ## Requirements and components
 
-### Board #1
+### Raspberry Pi
 
 - 1 x Raspberry Pi 4 (2 GB)
 - 1 x 32 GB MicroSD card
+
+### Board
+
 - 1 x [HDMI to CSI-2 bridge based on TC358743](https://www.aliexpress.com/item/4000102166176.html)
-- 1 x [USB/Power Splitter Module](https://www.pishop.us/product/usb-pwr-splitter/)
-- 1 x USB-A to USB-C cable (male-male) for connecting the Raspberry Pi to the splitter
-- 1 x USB-A to micro USB-B cable (male-male) for connecting the server to the splitter
-
-### Board #2
-
+- 1 x ATMEGA32U4 Pro Micro 5V/16MHZ
 - 12 x [MOSFET relays OMRON G3VM-61A1](https://www.aliexpress.com/item/1005001989679623.html?spm=a2g0s.9042311.0.0.27424c4dnmIQ2j)
 - 13 x 390 Ohm resistors
 - 6 x 4.7k Ohm resistors
-- 1 x ATMEGA32U4 Pro Micro 5V/16MHZ
 - 1 x 2N2222A
+- 1 x Bidirectional Logic Level Converter
 
 ### Other components
 
+- ?1 x [USB/Power Splitter Module](https://www.pishop.us/product/usb-pwr-splitter/)
+- ?1 x USB-A to USB-C cable (male-male) for connecting the Raspberry Pi to the splitter
+- ?1 x USB-A to micro USB-B cable (male-male) for connecting the server to the splitter
 - 3 x USB to PL2303 UART TTL Cables
 - [4 Ports KVM Switcher 4K HDMI-compatible Video Display 4 IN 1 Out Type USB-C with EDID/HDCP decryption](https://www.aliexpress.com/item/1005001873550202.html?spm=a2g0s.9042311.0.0.49584c4dNbLu7M)
 
+### Pinout
+
+[<img src="images/RPi4-Pinout.jpeg" width="500"/>](images/RPi4-Pinout.jpeg)
+
+| RPi-4 PIN | Component on Board | Notes |
+| --- | --- | --- |
+| 3.3V (1) | Power for OMRONs G3VM-61A1 ||
+| GND (6) | Bidirectional LLC GND -> Arduino GND ||
+| GPIO 14 (UART TX) | Bidirectional LLC -> Arduino RX ||
+| GPIO 15 (UART RX) | Bidirectional LLC -> Arduino TX ||
+| GPIO 4 (GPCLK0) | 2N2222A | For reset the HID |
+| GPIO 17 | OMRON 1 (input) | KVM Switch, channel #1: LED |
+| GPIO 27 | OMRON 2 (output) | KVM Switch, channel #1: Button |
+| GPIO 22 | OMRON 3 (input) | KVM Switch, channel #2: LED |
+| GPIO 23 | OMRON 4 (output) | KVM Switch, channel #2: Button |
+| GPIO 24 | OMRON 5 (input) | KVM Switch, channel #3: LED |
+| GPIO 25 | OMRON 6 (output) | KVM Switch, channel #3: Button |
+| GPIO 5 | OMRON 7 (output) | Worker01: Power button |
+| GPIO 6 | OMRON 8 (input) | Worker01: LED |
+| GPIO 13 | OMRON 9 (output) | Worker02: Power button |
+| GPIO 26 | OMRON 10 (input) | Worker02: LED |
+| GPIO 12 | OMRON 11 (output) | Worker03: Power button |
+| GPIO 16 | OMRON 12 (input) | Worker03: LED |
+
 ## 4 Ports HDMI KVM Switcher
 
+### Switching channels
+
 [4 Ports HDMI KVM Switcher](https://www.aliexpress.com/item/1005001873550202.html?spm=a2g0s.9042311.0.0.49584c4dNbLu7M) support using real keyboard for selecting ports, but nor Raspberry Pi4 emulated HID netheir Arduino emulated HID dostn't support it, therefore I used "Omron G3VM-61A1" for switching ports and read their status (via Web UI).
+
+### Power supply
+
+This KVM switch doesn't have separate input for power supply, therefore, it powering via usb-c ports from PCs. Also, it has "back powering issue" as power also coming to HDMI output port and USB HID ports (from Raspberry Pi) - see details on [Multiport KVM over IP](https://github.com/pikvm/pikvm/blob/master/pages/multiport.md), as result, after shutdown Raspberry Pi it wont't be started and will be needed push power button on KVM switch.
+To solve this issue I desided make own USB cables without power (+5V) wire. As I need only 3 KVM ports I use 4rd port for powering KVM switch from board #2. By this modification KVM switch powering only when Raspberry Pi started and it doesn't have "back powering issue".
 
 ## Hardware Arduino HID instead of the OTG
 
@@ -100,3 +138,11 @@ Hightlights from [official doc](https://github.com/pikvm/pikvm/blob/master/pages
   ```
 
 - Connect the RESET wire, disconnect the USB cable, and `reboot` the RPi.
+
+## Photos
+
+### Complete device photos
+
+### Board photos
+
+[<img src="images/board1_1.jpeg" width="300"/>](images/board1_1.jpeg)
