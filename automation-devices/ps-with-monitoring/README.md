@@ -10,7 +10,7 @@ Power Supply Monitoring module was developed for measure voltage, current and po
 
 - measure voltage, curent and power consumption on PS outputs, Solar Batteries input and dc-dc converter;
 - measure AC line parameters: Voltage, Current, Power, Energy, Frequency and Power factor;
-- measuring temperature on PS outputs, dc-dc converter and near diodes;
+- measuring temperature on PS outputs and dc-dc converters;
 - send data to server via [PJON protocol](https://github.com/gioblu/PJON)
 
 ## PJON Specification
@@ -22,13 +22,15 @@ Power Supply Monitoring module was developed for measure voltage, current and po
 
 ## Requirements and components for Power Supply
 
-- Power supply 18V 20A (model: JC-360-18)
-- Power supply 24V 10A (model: S-240-24)
-- 300W 20A DC-DC Buck Converter Step Down Module
+- 1 x Power supply 18V 20A (model: JC-360-18)
+- 1 x Power supply 24V 10A (model: S-240-24)
+- 2 x 300W 20A DC-DC Buck Converter Step Down Modules
 - 2 x MBR6045PT diodes
 - 2 x MBR60100CT diodes
+- 1 x MBR4045CT diode
 - 2 x 34x12x38mm heatsink for MBR6045PT diodes (19.3V -> 18.8V, 8A (~150W) - 70℃; 22V -> 21.47V, 7A (~150W) - 60℃)
 - 2 x 34x12x30mm heatsink for MBR60100CT diodes (19.1V -> 18.4V, 3A (~55W) - 48℃; 22.6V -> 21.8V, 3A (~65W) - 50℃)
+- 1 x 34x12x30mm heatsink for MBR4045CT diode (12.6V -> 12.05V, 5A (~60W) - 60℃)
 
 ### Modification power supply 24V 10A (model: S-240-24)
 
@@ -66,11 +68,11 @@ After this modification adjusting output voltage limits became: 21.3V - 28.77V w
 | D13 | - ||
 | A0 | Voltmeter: r1=100k, r2=10k | 24V 10A PS output (V-1) |
 | A1 | Voltmeter: r1=100k, r2=10k | 24V Solar Battaries output (V-2) |
-| A2 | Voltmeter: r1=100k, r2=10k | 5V DC-DC (from UPS 2+3) output (V-3) |
+| A2 | Voltmeter: r1=100k, r2=10k | 12V DC-DC (from UPS 2+3) output (V-3) |
 | A3 | Voltmeter: r1=100k, r2=10k | 18V 20A PS output (V-4) |
 | A4 | ACS712-20A | 24V 10A PS output (I-1) |
 | A5 | ACS712-20A | 24V Solar Battaries output (I-2) |
-| A6 | ACS712-20A | 5V DC-DC (from UPS 2+3) output (I-3) |
+| A6 | ACS712-20A | 12V DC-DC (from UPS 2+3) output (I-3) |
 | A7 | ACS712-20A | 18V 20A PS output (I-4) |
 
 ### Components photos and schematics
@@ -107,11 +109,11 @@ After this modification adjusting output voltage limits became: 21.3V - 28.77V w
 where,<br>
 [V,I,P]-1 - 24V 10A PS output<br>
 [V,I,P]-2 - 24V Solar Battaries output<br>
-[V,I,P]-3 - 5V DC-DC (from UPS 2+3) output<br>
+[V,I,P]-3 - 12V DC-DC (from UPS 2+3) output<br>
 [V,I,P]-4 - 18V 20A PS output<br>
 T-1 - 24V 10A PS<br>
-T-2 - near diodes<br>
-T-3 - 5V DC-DC (from UPS 2+3)<br>
+T-2 - 12V DC-DC2 (from UPS 2+3), near 24V 10A PS<br>
+T-3 - 12V DC-DC1 (from UPS 2+3), near 18V 20A PS<br>
 T-4 - 18V 20A PS<br>
 ***EEPROM*** - memory values are kept when the board is turned off<br>
 ***Auto-push*** - periodically send data to server
@@ -120,11 +122,36 @@ T-4 - 18V 20A PS<br>
 
 ### UPS schema and common photo
 
-[<img src="images/ps-monitoring_schema.jpg" width="220"/>](images/ps-monitoring_schema.jpg)
+[<img src="images/ps-monitoring_schema.jpeg" width="300"/>](images/ps-monitoring_schema.jpeg)
 [<img src="images/ps-monitoring_common.jpg" width="350"/>](images/ps-monitoring_common.jpg)
 
-### Monitoring board
+### PS diodes
 
-[<img src="images/ps-monitoring_1.jpg" width="300"/>](images/ps-monitoring_1.jpg)
-[<img src="images/ps-monitoring_2.jpg" width="296"/>](images/ps-monitoring_2.jpg)
-[<img src="images/ps-monitoring_3.jpg" width="305"/>](images/ps-monitoring_3.jpg)
+[<img src="images/ps-diodes_1.jpeg" width="300"/>](images/ps-diodes_1.jpeg)
+[<img src="images/ps-diodes_2.jpeg" width="282"/>](images/ps-diodes_2.jpeg)
+[<img src="images/ps-diodes_3.jpeg" width="300"/>](images/ps-diodes_3.jpeg)
+[<img src="images/ps-diodes_4.jpeg" width="131"/>](images/ps-diodes_4.jpeg)
+[<img src="images/ps-diodes_5.jpeg" width="282"/>](images/ps-diodes_5.jpeg)
+[<img src="images/ps-diodes_6.jpeg" width="150"/>](images/ps-diodes_6.jpeg)
+[<img src="images/ps-diodes_7.jpeg" width="266"/>](images/ps-diodes_7.jpeg)
+
+### DC diode
+
+[<img src="images/dc-diode_1.jpeg" width="300"/>](images/dc-diode_1.jpeg)
+[<img src="images/dc-diode_2.jpeg" width="300"/>](images/dc-diode_2.jpeg)
+[<img src="images/dc-diode_3.jpeg" width="200"/>](images/dc-diode_3.jpeg)
+
+### Monitoring board version 2
+
+**Note:** added [PZEM004T v3.0](https://innovatorsguru.com/pzem-004t-v3) and [PJON filters](https://github.com/gioblu/PJON/wiki/Mitigate-interference) (1MOm resistors and diode)
+
+[<img src="images/ps-monitoring_1_v2.jpg" alt="PS monitoring" width="300"/>](images/ps-monitoring_1_v2.jpg)
+[<img src="images/ps-monitoring_2_v2.jpg" alt="PS monitoring" width="296"/>](images/ps-monitoring_2_v2.jpg)
+[<img src="images/ps-monitoring_3_v2.jpg" alt="PS monitoring" width="305"/>](images/ps-monitoring_3_v2.jpg)
+
+### Monitoring board version 1
+
+[<img src="images/ps-monitoring_1_v1.jpg" alt="PS monitoring" width="300"/>](images/ps-monitoring_1_v1.jpg)
+[<img src="images/ps-monitoring_2_v1.jpg" alt="PS monitoring" width="310"/>](images/ps-monitoring_2_v1.jpg)
+[<img src="images/ps-monitoring_3_v1.jpg" alt="PS monitoring" width="346"/>](images/ps-monitoring_3_v1.jpg)
+[<img src="images/ps-monitoring_4_v1.jpg" alt="PS monitoring" width="326"/>](images/ps-monitoring_4_v1.jpg)

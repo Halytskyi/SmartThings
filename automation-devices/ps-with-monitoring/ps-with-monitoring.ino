@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2020 Oleh Halytskyi
+* Copyright (C) 2021 Oleh Halytskyi
 *
 * This software may be modified and distributed under the terms
 * of the Apache license. See the LICENSE file for details.
@@ -12,6 +12,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <PZEM004Tv30.h>
+#include <SoftwareSerial.h>
 
 const byte deviceID = 15;
 PJONSoftwareBitBang busA(deviceID); // TxRx bus
@@ -33,7 +34,7 @@ unsigned long prevMillisAutoPush = 0;
 unsigned long lastUpdateMillisAutoPush = 0;
 
 // Voltage params
-const float arduinoVoltage = 4.931;
+const float arduinoVoltage = 4.92;
 
 // Voltage sensors
 const byte voltageNum = 4;
@@ -81,13 +82,14 @@ unsigned long tSensorAutoPushLU[tSensorsNum] = {0, 0, 0, 0};
 // {"EEProm auto-push"}
 const byte eepromTSensorAutoPushAddr[tSensorsNum] = {13, 14, 15, 16};
 const DeviceAddress tSensorAddr[tSensorsNum] = {
-  {0x28, 0x4E, 0xD9, 0x5E, 0x39, 0x19, 0x01, 0x48}, // 12V 20A PS (T-1)
-  {0x28, 0x70, 0x3B, 0x1B, 0x39, 0x19, 0x01, 0x8E}, // 5V DC-DC (from 12V 20A) (T-2)
-  {0x28, 0xDE, 0xF9, 0x5D, 0x39, 0x19, 0x01, 0x89}, // 5V DC-DC (from 12V 25A) (T-3)
-  {0x28, 0xEF, 0xC7, 0x11, 0x39, 0x19, 0x01, 0x87}}; // 12V 25A PS (T-4)
+  {0x28, 0x4E, 0xD9, 0x5E, 0x39, 0x19, 0x01, 0x48}, // 24V 10A PS (T-1)
+  {0x28, 0x70, 0x3B, 0x1B, 0x39, 0x19, 0x01, 0x8E}, // 12V DC-DC2 (from UPS 2+3), near 24V 10A PS(T-2)
+  {0x28, 0xDE, 0xF9, 0x5D, 0x39, 0x19, 0x01, 0x89}, // 12V DC-DC1 (from UPS 2+3), near 18V 20A PS (T-3)
+  {0x28, 0xEF, 0xC7, 0x11, 0x39, 0x19, 0x01, 0x87}}; // 18V 20A PS (T-4)
 
 // PZEM004T v3.0
-PZEM004Tv30 pzem(2, 3);
+SoftwareSerial pzemSWSerial(2, 3);
+PZEM004Tv30 pzem;
 const byte acLineParamsNum = 6;
 // {"command"}
 const char *const acLineParamCmd[acLineParamsNum] = {"L-v", "L-c", "L-p", "L-e", "L-f", "L-pf"};
@@ -107,19 +109,19 @@ float get_voltage(const char command[]) {
   const byte voltageCountValues = 50; // how many values must be averaged
 
   if (strcmp(command, "V-1") == 0) {
-    voltagePin = 0; // 12V 20A PS output
+    voltagePin = 0; // 24V 10A PS output
     r1 = 101300; // R1 = 100k
     r2 = 9700; // R2 = 10k
   } else if (strcmp(command, "V-2") == 0) {
-    voltagePin = 1; // 5V DC-DC (from 12V 20A) output
+    voltagePin = 1; // 24V Solar Battaries output
     r1 = 100000; // R1 = 100k
     r2 = 9700; // R2 = 10k
   } else if (strcmp(command, "V-3") == 0) {
-    voltagePin = 2; // 5V DC-DC (from 12V 25A) output
+    voltagePin = 2; // 12V DC-DC (from UPS 2+3) output
     r1 = 100000; // R1 = 100k
-    r2 = 9580; // R2 = 10k
+    r2 = 9610; // R2 = 10k
   } else if (strcmp(command, "V-4") == 0) {
-    voltagePin = 3; // 12V 25A PS output
+    voltagePin = 3; // 18V 20A PS output
     r1 = 99650; // R1 = 100k
     r2 = 9700; // R2 = 10k
   }
@@ -131,7 +133,7 @@ float get_voltage(const char command[]) {
   voltageValue = voltageValue / voltageCountValues;
   float v  = (voltageValue * arduinoVoltage) / 1024.0;
   voltageValue = v / (r2 / (r1 + r2));
-  if (voltageValue < 0.1) voltageValue = 0.0;
+  if (voltageValue < 0.99) voltageValue = 0.0;
 
   return voltageValue;
 }
@@ -145,20 +147,20 @@ float get_current(const char command[]) {
   const byte currentCountValues = 50; // how many values must be averaged
 
   if (strcmp(command, "I-1") == 0) {
-    currentPin = 6; // 12V 20A PS output
+    currentPin = 6; // 24V 10A PS output
     offsetVoltage = 2.461;
     direction = 1;
   } else if (strcmp(command, "I-2") == 0) {
-    currentPin = 7; // 5V DC-DC (from 12V 20A) output
+    currentPin = 7; // 24V Solar Battaries output
     offsetVoltage = 2.465;
     direction = 1;
   } else if (strcmp(command, "I-3") == 0) {
-    currentPin = 4; // 5V DC-DC (from 12V 25A) output
-    offsetVoltage = 2.457;
+    currentPin = 4; // 12V DC-DC (from UPS 2+3) output
+    offsetVoltage = 2.450;
     direction = 0;
   } else if (strcmp(command, "I-4") == 0) {
-    currentPin = 5; // 12V 25A PS output
-    offsetVoltage = 2.453;
+    currentPin = 5; // 18V 20A PS output
+    offsetVoltage = 2.443;
     direction = 0;
   }
 
@@ -596,6 +598,8 @@ void setup() {
   for (byte i = 0; i < tSensorsNum; i += 1) {
     sensors.setResolution(tSensorAddr[i], 11);
   }
+
+  pzem = PZEM004Tv30(pzemSWSerial);
 
   busA.strategy.set_pin(pinBusA);
   busA.set_receiver(receiver_function);
