@@ -25,9 +25,9 @@ Power Supply Monitoring module was developed for measure voltage, current and po
 - 1 x Power supply 18V 20A (model: JC-360-18)
 - 1 x Power supply 24V 10A (model: S-240-24)
 - 2 x 300W 20A DC-DC Buck Converter Step Down Modules
-- 2 x MBR6045PT diodes
-- 2 x MBR60100CT diodes
-- 1 x MBR4045CT diode
+- 2 x MBR6045PT diodes (for mixing lines from 3 inputs)
+- 2 x MBR60100CT diodes (for chargers)
+- 1 x MBR4045CT diode (for DC convertors)
 - 2 x 34x12x38mm heatsink for MBR6045PT diodes (19.3V -> 18.8V, 8A (~150W) - 70℃; 22V -> 21.47V, 7A (~150W) - 60℃)
 - 2 x 34x12x30mm heatsink for MBR60100CT diodes (19.1V -> 18.4V, 3A (~55W) - 48℃; 22.6V -> 21.8V, 3A (~65W) - 50℃)
 - 1 x 34x12x30mm heatsink for MBR4045CT diode (12.6V -> 12.05V, 5A (~60W) - 60℃)
@@ -123,7 +123,12 @@ T-4 - 18V 20A PS<br>
 ### UPS schema and common photo
 
 [<img src="images/ps-monitoring_schema.jpeg" width="300"/>](images/ps-monitoring_schema.jpeg)
-[<img src="images/ps-monitoring_common.jpg" width="350"/>](images/ps-monitoring_common.jpg)
+[<img src="images/ps-monitoring_common_1.jpeg" width="350"/>](images/ps-monitoring_common_1.jpeg)
+[<img src="images/ps-monitoring_common_2.jpeg" width="408"/>](images/ps-monitoring_common_2.jpeg)
+[<img src="images/ps-monitoring_common_3.jpeg" width="179"/>](images/ps-monitoring_common_3.jpeg)
+[<img src="images/ps-monitoring_common_4.jpeg" width="350"/>](images/ps-monitoring_common_4.jpeg)
+[<img src="images/ps-monitoring_common_5.jpeg" width="152"/>](images/ps-monitoring_common_5.jpeg)
+[<img src="images/ps-monitoring_common_6.jpeg" width="700"/>](images/ps-monitoring_common_6.jpeg)
 
 ### PS diodes
 
