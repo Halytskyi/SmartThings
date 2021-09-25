@@ -14,7 +14,7 @@
     - [Arduino connections](#arduino-connections)
     - [Components](#components)
   - [Commands](#commands)
-  - [Connect SPI with two Master SBC](#connect-spi-with-two-master-sbc)
+  - [Connect SPI with two Master SBCs](#connect-spi-with-two-master-sbcs)
   - [Tests](#tests)
     - [DC-DC 5A Step-down Converter XL4015E1](#dc-dc-5a-step-down-converter-xl4015e1)
       - [Load tests](#load-tests)
@@ -205,7 +205,7 @@ Module of distribution input lines and fuses for 1-4 modules
 - status `1`: command accepted for change state to `enabled`, need make 2nd call `us[1-2]` within 3 seconds to verify if state changed (works only for verifying output #1);
 - status `2`: (only if was 2nd call `us[1-2]` within 3 seconds) means that output wasn't swithched (works only for verifying output #1)
 
-## Connect SPI with two Master SBC
+## Connect SPI with two Master SBCs
 
 For High Availability (to be able control outputs even if one of the control SBC is unavailable) I need connect the control board #1 with two SBC Masters. The simple connection both Masters on the same SPI is not working, therefore, I used relay and by signal from Master02 I can switch SPI from Master01 to Master02 (when Master01 has issues).
 
