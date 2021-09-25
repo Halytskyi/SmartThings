@@ -211,9 +211,9 @@ For High Availability (to be able control outputs even if one of the control SBC
 
 DR21A01 Mini DC 5V relay:
 
-<img src="images/dr21a01_mini_5v_relay_1.jpeg" width="150"/>
-<img src="images/dr21a01_mini_5v_relay_2.jpeg" width="152"/>
-<img src="images/dr21a01_mini_5v_relay_3.jpeg" width="137"/>
+[<img src="images/dr21a01_mini_5v_relay_1.jpeg" width="150"/>](images/dr21a01_mini_5v_relay_1.jpeg)
+[<img src="images/dr21a01_mini_5v_relay_2.jpeg" width="152"/>](images/dr21a01_mini_5v_relay_2.jpeg)
+[<img src="images/dr21a01_mini_5v_relay_3.jpeg" width="137"/>](images/dr21a01_mini_5v_relay_3.jpeg)
 
 Connections:
 
