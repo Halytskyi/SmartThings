@@ -316,12 +316,12 @@ void setup() {
     for (byte i = 0; i < controlOutputsNum; i += 1) {
       digitalWrite(controlOutputsPin[i], EEPROM.read(eepromControlOutputsStateAddr[i]));
     }
+    delay(700);
     for (byte i = 0; i < usbSwitchSelectorsNum; i += 1) {
       if (digitalRead(usbSwitchSelectorsLed1Pin[i]) != EEPROM.read(eepromUSBSwitchSelectorsLed1StateAddr[i])) {
         digitalWrite(usbSwitchSelectorsButtonPin[i], HIGH);
         delay(300);
         digitalWrite(usbSwitchSelectorsButtonPin[i], LOW);
-        strcpy(sendStatus, "1");
       }
     }
   }

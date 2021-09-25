@@ -48,9 +48,9 @@ ina219Sensors = [
   {"name": "Worker02 (mini PC)", "addr": 0x47, "shuntOhm": 0.05},
   {"name": "Worker03 (mini PC)", "addr": 0x48, "shuntOhm": 0.05},
   {"name": "Ethernet switch", "addr": 0x49, "shuntOhm": 0.1},
-  {"name": "External device #1", "addr": 0x4C, "shuntOhm": 0.1},
+  {"name": "External device #1", "addr": 0x4A, "shuntOhm": 0.1},
   {"name": "External device #2", "addr": 0x4B, "shuntOhm": 0.1},
-  {"name": "External device #3", "addr": 0x4A, "shuntOhm": 0.1}
+  {"name": "External device #3", "addr": 0x4C, "shuntOhm": 0.1}
 ]
 
 # Output statuses
@@ -156,7 +156,7 @@ def ps_control(command, value):
       print(usbSwitchSelector, "output #" + str(valueInt2), answerMid, answer_end)
 
 def read_sensor(ina219Sensor, ina219Address, shuntOhm):
-    ina = INA219(shuntOhm, address=ina219Address)
+    ina = INA219(shuntOhm, busnum=i2cBusAddr, address=ina219Address)
     try:
       ina.configure()
     except:

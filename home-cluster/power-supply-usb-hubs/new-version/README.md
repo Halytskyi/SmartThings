@@ -14,6 +14,7 @@
     - [Arduino connections](#arduino-connections)
     - [Components](#components)
   - [Commands](#commands)
+  - [Connect SPI with two Master SBC](#connect-spi-with-two-master-sbc)
   - [Tests](#tests)
     - [DC-DC 5A Step-down Converter XL4015E1](#dc-dc-5a-step-down-converter-xl4015e1)
       - [Load tests](#load-tests)
@@ -39,22 +40,18 @@
 
 ### Main functions
 
-- Control of:
+- Remote devices control: *On*, *Off* (state save in EEPROM) and *Reboot* (5 seconds) of:
   - 4 single board computers (5V);
   - 3 mini PCs (12V);
   - Ethernet/USB switches, external devices like modem, wi-fi routers, etc.
-
-- Remote devices control: *On*, *Off* (state save in EEPROM) and *Reboot* (5 seconds);
-- Button outputs control: Turn On devices by buttons (on case if remote control for some reasons not available);
+- High Availability: control board connected with two SBC Masters;
+- Button outputs control: turn On devices by buttons (on case if remote control for some reasons not available). Devices can't be turned off by button;
 - Remote reading voltage, current and power for all outputs;
 - Choosing input power source from 2 x 14-24V lines for any output: one line from "power line" and "solar" sources (UPS output #4), another one with additional backup (UPS output #2 + #3)
 
 ### Specification
 
 - **i2c address**: *0x03*
-- **Button**: Turn ON devices connected to D2-D12 Arduino Pins
-
-***Note:*** Devices can't be turned off by buttons
 
 ### Tools
 
@@ -208,6 +205,48 @@ Module of distribution input lines and fuses for 1-4 modules
 - status `1`: command accepted for change state to `enabled`, need make 2nd call `us[1-2]` within 3 seconds to verify if state changed (works only for verifying output #1);
 - status `2`: (only if was 2nd call `us[1-2]` within 3 seconds) means that output wasn't swithched (works only for verifying output #1)
 
+## Connect SPI with two Master SBC
+
+For High Availability (to be able control outputs even if one of the control SBC is unavailable) I need connect the control board #1 with two SBC Masters. The simple connection both Masters on the same SPI is not working, therefore, I used relay and by signal from Master02 I can switch SPI from Master01 to Master02 (when Master01 has issues).
+
+DR21A01 Mini DC 5V relay:
+
+<img src="images/dr21a01_mini_5v_relay_1.jpeg" width="150"/>
+<img src="images/dr21a01_mini_5v_relay_2.jpeg" width="152"/>
+<img src="images/dr21a01_mini_5v_relay_3.jpeg" width="137"/>
+
+Connections:
+
+**GND:** Master02, P20 Gnd  
+**VCC:** Master02, P2 5.0V  
+**IN:** Master02, P16 101 GPIO3_A5  
+**COM1:** board #1, A4, i2c SDA  
+**COM2:** board #1, A5, i2c SCL  
+**NC1:** Master01, P27 68 GPIO2_A4 I2C1_SDA_PMIC  
+**NC2:** Master01, P28 69 GPIO2_A5 I2C1_SLC_PMIC  
+**NO1:** Master02, P27 68 GPIO2_A4 I2C1_SDA_PMIC  
+**NO2:** Master02, P28 69 GPIO2_A5 I2C1_SLC_PMIC
+
+Rock64 pinouts:
+
+<img src="images/rock64-pinouts.jpeg"/>
+
+Example script of GPIO configuration on Master02:
+
+```bash
+# Relay control (PIN16 - GPIO3_A5)
+# Check if gpio is already exported
+if [ ! -d /sys/class/gpio/gpio101 ]
+then
+  echo 101 > /sys/class/gpio/export
+  sleep 1 # Short delay while GPIO permissions are set up
+fi
+echo "out" > /sys/class/gpio/gpio101/direction
+echo 0 > /sys/class/gpio/gpio101/value
+```
+
+Relay can be enabled/disabled by writing `1 or 0` to `/sys/class/gpio/gpio101/value`
+
 ## Tests
 
 ### DC-DC 5A Step-down Converter XL4015E1
@@ -275,7 +314,7 @@ Where to buy: https://www.aliexpress.com/item/32967000523.html?spm=a2g0s.9042311
 
 ## Schematic
 
-![Schematic](images/Schematic.png)
+![Schematic](images/Schematic.jpeg)
 
 ## Device Photos
 
