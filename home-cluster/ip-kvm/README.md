@@ -40,8 +40,8 @@ IP-KVM based on Raspberry Pi, for x64 architecture uses PiKVM: [https://github.c
 
 ### Screenshots of UI
 
-[<img src="images/ui_screenshot_1.jpeg" width="450"/>](images/ui_screenshot_1.jpeg)
-[<img src="images/ui_screenshot_2.jpeg" width="450"/>](images/ui_screenshot_2.jpeg)
+[<img src="images/ui_screenshot_1.jpeg" width="500"/>](images/ui_screenshot_1.jpeg)
+[<img src="images/ui_screenshot_2.jpeg" width="500"/>](images/ui_screenshot_2.jpeg)
 
 ## Requirements and components
 
