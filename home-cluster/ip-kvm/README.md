@@ -109,7 +109,7 @@ IP-KVM based on Raspberry Pi, for x64 architecture uses PiKVM: [https://github.c
 ### Power supply
 
 This KVM switch doesn't have separate input for power supply, therefore, it powering via usb-c ports from PCs. Also, it has "back powering issue" as power also coming to HDMI output port and USB HID ports (from Raspberry Pi) - see details on [Multiport KVM over IP](https://github.com/pikvm/pikvm/blob/master/pages/multiport.md), as result, after shutdown Raspberry Pi it wont't be started and will be needed push power button on KVM switch.
-To solve this issue I desided make own USB cables without power (+5V) wire (except "micro USB" to "USB" cable for Arduino HID, as it required +5V). As I need only 3 KVM ports I use 4rd port for powering KVM switch from board #2. By this modification KVM switch powering only when Raspberry Pi started.  
+To solve this issue I desided make own USB cables without power (+5V) wire (except "micro USB" to "USB" cable for Arduino HID, as it required +5V). As I need only 3 KVM ports I use 4rd port for powering KVM switch from board. By this modification KVM switch powering only when Raspberry Pi started.  
 For solving issue with "back powering" via HDMI ports I use "Techole 4K HDMI Splitter" which powered via the same line as KVM:
 
 [<img src="images/techole_hdmi_splitter_1.jpeg" width="230"/>](images/techole_hdmi_splitter_1.jpeg)
