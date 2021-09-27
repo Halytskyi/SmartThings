@@ -1,0 +1,68 @@
+kvmd:
+    hid:
+        type: serial
+        reset_pin: 4
+        device: /dev/kvmd-hid
+    atx:
+        type: disabled
+    gpio:
+        scheme:
+            # KVM Switch
+            kvm-led1:
+                pin: 17
+                mode: input
+            kvm-button1:
+                pin: 27
+                mode: output
+                switch: false
+            kvm-led2:
+                pin: 22
+                mode: input
+            kvm-button2:
+                pin: 23
+                mode: output
+                switch: false
+            kvm-led3:
+                pin: 24
+                mode: input
+            kvm-button3:
+                pin: 25
+                mode: output
+                switch: false
+            # Workers
+            worker01-led:
+                pin: 6
+                mode: input
+            worker01-button:
+                pin: 5
+                mode: output
+                switch: false
+            worker02-led:
+                pin: 26
+                mode: input
+            worker02-button:
+                pin: 13
+                mode: output
+                switch: false
+            worker03-led:
+                pin: 16
+                mode: input
+            worker03-button:
+                pin: 12
+                mode: output
+                switch: false
+        view:
+            header:
+                title: Switches
+            table:
+                - ["#KVM Switch"]
+                - []
+                - ["#Worker01:", kvm-led1, kvm-button1|Select]
+                - ["#Worker02:", kvm-led2, kvm-button2|Select]
+                - ["#Worker03:", kvm-led3, kvm-button3|Select]
+                - []
+                - ["#Workers"]
+                - []
+                - ["#Worker01:", worker01-led, worker01-button|On/Off]
+                - ["#Worker02:", worker02-led, worker02-button|On/Off]
+                - ["#Worker03:", worker03-led, worker03-button|On/Off]
