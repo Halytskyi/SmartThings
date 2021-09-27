@@ -37,6 +37,7 @@ IP-KVM based on Raspberry Pi, for x64 architecture uses PiKVM: [https://github.c
   - Access via Web UI or VNC;
   - Control power (on mini PCs) by power buttons via Web UI;
   - Check power status (on mini PCs) by reading power LED state via Web UI.
+- Using Raspberry Pi as DHCP and tFTP server for install OS on nodes via PXE.
 
 ### Screenshots of UI
 
