@@ -48,7 +48,7 @@ IP-KVM based on Raspberry Pi, for x64 architecture uses PiKVM: [https://github.c
 
 ### Raspberry Pi
 
-- 1 x Raspberry Pi 4 (2 GB)
+- 1 x Raspberry Pi 4 (2 GB RAM)
 - 1 x 32 GB MicroSD card
 
 ### Board

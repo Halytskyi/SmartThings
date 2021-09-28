@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2019 Oleh Halytskyi
+* Copyright (C) 2021 Oleh Halytskyi
 *
 * This software may be modified and distributed under the terms
 * of the Apache license. See the LICENSE file for details.
@@ -10,215 +10,263 @@
 #include <EEPROM.h>
 
 #define SLAVE_ADDRESS 0x03
-#define ADDR_VERSION 255         // Location of the software version in EEPROM
-#define CURRENT_EEPROM_VERSION 2 // We are on revision 1 of the EEPROM storage structure (0xFF or 255 is never a valid value for version)
 
-// Cluster outputs
-#define num_cluster_outputs 9
-// {<output pin>, <status>, <status_eeprom_addr>}
-int cluster_outputs[num_cluster_outputs][3] = {
-  {6, 0, 1},
-  {2, 0, 2},
-  {3, 0, 3},
-  {10, 0, 4},
-  {9, 0, 5},
-  {8, 0, 6},
-  {5, 0, 7},
-  {4, 0, 8},
-  {7, 0, 9}
-};
+const byte ADDR_VERSION = 255;         // Location of the software version in EEPROM
+const byte CURRENT_EEPROM_VERSION = 1; // We are on revision 1 of the EEPROM storage structure (0xFF or 255 is never a valid value for version)
 
-// IP KVM outputs
-#define num_ipkvm_outputs 5
-// {<output pin>, <status>, <status_eeprom_addr>}
-int ipkvm_outputs[num_ipkvm_outputs][3] = {
-  {11, 0, 10},
-  {12, 0, 11},
-  {13, 0, 12},
-  {14, 0, 13},
-  {15, 0, 14}
-};
+const char badCommandReply[] = "err";
+const char endReply[] = ";";
 
-const int buttonClusterPin = 16;
-const int buttonIPKVMPin = 17;
-int buttonTime = 2000; // 2 seconds
-char sendStatus[9] = "";
-String errorMsg = "WrongCMD";
-int index = 0;
-int rebootPin = -1;
-int rebootTime = 5000; // 5 seconds
-int rebootStatus = 0;
+// Control outputs
+const byte controlOutputsNum = 11;
+// {"pin"}
+const byte controlOutputsPin[controlOutputsNum] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+// {"EEProm control outputs state"}
+const byte eepromControlOutputsStateAddr[controlOutputsNum] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+// Reboot params
+byte rebootPin = 255;
+byte rebootStatus = 0;
+const unsigned int rebootTime = 5000; // 5 seconds
 
+// USB switch selectors
+const byte usbSwitchSelectorsNum = 2;
+// {"pin"}
+const byte usbSwitchSelectorsButtonPin[usbSwitchSelectorsNum] = {13, 14};
+// {"pin"}
+const byte usbSwitchSelectorsLed1Pin[usbSwitchSelectorsNum] = {15, 16};
+// {"EEProm for Led #1 state"}
+const byte eepromUSBSwitchSelectorsLed1StateAddr[usbSwitchSelectorsNum] = {12, 13};
+// USB switch params for switching inputs
+byte usbSwitchSelectorIndex = 255;
+byte usbSwitchSelectorLed1StatusBeforeSwitch = 255;
+unsigned long prevMillisClearBeforeSwitch = 0;
 
-void reboot() {
-  if (rebootPin != -1) {
-    rebootStatus = 1;
-    digitalWrite(rebootPin, LOW);
-    delay(rebootTime);
-    digitalWrite(rebootPin, HIGH);
-    rebootPin = -1;
-    rebootStatus = 0;
-  }
-}
+const byte buttonControlPin = 17;
+const unsigned int buttonTime = 2000; // 2 seconds
 
-void clearArray() {
-  for (unsigned int i=0; i < sizeof(sendStatus);  ++i)
-    sendStatus[i] = (char)0;
-}
+char sendStatus[controlOutputsNum + 1];
+byte index = 0;
 
-void receiveData(int byteCount) {
-  clearArray();
-  String response;
-  int receiveByte = 0;
-  char command[3] = {'\0', '\0', '\0'};
-  while (Wire.available()) {
-    command[receiveByte] = Wire.read();
-    receiveByte++;
-  }
-  String type = String(command[0]);
-  String cmd = String(command[1]);
-  int value = command[2] - '0';
-
-  if (type == "c") {
-    if (cmd == "e") {
-      if (value >= 1 && value <= num_cluster_outputs) {
-        if (rebootPin != cluster_outputs[value - 1][0]) {
-          digitalWrite(cluster_outputs[value - 1][0], HIGH);
-          cluster_outputs[value - 1][1] = 1;
-          EEPROM.update(cluster_outputs[value - 1][2], 1);
-          response = String(digitalRead(cluster_outputs[value - 1][0]));
-        } else {
-          response = "2";
-        }
-        response.toCharArray(sendStatus, 2);
-      } else {
-        response = errorMsg;
-        response.toCharArray(sendStatus, 9);
-      }
-    } else if (cmd == "d") {
-      if (value >= 1 && value <= num_cluster_outputs) {
-        if (rebootPin != cluster_outputs[value - 1][0]) {
-          digitalWrite(cluster_outputs[value - 1][0], LOW);
-          cluster_outputs[value - 1][1] = 0;
-          EEPROM.update(cluster_outputs[value - 1][2], 0);
-          response = String(digitalRead(cluster_outputs[value - 1][0]));
-        } else {
-          response = "2";
-        }
-        response.toCharArray(sendStatus, 2);
-      } else {
-        response = errorMsg;
-        response.toCharArray(sendStatus, 9);
-      }
-    } else if (cmd == "v") {
-      if (value >= 1 && value <= num_cluster_outputs) {
-        response = String(digitalRead(cluster_outputs[value - 1][0]));
-        response.toCharArray(sendStatus, 2);
-      } else if (value == 0) {
-        for (int i = 0; i < num_cluster_outputs; i += 1) {
-          response += cluster_outputs[i][1];
-        }
-        response.toCharArray(sendStatus, num_cluster_outputs + 1);
-      } else {
-        response = errorMsg;
-        response.toCharArray(sendStatus, 9);
-      }
-    } else if (cmd == "r") {
-      if (value >= 1 && value <= num_cluster_outputs) {
-        response = String(digitalRead(cluster_outputs[value - 1][0]));
-        if (response == "1") {
-          if (rebootStatus == 0) {
-            rebootPin = cluster_outputs[value - 1][0];
-          } else {
-            response = "2";
-          }
-        }
-        response.toCharArray(sendStatus, 2);
-      } else {
-        response = errorMsg;
-        response.toCharArray(sendStatus, 9);
-      }
-    } else {
-      response = errorMsg;
-      response.toCharArray(sendStatus, 9);
-    }
-  } else if (type == "i") {
-    if (cmd == "e") {
-      if (value >= 1 && value <= num_ipkvm_outputs) {
-        digitalWrite(ipkvm_outputs[value - 1][0], HIGH);
-        ipkvm_outputs[value - 1][1] = 1;
-        EEPROM.update(ipkvm_outputs[value - 1][2], 1);
-        response = String(digitalRead(ipkvm_outputs[value - 1][0]));
-        response.toCharArray(sendStatus, 2);
-      } else {
-        response = errorMsg;
-        response.toCharArray(sendStatus, 9);
-      }
-    } else if (cmd == "d") {
-      if (value >= 1 && value <= num_ipkvm_outputs) {
-        digitalWrite(ipkvm_outputs[value - 1][0], LOW);
-        ipkvm_outputs[value - 1][1] = 0;
-        EEPROM.update(ipkvm_outputs[value - 1][2], 0);
-        response = String(digitalRead(ipkvm_outputs[value - 1][0]));
-        response.toCharArray(sendStatus, 2);
-      } else {
-        response = errorMsg;
-        response.toCharArray(sendStatus, 9);
-      }
-    } else if (cmd == "v") {
-      if (value >= 1 && value <= num_ipkvm_outputs) {
-        response = String(digitalRead(ipkvm_outputs[value - 1][0]));
-        response.toCharArray(sendStatus, 2);
-      } else if (value == 0) {
-        for (int i = 0; i < num_ipkvm_outputs; i += 1) {
-          response += ipkvm_outputs[i][1];
-        }
-        response.toCharArray(sendStatus, num_ipkvm_outputs + 1);
-      } else {
-        response = errorMsg;
-        response.toCharArray(sendStatus, 9);
-      }
-    } else {
-      response = errorMsg;
-      response.toCharArray(sendStatus, 9);
-    }
-  } else {
-    response = errorMsg;
-    response.toCharArray(sendStatus, 9);
-  }
-}
 
 void sendData() {
   Wire.write(sendStatus[index]);
   ++index;
-  if (index >= 9) {
+  if (index >= strlen(sendStatus)) {
     index = 0;
   }
 }
 
-void buttonsControl() {
-  // Button for cluster control
-  int buttonClusterStatus = digitalRead(buttonClusterPin);
-  if (buttonClusterStatus == LOW) {
-    for (int i = 0; i < num_cluster_outputs; i += 1) {
-      if (digitalRead(cluster_outputs[i][0]) == 0) {
-        digitalWrite(cluster_outputs[i][0], HIGH);
-        cluster_outputs[i][1] = 1;
-        EEPROM.update(cluster_outputs[i][2], 1);
-        break;
-      }
-    }
-    delay(buttonTime);
+void receiveData(int byteCount) {
+  byte receiveByte = 0;
+  char command[5];
+  char value[3];
+  while (Wire.available()) {
+    command[receiveByte] = Wire.read();
+    receiveByte++;
   }
+  command[receiveByte] = 0;
+  if (isDigit(command[2])) {
+    value[0] = command[2];
+    if (isDigit(command[3])) {
+      value[1] = command[3];
+      value[2] = 0;
+    } else {
+      value[1] = 0;
+    }
+  } else {
+    strcpy(sendStatus, badCommandReply);
+    strcat(sendStatus, endReply);
+    return;
+  }
+  byte value_int = atoi(value);
 
-  // Button for IP KVM control
-  int buttonIPKVMStatus = digitalRead(buttonIPKVMPin);
-  if (buttonIPKVMStatus == LOW) {
-    for (int i = 0; i < num_ipkvm_outputs; i += 1) {
-      if (digitalRead(ipkvm_outputs[i][0]) == 0) {
-        digitalWrite(ipkvm_outputs[i][0], HIGH);
-        ipkvm_outputs[i][1] = 1;
-        EEPROM.update(ipkvm_outputs[i][2], 1);
+  if (command[0] == 'c') {
+    if (command[1] == 'e') {
+      if (value_int >= 1 && value_int <= controlOutputsNum) {
+        if (rebootPin != controlOutputsPin[value_int - 1]) {
+          digitalWrite(controlOutputsPin[value_int - 1], HIGH);
+          EEPROM.update(eepromControlOutputsStateAddr[value_int - 1], 1);
+          itoa(digitalRead(controlOutputsPin[value_int - 1]), sendStatus, 10);
+          strcat(sendStatus, endReply);
+          return;
+        } else {
+          strcpy(sendStatus, "2");
+          strcat(sendStatus, endReply);
+          return;
+        }
+      } else {
+        strcpy(sendStatus, badCommandReply);
+        strcat(sendStatus, endReply);
+        return;
+      }
+    } else if (command[1] == 'd') {
+      if (value_int >= 1 && value_int <= controlOutputsNum) {
+        if (rebootPin != controlOutputsPin[value_int - 1]) {
+          digitalWrite(controlOutputsPin[value_int - 1], LOW);
+          EEPROM.update(eepromControlOutputsStateAddr[value_int - 1], 0);
+          itoa(digitalRead(controlOutputsPin[value_int - 1]), sendStatus, 10);
+          strcat(sendStatus, endReply);
+          return;
+        } else {
+          strcpy(sendStatus, "2");
+          strcat(sendStatus, endReply);
+          return;
+        }
+      } else {
+        strcpy(sendStatus, badCommandReply);
+        strcat(sendStatus, endReply);
+        return;
+      }
+    } else if (command[1] == 'r') {
+      if (value_int >= 1 && value_int <= controlOutputsNum) {
+        byte rResponse = digitalRead(controlOutputsPin[value_int - 1]);
+        if (rResponse == 1) {
+          if (rebootStatus == 0) {
+            rebootPin = controlOutputsPin[value_int - 1];
+            strcpy(sendStatus, "1");
+            strcat(sendStatus, endReply);
+            return;
+          } else {
+            strcpy(sendStatus, "2");
+            strcat(sendStatus, endReply);
+            return;
+          }
+        } else {
+          strcpy(sendStatus, "0");
+          strcat(sendStatus, endReply);
+          return;
+        }
+      } else {
+        strcpy(sendStatus, badCommandReply);
+        strcat(sendStatus, endReply);
+        return;
+      }
+    } else if (command[1] == 's') {
+      if (value_int >= 1 && value_int <= controlOutputsNum) {
+        itoa(digitalRead(controlOutputsPin[value_int - 1]), sendStatus, 10);
+        strcat(sendStatus, endReply);
+        return;
+      } else if (value_int == 0) {
+        for (byte i = 0; i < controlOutputsNum; i += 1) {
+          sendStatus[i] = digitalRead(controlOutputsPin[i]) + '0';
+        }
+        sendStatus[controlOutputsNum] = 0;
+        return;
+      } else {
+        strcpy(sendStatus, badCommandReply);
+        strcat(sendStatus, endReply);
+        return;
+      }
+    } else {
+      strcpy(sendStatus, badCommandReply);
+      strcat(sendStatus, endReply);
+      return;
+    }
+  } else if (command[0] == 'u') {
+    if (command[1] == 'e') {
+      byte usbSwitchSelectorsLed1Status;
+      if (value_int == 11) {
+        usbSwitchSelectorIndex = 0;
+        usbSwitchSelectorsLed1Status = 1;
+      } else if (value_int == 12) {
+        usbSwitchSelectorIndex = 0;
+        usbSwitchSelectorsLed1Status = 0;
+      } else if (value_int == 21) {
+        usbSwitchSelectorIndex = 1;
+        usbSwitchSelectorsLed1Status = 1;
+      } else if (value_int == 22) {
+        usbSwitchSelectorIndex = 1;
+        usbSwitchSelectorsLed1Status = 0;
+      } else {
+        strcpy(sendStatus, badCommandReply);
+        strcat(sendStatus, endReply);
+        return;
+      }
+      if (digitalRead(usbSwitchSelectorsLed1Pin[usbSwitchSelectorIndex]) != usbSwitchSelectorsLed1Status) {
+        usbSwitchSelectorLed1StatusBeforeSwitch = digitalRead(usbSwitchSelectorsLed1Pin[usbSwitchSelectorIndex]);
+        prevMillisClearBeforeSwitch = millis();
+        EEPROM.update(eepromUSBSwitchSelectorsLed1StateAddr[usbSwitchSelectorIndex], usbSwitchSelectorsLed1Status);
+        strcpy(sendStatus, "1");
+      } else {
+        usbSwitchSelectorIndex = 255;
+        strcpy(sendStatus, "0");
+      }
+      strcat(sendStatus, endReply);
+      return;
+    } else if (command[1] == 's') {
+      if (value_int == 0) {
+        for (byte i = 0; i < usbSwitchSelectorsNum; i += 1) {
+          sendStatus[i] = digitalRead(usbSwitchSelectorsLed1Pin[i]) + '0';
+        }
+        sendStatus[usbSwitchSelectorsNum] = 0;
+      } else if (value_int == 1) {
+        if (usbSwitchSelectorLed1StatusBeforeSwitch != 255 and usbSwitchSelectorLed1StatusBeforeSwitch == digitalRead(usbSwitchSelectorsLed1Pin[0])) {
+          usbSwitchSelectorLed1StatusBeforeSwitch = 255;
+          strcpy(sendStatus, "2");
+        } else {
+          itoa(digitalRead(usbSwitchSelectorsLed1Pin[0]), sendStatus, 10);
+        }
+      } else if (value_int == 2) {
+        if (usbSwitchSelectorLed1StatusBeforeSwitch != 255 and usbSwitchSelectorLed1StatusBeforeSwitch == digitalRead(usbSwitchSelectorsLed1Pin[1])) {
+          usbSwitchSelectorLed1StatusBeforeSwitch = 255;
+          strcpy(sendStatus, "2");
+        } else {
+          itoa(digitalRead(usbSwitchSelectorsLed1Pin[1]), sendStatus, 10);
+        }
+      } else {
+        strcpy(sendStatus, badCommandReply);
+      }
+      strcat(sendStatus, endReply);
+      return;
+    } else {
+      strcpy(sendStatus, badCommandReply);
+      strcat(sendStatus, endReply);
+      return;
+    }
+  } else {
+    strcpy(sendStatus, badCommandReply);
+    strcat(sendStatus, endReply);
+    return;
+  }
+}
+
+void reboot() {
+  if (rebootPin != 255) {
+    rebootStatus = 1;
+    digitalWrite(rebootPin, LOW);
+    delay(rebootTime);
+    digitalWrite(rebootPin, HIGH);
+    rebootPin = 255;
+    rebootStatus = 0;
+  }
+}
+
+void usbSwitchSelector() {
+  if (usbSwitchSelectorIndex != 255) {
+    digitalWrite(usbSwitchSelectorsButtonPin[usbSwitchSelectorIndex], HIGH);
+    delay(300);
+    digitalWrite(usbSwitchSelectorsButtonPin[usbSwitchSelectorIndex], LOW);
+    usbSwitchSelectorIndex = 255;
+  }
+}
+
+void usbSwitchSelectorClearBeforeSwitch() {
+  unsigned long curMillis = millis(); // time now in ms
+  if (curMillis - prevMillisClearBeforeSwitch >= 3000) {
+    if (usbSwitchSelectorLed1StatusBeforeSwitch != 255) {
+      usbSwitchSelectorLed1StatusBeforeSwitch = 255;
+    }
+  }
+}
+
+void buttonsControl() {
+  // Button for control outputs
+  byte buttonControlStatus = digitalRead(buttonControlPin);
+  if (buttonControlStatus == HIGH) {
+    for (byte i = 0; i < controlOutputsNum; i += 1) {
+      if (digitalRead(controlOutputsPin[i]) == 0) {
+        digitalWrite(controlOutputsPin[i], HIGH);
+        EEPROM.update(eepromControlOutputsStateAddr[i], 1);
         break;
       }
     }
@@ -228,6 +276,8 @@ void buttonsControl() {
 
 void loop() {
   reboot();
+  usbSwitchSelector();
+  usbSwitchSelectorClearBeforeSwitch();
   buttonsControl();
   delay(100);
 }
@@ -239,35 +289,40 @@ void setup() {
   Wire.onRequest(sendData);
 
   // Initialize input PINs
-  pinMode(buttonClusterPin, INPUT);
-  pinMode(buttonIPKVMPin, INPUT);
+  pinMode(buttonControlPin, INPUT);
+  for (byte i = 0; i < usbSwitchSelectorsNum; i += 1) {
+    pinMode(usbSwitchSelectorsLed1Pin[i], INPUT);
+  }
 
   // Initialize output PINs
-  for (int i = 0; i < num_cluster_outputs; i += 1) {
-    pinMode(cluster_outputs[i][0], OUTPUT);
+  for (byte i = 0; i < controlOutputsNum; i += 1) {
+    pinMode(controlOutputsPin[i], OUTPUT);
   }
-  for (int i = 0; i < num_ipkvm_outputs; i += 1) {
-    pinMode(ipkvm_outputs[i][0], OUTPUT);
+  for (byte i = 0; i < usbSwitchSelectorsNum; i += 1) {
+    pinMode(usbSwitchSelectorsButtonPin[i], OUTPUT);
   }
 
   // Read status of outputs
   if (EEPROM.read(ADDR_VERSION) != CURRENT_EEPROM_VERSION) {
     // EEprom is wrong version or was not programmed, write default values to the EEprom
-    for (int i = 0; i < num_cluster_outputs; i += 1) {
-      EEPROM.update(cluster_outputs[i][2], cluster_outputs[i][1]);
+    for (byte i = 0; i < controlOutputsNum; i += 1) {
+      EEPROM.update(eepromControlOutputsStateAddr[i], 0);
     }
-    for (int i = 0; i < num_ipkvm_outputs; i += 1) {
-      EEPROM.update(ipkvm_outputs[i][2], ipkvm_outputs[i][1]);
+    for (byte i = 0; i < usbSwitchSelectorsNum; i += 1) {
+      EEPROM.update(eepromUSBSwitchSelectorsLed1StateAddr[i], 0);
     }
     EEPROM.update(ADDR_VERSION, CURRENT_EEPROM_VERSION); // update software version
   } else {
-    for (int i = 0; i < num_cluster_outputs; i += 1) {
-      cluster_outputs[i][1] = EEPROM.read(cluster_outputs[i][2]);
-      digitalWrite(cluster_outputs[i][0], cluster_outputs[i][1]);
+    for (byte i = 0; i < controlOutputsNum; i += 1) {
+      digitalWrite(controlOutputsPin[i], EEPROM.read(eepromControlOutputsStateAddr[i]));
     }
-    for (int i = 0; i < num_ipkvm_outputs; i += 1) {
-      ipkvm_outputs[i][1] = EEPROM.read(ipkvm_outputs[i][2]);
-      digitalWrite(ipkvm_outputs[i][0], ipkvm_outputs[i][1]);
+    delay(700);
+    for (byte i = 0; i < usbSwitchSelectorsNum; i += 1) {
+      if (digitalRead(usbSwitchSelectorsLed1Pin[i]) != EEPROM.read(eepromUSBSwitchSelectorsLed1StateAddr[i])) {
+        digitalWrite(usbSwitchSelectorsButtonPin[i], HIGH);
+        delay(300);
+        digitalWrite(usbSwitchSelectorsButtonPin[i], LOW);
+      }
     }
   }
 }

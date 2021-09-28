@@ -16,7 +16,7 @@
   - [Device circuit](#device-circuit)
   - [Assembled device photos](#assembled-device-photos)
 
-This is version 2 for input voltage 18-24V.
+This is version 3 for input voltage 18-24V.
 
 ## Description
 

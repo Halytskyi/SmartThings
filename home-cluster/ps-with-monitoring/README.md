@@ -1,6 +1,6 @@
 # Power Supply with Monitoring
 
-This is version 2 with power supplies on 18V and 24V and included input for Solar Batteries output on 24V.
+This is version 2 with power supplies on 18V and 24V and included input for connecting Solar Batteries on 24V.
 
 ## Description
 

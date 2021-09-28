@@ -94,3 +94,4 @@ Cluster Cooling was developed for fans control depends from temperature with abi
 [<img src="images/cluster-cooling_5.jpeg" width="326"/>](images/cluster-cooling_5.jpeg)
 [<img src="images/cluster-cooling_6.jpeg" width="279"/>](images/cluster-cooling_6.jpeg)
 [<img src="images/cluster-cooling_7.jpeg" width="278"/>](images/cluster-cooling_7.jpeg)
+[<img src="images/cluster-cooling_8.jpeg" width="391"/>](images/cluster-cooling_8.jpeg)
