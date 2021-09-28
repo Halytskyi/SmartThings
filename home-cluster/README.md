@@ -6,7 +6,7 @@
 |---|---|---|---|
 | [Cluster case and hardware](cluster-case-and-hardware) | - | - ||
 | [IP-KVM](ip-kvm) | Ethernet | Private IP ||
-| [PJON routers](pjon_routers) | PJON | 1, 6 ||
+| [PJON routers](pjon-routers) | PJON | 1, 6 ||
 | [Power Supply with Monitoring](ps-with-monitoring) | PJON | 15 ||
 | [Low voltage UPS for smart home](smart-low-voltage-ups) | PJON | 16, 17, 18 ||
 | [Fire Alarm System](fire-alarm)| PJON | 19 ||
