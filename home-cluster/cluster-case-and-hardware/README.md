@@ -27,7 +27,7 @@ Before starting this project I chose [0.093" x 30" x 36" acrylic sheet](https://
 [<img src="images/acrylic-case_3.jpeg" width="230"/>](images/acrylic-case_3.jpeg)
 [<img src="images/acrylic-case_4.jpeg" width="94"/>](images/acrylic-case_4.jpeg)
 
-After that I decided remake it with using 0.06" steel sheets which was a great choose even it added weight (assembled case became 12.2kg), but it became very stable and strong.
+After that I decided remake it with using 0.06" steel sheets which was a great choose even it added weight (assembled case became 12.2kg), but it became very stable, strong and non-combustible.
 
 ## Components
 
