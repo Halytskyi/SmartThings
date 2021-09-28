@@ -28,14 +28,14 @@ In the inside I put 2 x automatic fire suppressor [StoveTop FireStop Rangehood](
 [<img src="images/rack_5.jpg" alt="Rack" width="402"/>](images/rack_5.jpg)
 [<img src="images/rack_6.jpg" alt="Rack" width="254"/>](images/rack_6.jpg)
 
-On front side plate was placed [UPS](../automation-devices/smart-low-voltage-ups), [server-rack-cooling](../automation-devices/server-rack-cooling) and reserved place for other electronics like [fire-alarm](../automation-devices/fire-alarm), security alarm, etc.
+On front side plate was placed [UPS](smart-low-voltage-ups), [server-rack-cooling](server-rack-cooling) and reserved place for other electronics like [fire-alarm](fire-alarm), security alarm, etc.
 
 [<img src="images/rack_inside_front_1.jpg" alt="Rack" width="300"/>](images/rack_inside_front_1.jpg)
 [<img src="images/rack_inside_front_2.jpg" alt="Rack" width="286"/>](images/rack_inside_front_2.jpg)
 [<img src="images/rack_inside_front_3.jpg" alt="Rack" width="322"/>](images/rack_inside_front_3.jpg)
 [<img src="images/rack_inside_front_4.jpg" alt="Rack" width="370"/>](images/rack_inside_front_4.jpg)
 
-On back side plate was placed Power supply modules with 5 x 50mm 12V fans and [power supplies with monitoring module](../automation-devices/ps-with-monitoring) and other sensors.
+On back side plate was placed Power supply modules with 5 x 50mm 12V fans and [power supplies with monitoring module](ps-with-monitoring) and other sensors.
 
 [<img src="images/rack_inside_back_1.jpg" alt="Rack" width="330"/>](images/rack_inside_back_1.jpg)
 [<img src="images/rack_inside_back_2.jpg" alt="Rack" width="300"/>](images/rack_inside_back_2.jpg)
