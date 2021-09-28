@@ -1,6 +1,7 @@
 # Cluster case and hardware
 
 - [Cluster case and hardware](#cluster-case-and-hardware)
+  - [Prehistory](#prehistory)
   - [How don't need to do](#how-dont-need-to-do)
   - [Components](#components)
   - [Cluster hardware](#cluster-hardware)
@@ -17,6 +18,14 @@
     - [Worker02](#worker02)
     - [Worker03](#worker03)
     - [Assembled case](#assembled-case)
+
+## Prehistory
+
+What pushed me to make the cluster case? Simple answer - this picture:
+
+[<img src="images/old-cluster-rack.jpeg" width="300"/>](images/old-cluster-rack.jpeg)
+
+This is was total mess...
 
 ## How don't need to do
 
