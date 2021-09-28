@@ -113,7 +113,7 @@ Other components listed here: [ip-kvm](../ip-kvm/README.md)
 
 ## Simple circuit of connections hardware
 
-[<img src="images/cluster-schematic.jpeg"/>](images/cluster-schematic.jpeg)
+[<img src="images/cluster-connections-circuit.jpeg"/>](images/cluster-connections-circuit.jpeg)
 
 ## Case drawing
 
