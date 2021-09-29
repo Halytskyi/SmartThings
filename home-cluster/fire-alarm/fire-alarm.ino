@@ -1,54 +1,50 @@
 /*
-* Copyright (C) 2020 Oleh Halytskyi
+* Copyright (C) 2021 Oleh Halytskyi
 *
 * This software may be modified and distributed under the terms
 * of the Apache license. See the LICENSE file for details.
 *
 */
 
-#define PJON_INCLUDE_PACKET_ID true
-#define PJON_INCLUDE_SWBB true // Include SoftwareBitBang
-#include <PJON.h>
+#define PJON_INCLUDE_PACKET_ID
+#include <PJONSoftwareBitBang.h>
 
-const uint8_t DEVICE_ID = 19;
+const byte deviceID = 19;
+PJONSoftwareBitBang bus(deviceID); // Tx bus
+const byte pinBus = 12;
+const byte masterIdBus = 6;
 
-PJON<SoftwareBitBang> bus(DEVICE_ID); // Tx bus
-int pinBus = 12;
-int masterIdBus = 2;
-
-int buzzer = 10;
-unsigned int pushInterval = 5000; // 5 seconds
-int signalOutput = 13;
-int signalOutputValue = 0;
-unsigned long signalOutputInterval = 60000; // 60 seconds
+const byte buzzer = 10;
+const unsigned int pushInterval = 5000; // 5 seconds
+const byte signalOutput = 13;
+byte signalOutputValue = 0;
+const unsigned long signalOutputInterval = 60000; // 60 seconds
 unsigned long signalOutputLastTriggered = 0;
-int alarmStatus = 0;
+byte alarmStatus = 0;
 unsigned long alarmStatusLast = 0;
 
 // Fire sensors
-#define numFireSensors 9
-// {"command", "pin", "last value", "last triggered"}
-String fireSensor[numFireSensors][4] = {
-    {"F-1", "2", "0", "0"},
-    {"F-2", "3", "0", "0"},
-    {"F-3", "4", "0", "0"},
-    {"F-4", "5", "0", "0"},
-    {"F-5", "6", "0", "0"},
-    {"F-6", "7", "0", "0"},
-    {"F-7", "8", "0", "0"},
-    {"F-8", "9", "0", "0"},
-    {"F-9", "11", "0", "0"}};
+const byte fireSensorsNum = 9;
+// {"command"}
+const char *const fireSensorCmd[fireSensorsNum] = {"F-1", "F-2", "F-3", "F-4", "F-5", "F-6", "F-7", "F-8", "F-9"};
+// {"pin"}
+const byte fireSensorPin[fireSensorsNum] = {2, 3, 4, 5, 6, 7, 8, 9, 11};
+// {"last value"}
+byte fireSensorLastValue[fireSensorsNum] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+// {"last triggered"}
+unsigned long fireSensorLastTriggered[fireSensorsNum] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 // Smoke sensors
-#define numSmokeSensors 6
-// {"command", "pin", "last value", "last triggered"}
-String smokeSensor[numSmokeSensors][4] = {
-    {"S-1", "14", "0", "0"},
-    {"S-2", "15", "0", "0"},
-    {"S-3", "16", "0", "0"},
-    {"S-4", "17", "0", "0"},
-    {"S-5", "18", "0", "0"},
-    {"S-6", "19", "0", "0"}};
+const byte smokeSensorsNum = 6;
+// {"command"}
+const char *const smokeSensorCmd[smokeSensorsNum] = {"S-1", "S-2", "S-3", "S-4", "S-5", "S-6"};
+// {"pin"}
+const byte fsmokeSensorPin[smokeSensorsNum] = {14, 15, 16, 17, 18, 19};
+// {"last value"}
+byte smokeSensorLastValue[smokeSensorsNum] = {0, 0, 0, 0, 0, 0};
+// {"last triggered"}
+unsigned long smokeSensorLastTriggered[smokeSensorsNum] = {0, 0, 0, 0, 0, 0};
+
 
 void alarm()  {
   tone(buzzer, 400, 500); //the buzzer emit sound at 400 MHz for 500 millis
@@ -58,52 +54,55 @@ void alarm()  {
   digitalWrite(buzzer, HIGH); // for turn off buzzer
 }
 
-void bus_send(String msgStr) {
-  int msgStrLen = msgStr.length();
-  char response[msgStrLen + 1];
-  msgStr.toCharArray(response, msgStrLen + 1);
-  bus.send_packet_blocking(masterIdBus, response, msgStrLen);
+void bus_send(const char command[], const char response[]) {
+  char responseFull[22]; // 21 charters + 1 NULL termination
+  strcpy(responseFull, command);
+  strcat(responseFull, "<");
+  strcat(responseFull, response);
+  bus.send_packet_blocking(masterIdBus, responseFull, strlen(responseFull));
 }
 
 void read_sensors() {
   unsigned long curMillis = millis(); // time now in ms
   // Fire sensors
-  for (int i = 0; i < numFireSensors; i += 1) {
-    if (curMillis - fireSensor[i][3].toInt() >= pushInterval) {
-      int value = digitalRead(fireSensor[i][1].toInt());
+  for (byte i = 0; i < fireSensorsNum; i += 1) {
+    if (curMillis - fireSensorLastTriggered[i] >= pushInterval) {
+      byte value = digitalRead(fireSensorPin[i]);
       if (value == HIGH) {
         value = LOW;
       } else {
         value = HIGH;
       }
-      if (value != fireSensor[i][2].toInt()) {
-        String msgStr = fireSensor[i][0] + "<" + String(value);
-        bus_send(msgStr);
-        fireSensor[i][2] = String(value);
+      if (value != fireSensorLastValue[i]) {
+        char tmpBuf[2];
+        itoa(value, tmpBuf, 10);
+        bus_send(fireSensorCmd[i], tmpBuf);
+        fireSensorLastValue[i] = value;
         signalOutputValue = value;
         if (value == HIGH) {
-          fireSensor[i][3] = curMillis;
+          fireSensorLastTriggered[i] = curMillis;
           alarm();
         }
       }
     }
   }
   // Smoke sensors
-  for (int i = 0; i < numSmokeSensors; i += 1) {
-    if (curMillis - smokeSensor[i][3].toInt() >= pushInterval) {
-      int value = digitalRead(smokeSensor[i][1].toInt());
+  for (byte i = 0; i < smokeSensorsNum; i += 1) {
+    if (curMillis - smokeSensorLastTriggered[i] >= pushInterval) {
+      byte value = digitalRead(fsmokeSensorPin[i]);
       if (value == HIGH) {
         value = LOW;
       } else {
         value = HIGH;
       }
-      if (value != smokeSensor[i][2].toInt()) {
-        String msgStr = smokeSensor[i][0] + "<" + String(value);
-        bus_send(msgStr);
-        smokeSensor[i][2] = String(value);
+      if (value != smokeSensorLastValue[i]) {
+        char tmpBuf[2];
+        itoa(value, tmpBuf, 10);
+        bus_send(smokeSensorCmd[i], tmpBuf);
+        smokeSensorLastValue[i] = value;
         signalOutputValue = value;
         if (value == HIGH) {
-          smokeSensor[i][3] = curMillis;
+          smokeSensorLastTriggered[i] = curMillis;
           alarm();
         }
       }
@@ -123,11 +122,11 @@ void signal_output() {
 }
 
 void send_status() {
-  String value = "";
   unsigned long curMillis = millis(); // time now in ms
   if (curMillis - alarmStatusLast >= signalOutputInterval) {
-    String msgStr = "A<" + String(alarmStatus);
-    bus_send(msgStr);
+    char tmpBuf[2];
+    itoa(alarmStatus, tmpBuf, 10);
+    bus_send("A", tmpBuf);
     alarmStatusLast = curMillis;
   }
 }
@@ -139,20 +138,20 @@ void loop() {
 }
 
 void setup() {
-  for (int i = 0; i < numFireSensors; i += 1) {
-    pinMode(fireSensor[i][1].toInt(), INPUT);
-    digitalWrite(fireSensor[i][1].toInt(), HIGH); // turn on pullup resistor
+  for (byte i = 0; i < fireSensorsNum; i += 1) {
+    pinMode(fireSensorPin[i], INPUT);
+    digitalWrite(fireSensorPin[i], HIGH); // turn on pullup resistor
   }
-  for (int i = 0; i < numSmokeSensors; i += 1) {
-    pinMode(smokeSensor[i][1].toInt(), INPUT);
-    digitalWrite(smokeSensor[i][1].toInt(), HIGH); // turn on pullup resistor
+  for (byte i = 0; i < smokeSensorsNum; i += 1) {
+    pinMode(fsmokeSensorPin[i], INPUT);
+    digitalWrite(fsmokeSensorPin[i], HIGH); // turn on pullup resistor
   }
   pinMode(buzzer, OUTPUT);
   digitalWrite(buzzer, HIGH); // for turn off buzzer
   pinMode(signalOutput, OUTPUT);
 
   bus.strategy.set_pin(pinBus);
-  bus.set_synchronous_acknowledge(true);
+  bus.set_acknowledge(true);
   bus.set_crc_32(true);
   bus.set_packet_id(true);
   bus.begin();

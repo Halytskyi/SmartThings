@@ -4,13 +4,13 @@
 
 ### Main functions
 
-- send messages to server (via [PJON protocol](https://github.com/gioblu/PJON)) when detect smoke or flame
-- send "status" message to server each 1 minute
-- send message to server and HIGH signal (within 1 minute after last sensor triggered) to air-conditioner system for turn off it
+- send messages to server (via [PJON protocol](https://github.com/gioblu/PJON)) when detect smoke or flame;
+- send "status" message to server each 1 minute;
+- send message to server and HIGH signal (within 1 minute after last sensor triggered). Can be used, for example, for turn off the air-conditioner system.
 
 ### PJON Specification
 
-- PJON Tx Bus Server ID: _2_
+- PJON Tx Bus Server ID: _6_
 - PJON Bus Device ID: _19_
 - PJON Strategy: _SoftwareBitBang_
 
@@ -37,7 +37,7 @@
 | D9 (PWM) | flame sensor ||
 | D10 (PWM) | buzzer ||
 | D11 (PWM) | flame sensor ||
-| D12 | [PJON v12.1](https://github.com/gioblu/PJON/tree/12.1/src/strategies/SoftwareBitBang) | Communication with Server (TX only) |
+| D12 | [PJON v13.0](https://github.com/gioblu/PJON/tree/13.0/src/strategies/SoftwareBitBang) | Communication with Server (TX only) |
 | D13 | signal output ||
 | A0 | MQ-2 smoke sensor ||
 | A1 | MQ-2 smoke sensor ||
