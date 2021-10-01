@@ -23,27 +23,31 @@ unsigned long signalOutputLastTriggered = 0;
 byte alarmStatus = 0;
 unsigned long alarmStatusLast = 0;
 
-// Fire sensors
-const byte fireSensorsNum = 9;
+// Flame sensors
+const byte flameSensorsNum = 9;
 // {"command"}
-const char *const fireSensorCmd[fireSensorsNum] = {"F-1", "F-2", "F-3", "F-4", "F-5", "F-6", "F-7", "F-8", "F-9"};
+const char *const flameSensorCmd[flameSensorsNum] = {"F-1", "F-2", "F-3", "F-4", "F-5", "F-6", "F-7", "F-8", "F-9"};
 // {"pin"}
-const byte fireSensorPin[fireSensorsNum] = {2, 3, 4, 5, 6, 7, 8, 9, 11};
+const byte flameSensorPin[flameSensorsNum] = {2, 3, 4, 5, 6, 7, 8, 9, 11};
 // {"last value"}
-byte fireSensorLastValue[fireSensorsNum] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+byte flameSensorLastValue[flameSensorsNum] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 // {"last triggered"}
-unsigned long fireSensorLastTriggered[fireSensorsNum] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+unsigned long flameSensorLastTriggered[flameSensorsNum] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 // Smoke sensors
-const byte smokeSensorsNum = 6;
+const byte smokeSensorsNum = 5;
 // {"command"}
-const char *const smokeSensorCmd[smokeSensorsNum] = {"S-1", "S-2", "S-3", "S-4", "S-5", "S-6"};
+const char *const smokeSensorCmd[smokeSensorsNum] = {"S-1", "S-2", "S-3", "S-4", "S-5"};
 // {"pin"}
-const byte fsmokeSensorPin[smokeSensorsNum] = {14, 15, 16, 17, 18, 19};
+const byte smokeSensorPin[smokeSensorsNum] = {14, 15, 16, 17, 18};
 // {"last value"}
-byte smokeSensorLastValue[smokeSensorsNum] = {0, 0, 0, 0, 0, 0};
+byte smokeSensorLastValue[smokeSensorsNum] = {0, 0, 0, 0, 0};
 // {"last triggered"}
-unsigned long smokeSensorLastTriggered[smokeSensorsNum] = {0, 0, 0, 0, 0, 0};
+unsigned long smokeSensorLastTriggered[smokeSensorsNum] = {0, 0, 0, 0, 0};
+
+const byte motionSensorPin = 19;
+byte motionSensorLastValue = 0;
+unsigned long motionSensorLastTriggered = 0;
 
 
 void alarm()  {
@@ -64,23 +68,23 @@ void bus_send(const char command[], const char response[]) {
 
 void read_sensors() {
   unsigned long curMillis = millis(); // time now in ms
-  // Fire sensors
-  for (byte i = 0; i < fireSensorsNum; i += 1) {
-    if (curMillis - fireSensorLastTriggered[i] >= pushInterval) {
-      byte value = digitalRead(fireSensorPin[i]);
+  // Flame sensors
+  for (byte i = 0; i < flameSensorsNum; i += 1) {
+    if (curMillis - flameSensorLastTriggered[i] >= pushInterval) {
+      byte value = digitalRead(flameSensorPin[i]);
       if (value == HIGH) {
         value = LOW;
       } else {
         value = HIGH;
       }
-      if (value != fireSensorLastValue[i]) {
+      if (value != flameSensorLastValue[i]) {
         char tmpBuf[2];
         itoa(value, tmpBuf, 10);
-        bus_send(fireSensorCmd[i], tmpBuf);
-        fireSensorLastValue[i] = value;
+        bus_send(flameSensorCmd[i], tmpBuf);
+        flameSensorLastValue[i] = value;
         signalOutputValue = value;
         if (value == HIGH) {
-          fireSensorLastTriggered[i] = curMillis;
+          flameSensorLastTriggered[i] = curMillis;
           alarm();
         }
       }
@@ -89,7 +93,7 @@ void read_sensors() {
   // Smoke sensors
   for (byte i = 0; i < smokeSensorsNum; i += 1) {
     if (curMillis - smokeSensorLastTriggered[i] >= pushInterval) {
-      byte value = digitalRead(fsmokeSensorPin[i]);
+      byte value = digitalRead(smokeSensorPin[i]);
       if (value == HIGH) {
         value = LOW;
       } else {
@@ -105,6 +109,25 @@ void read_sensors() {
           smokeSensorLastTriggered[i] = curMillis;
           alarm();
         }
+      }
+    }
+  }
+  // Motion sensor(s)
+  if (curMillis - motionSensorLastTriggered >= pushInterval) {
+    byte value = digitalRead(motionSensorPin);
+    if (value == HIGH) {
+      value = LOW;
+    } else {
+      value = HIGH;
+    }
+    if (value != motionSensorLastValue) {
+      char tmpBuf[2];
+      itoa(value, tmpBuf, 10);
+      bus_send("M", tmpBuf);
+      motionSensorLastValue = value;
+      if (value == HIGH) {
+        motionSensorLastTriggered = curMillis;
+        alarm();
       }
     }
   }
@@ -138,14 +161,16 @@ void loop() {
 }
 
 void setup() {
-  for (byte i = 0; i < fireSensorsNum; i += 1) {
-    pinMode(fireSensorPin[i], INPUT);
-    digitalWrite(fireSensorPin[i], HIGH); // turn on pullup resistor
+  for (byte i = 0; i < flameSensorsNum; i += 1) {
+    pinMode(flameSensorPin[i], INPUT);
+    digitalWrite(flameSensorPin[i], HIGH); // turn on pullup resistor
   }
   for (byte i = 0; i < smokeSensorsNum; i += 1) {
-    pinMode(fsmokeSensorPin[i], INPUT);
-    digitalWrite(fsmokeSensorPin[i], HIGH); // turn on pullup resistor
+    pinMode(smokeSensorPin[i], INPUT);
+    digitalWrite(smokeSensorPin[i], HIGH); // turn on pullup resistor
   }
+  pinMode(motionSensorPin, INPUT);
+  digitalWrite(motionSensorPin, HIGH); // turn on pullup resistor
   pinMode(buzzer, OUTPUT);
   digitalWrite(buzzer, HIGH); // for turn off buzzer
   pinMode(signalOutput, OUTPUT);

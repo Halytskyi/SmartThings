@@ -10,7 +10,7 @@ Repository for storing code, schemas and docs for smart devices
   - [PJON routers](home-cluster/pjon-routers)
   - [Power Supply with Monitoring](home-cluster/ps-with-monitoring)
   - [Low voltage UPS for smart home](home-cluster/smart-low-voltage-ups)
-  - [Fire Alarm System](home-cluster/fire-alarm)
+  - [Rack Alarm System](home-cluster/rack-alarm-system)
   - [Server Rack Cooling System](home-cluster/server-rack-cooling)
   - [Power Supply boards and USB HUBs](home-cluster/power-supply-usb-hubs)
   - [Cluster cooling](home-cluster/cluster-cooling)
