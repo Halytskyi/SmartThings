@@ -71,11 +71,11 @@
 
 ## Device Photos
 
-[<img src="images/rack-alarm-system_1.jpeg" width="306"/>](images/rack-alarm-system_1.jpeg)
-[<img src="images/rack-alarm-system_2.jpeg" width="300"/>](images/rack-alarm-system_2.jpeg)
-[<img src="images/rack-alarm-system_3.jpeg" width="310"/>](images/rack-alarm-system_3.jpeg)
-[<img src="images/rack-alarm-system_4.jpeg" width="306"/>](images/rack-alarm-system_4.jpeg)
-[<img src="images/rack-alarm-system_5.jpeg" width="310"/>](images/rack-alarm-system_5.jpeg)
+[<img src="images/rack-alarm_1.jpeg" width="306"/>](images/rack-alarm_1.jpeg)
+[<img src="images/rack-alarm_2.jpeg" width="300"/>](images/rack-alarm_2.jpeg)
+[<img src="images/rack-alarm_3.jpeg" width="310"/>](images/rack-alarm_3.jpeg)
+[<img src="images/rack-alarm_4.jpeg" width="306"/>](images/rack-alarm_4.jpeg)
+[<img src="images/rack-alarm_5.jpeg" width="310"/>](images/rack-alarm_5.jpeg)
 
 ## Sensors photos
 
