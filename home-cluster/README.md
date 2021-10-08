@@ -10,7 +10,7 @@
 | [Power Supply with Monitoring](ps-with-monitoring) | PJON | 15 ||
 | [Low voltage UPS for smart home](smart-low-voltage-ups) | PJON | 16, 17, 18 ||
 | [Rack Alarm System](rack-alarm-system)| PJON | 19 ||
-| [Server Rack Cooling System](server-rack-cooling) | PJON | 20 ||
+| [Rack Cooling System](rack-cooling) | PJON | 20 ||
 | [Power Supply boards and USB HUBs](power-supply-usb-hubs) | I2C | 0x03 ||
 | [Cluster cooling](cluster-cooling) | PJON | 22 ||
 
@@ -28,7 +28,7 @@ In the inside I put 2 x automatic fire suppressor [StoveTop FireStop Rangehood](
 [<img src="images/rack_5.jpg" alt="Rack" width="402"/>](images/rack_5.jpg)
 [<img src="images/rack_6.jpg" alt="Rack" width="254"/>](images/rack_6.jpg)
 
-On front side plate was placed [UPS](smart-low-voltage-ups), [server-rack-cooling](server-rack-cooling) and reserved place for other electronics like [fire-alarm](fire-alarm), security alarm, etc.
+On front side plate was placed [UPS](smart-low-voltage-ups), [rack-cooling](rack-cooling) and reserved place for other electronics like [fire-alarm](fire-alarm), security alarm, etc.
 
 [<img src="images/rack_inside_front_1.jpg" alt="Rack" width="300"/>](images/rack_inside_front_1.jpg)
 [<img src="images/rack_inside_front_2.jpg" alt="Rack" width="286"/>](images/rack_inside_front_2.jpg)

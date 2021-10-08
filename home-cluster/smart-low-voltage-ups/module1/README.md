@@ -43,8 +43,8 @@
 - 1 x 0.5A fuse (arduino, ammeter, etc)
 - 1 x 2A fuse (DC charger #1)
 - 1 x 2A fuse (DC charger #2)
-- 1 x 15A fuse (near battery)
-- 1 x 15A fuse (near battery)
+- 1 x 12A fuse (near battery)
+- 1 x 12A fuse (near battery)
 
 | Arduino PIN | Component | Notes |
 | --- | --- | --- |

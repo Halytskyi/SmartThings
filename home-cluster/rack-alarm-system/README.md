@@ -6,7 +6,7 @@
 
 - send messages to server (via [PJON protocol](https://github.com/gioblu/PJON)) when detect smoke, flame or external motion;
 - send "status" message to server each 1 minute;
-- send message to server and HIGH signal within 1 minute after last any sensor triggered (except A5 external motion sensor). Can be used, for example, for turn off the air-conditioner system.
+- send message to server and HIGH signal within 1 minute after last any sensor triggered (except A5 external motion sensor). Can be used, for example, for turn off the air-conditioner system, rack/cluster cooling system, etc.
 
 ### PJON Specification
 
@@ -21,8 +21,10 @@
 - 5 x MQ-2 smoke sensor modules
 - 1(2) x HC-SR501 pir sensor(s)
 - 1 x buzzer
-- 1 x 1MOm resistor
-- 1 x 1N4001 diode
+- 1 x 10kΩ resistor
+- 1 x 100kΩ resistor (for external two motion sensors, can be omitted as 10kΩ resistor already exists as pull-down resistor for that sensor PIN)
+- 1 x 1MΩ resistor
+- 3 x 1N4001 diode (2 of them for external two motion sensors)
 - HW-613 Mini DC-DC 3A Step Down Power Supply Module (for Arduino and sensors, 5V output)
 - 1 x 0.5A fuse
 
@@ -45,7 +47,7 @@
 | A2 | MQ-2 smoke sensor ||
 | A3 | MQ-2 smoke sensor ||
 | A4 | external MQ-2 smoke sensor ||
-| A5 | external motion sensor(s) ||
+| A5 | external motion sensor(s) | used with 10kΩ pull-down resistor |
 
 ### Components photos and schematics
 
@@ -65,8 +67,22 @@
 | M | Motion sensor(s) status (A5) | 0 - not triggered, 1 - triggered |
 | A | Alarm status for the last 1 minute | 0 - no alarm, 1 - alarm |
 
+**Note:** Motion sensors (HC-SR501) configuration: timer set to the middle and sensitivity set to the minimum, the trigger jumper set to H.
+
 ## Device Photos
 
-[<img src="images/rack-alarm-system_1.jpg" width="306"/>](images/rack-alarm-system_1.jpg)
-[<img src="images/rack-alarm-system_2.jpg" width="300"/>](images/rack-alarm-system_2.jpg)
-[<img src="images/rack-alarm-system_3.jpg" width="311"/>](images/rack-alarm-system_3.jpg)
+[<img src="images/rack-alarm-system_1.jpeg" width="306"/>](images/rack-alarm-system_1.jpeg)
+[<img src="images/rack-alarm-system_2.jpeg" width="300"/>](images/rack-alarm-system_2.jpeg)
+[<img src="images/rack-alarm-system_3.jpeg" width="310"/>](images/rack-alarm-system_3.jpeg)
+[<img src="images/rack-alarm-system_4.jpeg" width="306"/>](images/rack-alarm-system_4.jpeg)
+[<img src="images/rack-alarm-system_5.jpeg" width="310"/>](images/rack-alarm-system_5.jpeg)
+
+## Sensors photos
+
+[<img src="images/sensors_1.jpeg" width="300"/>](images/sensors_1.jpeg)
+[<img src="images/sensors_2.jpeg" width="304"/>](images/sensors_2.jpeg)
+[<img src="images/sensors_3.jpeg" width="261"/>](images/sensors_3.jpeg)
+[<img src="images/sensors_4.jpeg" width="227"/>](images/sensors_4.jpeg)
+[<img src="images/sensors_5.jpeg" width="143"/>](images/sensors_5.jpeg)
+[<img src="images/sensors_6.jpeg" width="143"/>](images/sensors_6.jpeg)
+[<img src="images/sensors_7.jpeg" width="440"/>](images/sensors_7.jpeg)

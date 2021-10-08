@@ -47,7 +47,6 @@ unsigned long smokeSensorLastTriggered[smokeSensorsNum] = {0, 0, 0, 0, 0};
 
 const byte motionSensorPin = 19;
 byte motionSensorLastValue = 0;
-unsigned long motionSensorLastTriggered = 0;
 
 
 void alarm()  {
@@ -113,23 +112,12 @@ void read_sensors() {
     }
   }
   // Motion sensor(s)
-  if (curMillis - motionSensorLastTriggered >= pushInterval) {
-    byte value = digitalRead(motionSensorPin);
-    if (value == HIGH) {
-      value = LOW;
-    } else {
-      value = HIGH;
-    }
-    if (value != motionSensorLastValue) {
-      char tmpBuf[2];
-      itoa(value, tmpBuf, 10);
-      bus_send("M", tmpBuf);
-      motionSensorLastValue = value;
-      if (value == HIGH) {
-        motionSensorLastTriggered = curMillis;
-        alarm();
-      }
-    }
+  byte value = digitalRead(motionSensorPin);
+  if (value != motionSensorLastValue) {
+    char tmpBuf[2];
+    itoa(value, tmpBuf, 10);
+    bus_send("M", tmpBuf);
+    motionSensorLastValue = value;
   }
 }
 
@@ -169,8 +157,10 @@ void setup() {
     pinMode(smokeSensorPin[i], INPUT);
     digitalWrite(smokeSensorPin[i], HIGH); // turn on pullup resistor
   }
+  // delay 60 seconds for warming smoke sensors
+  delay(60000);
+
   pinMode(motionSensorPin, INPUT);
-  digitalWrite(motionSensorPin, HIGH); // turn on pullup resistor
   pinMode(buzzer, OUTPUT);
   digitalWrite(buzzer, HIGH); // for turn off buzzer
   pinMode(signalOutput, OUTPUT);

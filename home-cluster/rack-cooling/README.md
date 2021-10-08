@@ -1,8 +1,8 @@
-# Server Rack Cooling System
+# Rack Cooling System
 
 ## Description
 
-Server Rack Cooling System was developed for rack fans control depends from temperature with ability control and send data from/to server via [PJON protocol](https://github.com/gioblu/PJON).
+Rack Cooling System was developed for rack fans control depends from temperature with ability control and send data from/to server via [PJON protocol](https://github.com/gioblu/PJON).
 
 ## Main functions
 
@@ -17,7 +17,7 @@ Server Rack Cooling System was developed for rack fans control depends from temp
 ## PJON Specification
 
 - PJON TxRx Bus Server ID: _1_
-- PJON Tx Bus Server ID: _2_
+- PJON Tx Bus Server ID: _6_
 - PJON Bus Device ID: _20_
 - PJON Strategy: _SoftwareBitBang_
 
@@ -95,6 +95,7 @@ Server Rack Cooling System was developed for rack fans control depends from temp
 
 ## Device Photos
 
-[<img src="images/server-rack-cooling_1.jpg" alt="server-rack-cooling_1" width="252"/>](images/server-rack-cooling_1.jpg)
-[<img src="images/server-rack-cooling_2.jpg" alt="server-rack-cooling_2" width="252"/>](images/server-rack-cooling_2.jpg)
-[<img src="images/server-rack-cooling_3.jpg" alt="server-rack-cooling_3" width="250"/>](images/server-rack-cooling_3.jpg)
+[<img src="images/rack-cooling_1.jpeg" width="252"/>](images/rack-cooling_1.jpg)
+[<img src="images/rack-cooling_2.jpeg" width="252"/>](images/rack-cooling_2.jpg)
+[<img src="images/rack-cooling_3.jpeg" width="250"/>](images/rack-cooling_3.jpg)
+[<img src="images/rack-cooling_4.jpeg" width="346"/>](images/rack-cooling_4.jpg)
