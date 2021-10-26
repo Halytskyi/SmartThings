@@ -76,7 +76,7 @@ float get_voltage(const char command[]) {
   if (strcmp(command, "V-1") == 0) {
     voltagePin = 5; // Step UP/DOWN regulator output #1
     r1 = 100470; // R1 = 100k
-    r2 = 9700; // R2 = 10k
+    r2 = 9749; // R2 = 10k
   } else if (strcmp(command, "V-2") == 0) {
     voltagePin = 4; // Step UP/DOWN regulator output #2
     r1 = 99470; // R1 = 100k
@@ -84,11 +84,11 @@ float get_voltage(const char command[]) {
   } else if (strcmp(command, "V-3") == 0) {
     voltagePin = 7; // Step UP/DOWN regulator output #3
     r1 = 97600; // R1 = 100k
-    r2 = 10100; // R2 = 10k
+    r2 = 10149; // R2 = 10k
   } else if (strcmp(command, "V-4") == 0) {
     voltagePin = 6; // Step UP/DOWN regulator output #4
     r1 = 100500; // R1 = 100k
-    r2 = 9700; // R2 = 10k
+    r2 = 9749; // R2 = 10k
   }
 
   for (byte i = 0; i < voltageCountValues; i++) {
@@ -117,15 +117,15 @@ float get_current(const char command[]) {
     direction = 0;
   } else if (strcmp(command, "I-2") == 0) {
     currentPin = 2; // Step UP/DOWN regulator output #2
-    offsetVoltage = 2.456;
+    offsetVoltage = 2.462;
     direction = 0;
   } else if (strcmp(command, "I-3") == 0) {
     currentPin = 0; // Step UP/DOWN regulator output #3
-    offsetVoltage = 2.503;
+    offsetVoltage = 2.505;
     direction = 1;
   } else if (strcmp(command, "I-4") == 0) {
     currentPin = 1; // Step UP/DOWN regulator output #4
-    offsetVoltage = 2.486;
+    offsetVoltage = 2.485;
     direction = 1;
   }
 

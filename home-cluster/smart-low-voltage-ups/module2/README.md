@@ -21,9 +21,10 @@
 - 4 x ACS712-20A modules
 - 4 x 10k resistors
 - 4 x 100k resistors
+- 2 x 6A fuses
 - 2 x 8A fuses
-- 2 x 12A fuses
 - 1 x HW-613 Mini DC-DC 3A Step Down Power Supply Module (for ACS712 and Arduino devices on #1 and #2 modules, 5V output)
+- 1 x 0.2A fuse (arduino, ammeter, etc)
 
 | Arduino PIN | Component | Notes |
 | --- | --- | --- |

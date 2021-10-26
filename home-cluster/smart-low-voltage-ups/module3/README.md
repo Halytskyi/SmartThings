@@ -17,8 +17,9 @@
 - 4 x ACS712-20A modules
 - 4 x 10k resistors
 - 4 x 100k resistors
-- 2 x 8A fuses
-- 2 x 12A fuses
+- 2 x 5A fuses
+- 1 x 7A fuses
+- 1 x 8A fuses
 
 | Arduino PIN | Component | Notes |
 | --- | --- | --- |
@@ -74,6 +75,6 @@ where,<br>
 
 ## Device Photos
 
-[<img src="images/slvu_module3_1.jpg" alt="Module 3" width="300"/>](images/slvu_module3_1.jpg)
-[<img src="images/slvu_module3_2.jpg" alt="Module 3" width="328"/>](images/slvu_module3_2.jpg)
-[<img src="images/slvu_module3_3.jpg" alt="Module 3" width="347"/>](images/slvu_module3_3.jpg)
+[<img src="images/slvu_module3_1.jpeg" alt="Module 3" width="300"/>](images/slvu_module3_1.jpeg)
+[<img src="images/slvu_module3_2.jpeg" alt="Module 3" width="328"/>](images/slvu_module3_2.jpeg)
+[<img src="images/slvu_module3_3.jpeg" alt="Module 3" width="347"/>](images/slvu_module3_3.jpeg)

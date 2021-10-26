@@ -2,14 +2,13 @@
 
 ## Main functions
 
-- control charge process for 2 batteries from DC or Solar chargers;
+- control charge process for 2 batteries from DC or Solar inputs;
 - two batteries can be charged simultaneously;
 - start batteries charge if voltage >5V and <12.5V;
-- charging will be enabled if input voltage on charger >=15.0V;
+- charging will be enabled if input voltage to charger >=15.0V;
 - stop charge batteries if current consumption from them >0.1A;
-- stop charge batteries if charging current <0.15A or was received signal from charger status LED;
+- stop charge batteries if input voltage <15V or charging current <0.15A or was received signal from charger status LED;
 - measuring batteries temperature, don't start batteries charge if temperature >42°C and stop charge if >45°C;
-- measuring charger temperature, don't start batteries charge if charger temperature >50°C and stop charge if >60°C;
 - enable batteries outputs if voltage >12.0V, disable if batteries discharged (less 11.5V)
 - measuring batteries temperature, don't enable outputs if batteries temperature >42°C and disable outputs if >45°C;
 - measuring voltage, current and power consumption on batteries and chargers with ability sending data to server via [PJON protocol](https://github.com/gioblu/PJON);
@@ -29,22 +28,20 @@
 - 2 x BC547 transistors
 - 2 x 12v Zener diode (1N4742A)
 - 2 x SR240 diodes
+- 2 x SR540 diodes (before chargers input)
 - 2 x 1k resistors
 - 2 x 2k 2W resistors
-- 7 x 10k resistors
-- 1 x 100k resistors
-- 2 x 390 Ohm resistors
+- 8 x 10k resistors
+- 2 x 100k resistors
+- 2 x 420 Ohm resistors
 - 2 x [MOSFET relays OMRON G3VM-61A1](https://www.aliexpress.com/item/1005001989679623.html?spm=a2g0s.9042311.0.0.27424c4dnmIQ2j)
-- 4 x DS18B20 (for batteries and chargers)
+- 2 x DS18B20 (for batteries)
 - 2 x 1 MOm resistors
 - 1 x 1N4001 diode
 - 1 x HW-613 Mini DC-DC 3A Step Down Power Supply Module (for ACS712 and Arduino devices, 5V output)
-- 2 x 9x9x5mm aluminum heatsinks (19.1V -> 18.4V, 3A (~55W) - 40℃; 22.6V -> 21.8V, 3A (~65W) - 42℃)
-- 1 x 0.5A fuse (arduino, ammeter, etc)
-- 1 x 2A fuse (DC charger #1)
-- 1 x 2A fuse (DC charger #2)
-- 1 x 12A fuse (near battery)
-- 1 x 12A fuse (near battery)
+- 2 x 15x10x25mm aluminum heatsinks (19.1V -> 18.4V, 3A (~55W) - 40℃; 22.6V -> 21.8V, 3A (~65W) - 42℃)
+- 1 x 0.2A fuse (arduino, ammeter, etc)
+- 1 x 70x90 PCB
 
 | Arduino PIN | Component | Notes |
 | --- | --- | --- |
@@ -54,24 +51,24 @@
 | D5 (PWM) | Transistor switch 6 | Output 4 |
 | D6 (PWM) | 1-Wire | Temperature sensors |
 | D7 | [PJON v13.0](https://github.com/gioblu/PJON/tree/13.0/src/strategies/SoftwareBitBang) | Communication with Server (TxRx) |
-| D8 | Transistor switch 1 | Solar/DC charger #1 |
-| D9 (PWM) | Transistor switch 2 | Solar/DC charger #2 |
+| D8 | Transistor switch 2 | Solar/DC charger #2 |
+| D9 (PWM) | OMRON G3VM-61A1 | DC charger status LED #2 |
 | D10 (PWM) | OMRON G3VM-61A1 | DC charger status LED #1 |
-| D11 (PWM) | OMRON G3VM-61A1 | DC charger status LED #2 |
+| D11 (PWM) | Transistor switch 1 | Solar/DC charger #1 |
 | D12 | [PJON v13.0](https://github.com/gioblu/PJON/tree/13.0/src/strategies/SoftwareBitBang) | Communication with Server (TX only) |
 | D13 | - | - |
 | A0 | ACS712-20A | Solar/DC charger #1 |
-| A1 | ACS712-20A | Transistor switch 3 and 4 |
-| A2 | ACS712-20A | Transistor switch 5 and 6 |
+| A1 | ACS712-20A | Battery #1 (Transistor switch 3 and 4) |
+| A2 | ACS712-20A | Battery #2 (Transistor switch 5 and 6) |
 | A3 | ACS712-20A | Solar/DC charger #2 |
 | A4 | Voltmeter: r1=100k, r2=10k | Battery #1; 10k=9.76k, 100k=98.7k |
 | A5 | Voltmeter: r1=100k, r2=10k | Battery #2; 10k=9.9k, 100k=99.5k |
-| A6 | Voltmeter: r1=100k, r2=10k | Input to chargers. ?10k=9.9k, ?100k=98.6k |
-| A7 | - | -|
+| A6 | Voltmeter: r1=100k, r2=10k | Input to DC charger #1; 10k=9.89k, 100k=100k |
+| A7 | Voltmeter: r1=100k, r2=10k | Input to DC charger #2; 10k=10.9k, 100k=98.7k |
 
 ## Requirements and components for module #1.2
 
-To avoid increase temperature above 100℃ on transistors and work with load up to 150W is required 2 transistors per channel with related heatsinks.
+To avoid increase temperature above 100℃ on transistors and work with load up to 150W is required 2 MOSFET transistors per channel with related heatsinks.
 
 - 8 x IRF4905 transistors
 - 4 x BC547 transistors
@@ -94,31 +91,73 @@ To avoid increase temperature above 100℃ on transistors and work with load up 
 | DS18B20 | [<img src="images/DS18B20.jpg" alt="DS18B20" width="330"/>](images/DS18B20.jpg) |
 | OMRON G3VM-61A1 | [<img src="images/OMRON_G3VM-61A1_input.jpeg" width="330"/>](images/OMRON_G3VM-61A1_input.jpeg) |
 
+### Chargers
+
+Choose correct DC charger - it's very important step. I made mistake here when I chose charger "YH11059B on XL4005 chip" which doesn't work when battery "minus" connected to the same "minus" as charger (i.e. input and output "minus" of charger connected together), because this charger has shunt resistor between "minus" input and output, as result, the current does not pass through this shunt.
+
+Photo of charger and schematic which very similar to that one:
+
+[<img src="images/YH11059B-XL4005.jpeg" width="268"/>](images/YH11059B-XL4005.jpeg)
+[<img src="images/XL4015-CC-CV-Buck-Module-schematic.jpeg" width="330"/>](images/XL4015-CC-CV-Buck-Module-schematic.jpeg)
+
+After long searching the charger which should cover all my requirements I found awesome "DD30CRTA" which has very good characteristics and works well with common "minus" (GND):
+
+[<img src="images/DD30CRTA_1.jpeg" width="220"/>](images/DD30CRTA_1.jpeg)
+[<img src="images/DD30CRTA_2.jpeg" width="387"/>](images/DD30CRTA_2.jpeg)
+
+It came with configured 3A charge current which is too much for my 9Ah AGM batteries. A rule of thumb for gel and AGM batteries states that the charging current should be 15 to 25 % of the battery capacity, which mean in my case 1.35 - 2.25A.  
+I fixed that by solder out one of the two resistors R080 (0.08 Ohm) and in result I got 1.5A on output which is excellent for my batteries:
+
+[<img src="images/DD30CRTA_3.jpeg" width="300"/>](images/DD30CRTA_3.jpeg)
+
+Example of resistor values (120mV / RCS)
+
+| RCS 1210 Resistor | Charging current |
+| --- | --- |
+| 0.24 Ohm (R240) | 0.5A |
+| 0.12 Ohm (R120) | 1A |
+| 0.08 Ohm (R080) | 1.5A |
+| 0.06 Ohm (R060) | 2A |
+| 0.04 Ohm (R040) | 3A |
+
+Photos of mounts
+
+[<img src="images/DD30CRTA_4.jpeg" width="344"/>](images/DD30CRTA_4.jpeg)
+[<img src="images/DD30CRTA_5.jpeg" width="200"/>](images/DD30CRTA_5.jpeg)
+
+Soldering wires to status LED for use it with controlled module
+
+[<img src="images/DD30CRTA_6.jpeg" width="200"/>](images/DD30CRTA_6.jpeg)
+[<img src="images/DD30CRTA_7.jpeg" width="342"/>](images/DD30CRTA_7.jpeg)
+
+Heatmap during charging battery by 1.5A current (73.8℃)
+
+[<img src="images/DD30CRTA_8.jpeg" width="250"/>](images/DD30CRTA_8.jpeg)
+
 ## Commands
 
 | Command | Description | EEPROM | Auto-push | Notes |
 | --- | --- | --- | --- | --- |
 | C-[1-2] | Read value of DC charger state | - | - | 0 - disabled<br>1 - enabled |
 | C-[1-2]=[0,1] | Disable/enable DC charger | - | - | 0 - disable<br>1 - enable<br>default: 0 |
-| C-l-[1-2]=[0,1] | Disable/enable DC charger control by status LED | - | - | 0 - disable<br>1 - enable<br>default: 1 |
-| C-a | Read value of charger automode | - | - | 0 - disabled<br>1 - enabled |
-| C-a=[0,1] | Disable/enable charger automode | + | - | 0 - disable<br>1 - enable<br>default: 1 |
-| C-a-m | Read value of charger automode messages | - | - | 0 - disabled<br>1 - "status" messages only<br>2 - "status" and "state" messages<br>Status template:<br>"C-a-m<B-[1-2]:\<status>"<br>Possible "status":<br>0 - disabled<br>1 - everything is ok<br>"I-[3,4]=value" - battery current consumption >0.1A<br>"T-[1-4]=value" - temperature on batteries or DC charger not ok<br>"C-p=2" - no output from DC charger<br>|
-| C-a-m=[0-2] | Disable/enable charger automode messages | + | - | 0 - disable<br>1 - "status" messages only<br>2 - "status" and "state" messages<br>default: 0 |
+| C-[1-2]-a | Read value of charger automode | - | - | 0 - disabled<br>1 - enabled (by current)<br>2 - enabled (by current/LED) |
+| C-[1-2]-a=[0-2] | Disable/enable charger automode | + | - | 0 - disable<br>1 - enable (by current)<br>2 - enable (by current/LED)<br>default: 1 |
+| C-a-m | Read value of charger automode messages | - | - | 0 - disabled<br>1 - "status" messages only<br>2 - "state" messages only<br>3 - "status" and "state" messages<br>Status template:<br>"C-a-m<C-[1-2]:\<status>"<br>Possible "status":<br>1 - everything is ok<br>2 - input voltage to DC charger less 15V<br>"I-[1,2]=value" - battery current consumption >0.1A<br>"T-[1-2]=value" - temperature on batteries >42℃<br>State template:<br>"C-a-m<C-[1-2]=[0,1]"|
+| C-a-m=[0-3] | Disable/enable charger automode messages | + | - | 0 - disable<br>1 - "status" messages only<br>2 - "state" messages only<br>3 - "status" and "state" messages<br>default: 0 |
 | O-[1-4] | Read value of outputs status | - | - | 0 - disabled<br>1 - enabled |
 | O-[1-4]=[0,1] | Disable/enable outputs | - | - | 0 - disable<br>1 - enable<br>default: 0 |
 | O-a | Read value of outputs control automode | - | - | 0 - disabled<br>1 - enabled |
 | O-a=[0,1] | Disable/enable outputs control automode | + | - | 0 - disable<br>1 - enable<br>default: 1 |
-| O-a-m | Read value of outputs control automode messages | - | - | 0 - disabled<br>1 - "status" messages only<br>2 - "status" and "state" messages<br>"O-a-m<B-[1-2]:\<status>"<br>Possible "status:"<br>1 - everything is ok<br>"V-[3,4]=value" - batteries voltage < 11.5V<br>"T-[1-2]=value" - temperature on batteries not ok<br> |
-| O-a-m=[0-2] | Disable/enable outputs control automode messages | + | - | 0 - disable<br>1 - "status" messages only<br>2 - "status" and "state" messages<br>default: 0 |
-| T-c-[1-4] | Read value of temperature control | - | - | 0 - disabled<br>1 - enabled |
-| T-c-[1-4]=[0,1] | Disable/enable temperature control | + | - | 0 - disable<br>1 - enable<br>default: 1<br>T-c-1 - Battery 1<br>T-c-2 - Battery 2<br>T-c-3 - DC charger 1<br>T-c-4 - DC charger 2<br> |
-| T-[1-4] | Read value of temperature on batteries and chargers | - | + (auto-push every 1 minute) | °C<br>T-1 - Battery 1<br>T-2 - Battery 2<br>T-3 - Charger 1<br>T-4 - Charger 2<br> |
-| T-[1-4]-a | Read value of auto-push for temperature on batteries and chargers | - | - | 0 - disabled<br>1 - enabled |
-| T-[1-4]-a=[0,1] | Disable/enable auto-push for read values of temperature on batteries and chargers | + | - | 0 - disable<br>1 - enable<br>default: 0 |
-| V-[1-3] | Read value of input voltage for chargers and batteries outputs | - | + (auto-push every 1 minute) | Volt |
-| V-[1-3]-a | Read value of auto-push input voltage for chargers and batteries outputs | - | - | 0 - disabled<br>1 - enabled |
-| V-[1-3]-a=[0,1] | Disable/enable auto-push for read values of input voltage for chargers and batteries outputs | + | - | 0 - disable<br>1 - enable<br>default: 0 |
+| O-a-m | Read value of outputs control automode messages | - | - | 0 - disabled<br>1 - "status" messages only<br>2 - "state" messages only<br>3 - "status" and "state" messages<br>Status template:<br>"O-a-m<B-[1-2]:\<status>"<br>Possible "status:"<br>1 - everything is ok<br>"V-[1,2]=value" - batteries voltage < 11.5V<br>"T-[1-2]=value" - temperature on batteries >45℃<br>State template:<br>"O-a-m<O-[1-4]=[0,1]" |
+| O-a-m=[0-3] | Disable/enable outputs control automode messages | + | - | 0 - disable<br>1 - "status" messages only<br>2 - "state" messages only<br>3 - "status" and "state" messages<br>default: 0 |
+| T-c-[1-2] | Read value of temperature control | - | - | 0 - disabled<br>1 - enabled |
+| T-c-[1-2]=[0,1] | Disable/enable temperature control | + | - | 0 - disable<br>1 - enable<br>default: 1<br>where:<br>T-c-1 - Battery 1<br>T-c-2 - Battery 2<br> |
+| T-[1-2] | Read value of temperature on batteries | - | + (auto-push every 1 minute) | °C<br>T-1 - Battery 1<br>T-2 - Battery 2<br> |
+| T-[1-2]-a | Read value of auto-push for temperature on batteries | - | - | 0 - disabled<br>1 - enabled |
+| T-[1-2]-a=[0,1] | Disable/enable auto-push for read values of temperature on batteries | + | - | 0 - disable<br>1 - enable<br>default: 0 |
+| V-[1-4] | Read value of input voltage for chargers and batteries outputs | - | + (auto-push every 1 minute) | Volt |
+| V-[1-4]-a | Read value of auto-push input voltage for chargers and batteries outputs | - | - | 0 - disabled<br>1 - enabled |
+| V-[1-4]-a=[0,1] | Disable/enable auto-push for read values of input voltage for chargers and batteries outputs | + | - | 0 - disable<br>1 - enable<br>default: 0 |
 | I-[1-4] | Read value of current for chargers and batteries outputs | - | + (auto-push every 1 minute) | Amper |
 | I-[1-4]-a | Read value of auto-push current for chargers and batteries outputs | - | - | 0 - disabled<br>1 - enabled |
 | I-[1-4]-a=[0,1] | Disable/enable auto-push for read values of current for chargers and batteries outputs | + | - | 0 - disable<br>1 - enable<br>default: 0 |
@@ -126,31 +165,36 @@ To avoid increase temperature above 100℃ on transistors and work with load up 
 | P-[1-4]-a | Read value of auto-push power consumption for chargers and batteries outputs | - | - | 0 - disabled<br>1 - enabled |
 | P-[1-4]-a=[0,1] | Disable/enable auto-push for read values of power consumption for chargers and batteries outputs | + | - | 0 - disable<br>1 - enable<br>default: 0 |
 
-where,<br>
-V-1 - Input voltage to chargers
-[I,P]-1 - DC charger 1<br>
-[I,P]-2 - DC charger 2<br>
-[V,I,P]-3 - Battery 1<br>
-[V,I,P]-4 - Battery 2<br>
-***EEPROM*** - memory values are kept when the board is turned off<br>
+where,  
+[V,I,P]-1 - Battery #1  
+[V,I,P]-2 - Battery #2  
+[V,I,P]-3 - DC charger #1  
+[V,I,P]-4 - DC charger #2  
+***EEPROM*** - memory values are kept when the board is turned off  
 ***Auto-push*** - periodically send data to server
 
 ## Charge logic diagram
 
-[<img src="images/slvu_module1_charge_diagram.jpg" width="300"/>](images/slvu_module1_charge_diagram.jpg)
+[<img src="images/slvu_module1_charge_diagram.jpeg" width="700"/>](images/slvu_module1_charge_diagram.jpeg)
 
 ## Device Photos
 
 ### Module board 1.1
 
-[<img src="images/slvu_module1_1_v2.jpg" width="300"/>](images/slvu_module1-1_1.jpg)
-[<img src="images/slvu_module1_2_v2.jpg" width="276"/>](images/slvu_module1-1_2.jpg)
-[<img src="images/slvu_module1_3_v2.jpg" width="314"/>](images/slvu_module1-1_3.jpg)
-[<img src="images/slvu_module1_4_v2.jpg" width="344"/>](images/slvu_module1-1_4.jpg)
-[<img src="images/slvu_module1_5_v2.jpg" width="320"/>](images/slvu_module1-1_5.jpg)
+[<img src="images/slvu_module1.1_1.jpg" width="257"/>](images/slvu_module1-1_1.jpg)
+[<img src="images/slvu_module1.1_2.jpg" width="450"/>](images/slvu_module1-1_2.jpg)
+[<img src="images/slvu_module1.1_3.jpg" width="340"/>](images/slvu_module1-1_3.jpg)
+[<img src="images/slvu_module1.1_4.jpg" width="348"/>](images/slvu_module1-1_4.jpg)
+[<img src="images/slvu_module1.1_5.jpg" width="301"/>](images/slvu_module1-1_5.jpg)
+[<img src="images/slvu_module1.1_6.jpg" width="362"/>](images/slvu_module1-1_6.jpg)
+[<img src="images/slvu_module1.1_7.jpg" width="276"/>](images/slvu_module1-1_7.jpg)
+[<img src="images/slvu_module1.1_8.jpg" width="353"/>](images/slvu_module1-1_8.jpg)
 
 ### Module board 1.2
 
-[<img src="images/slvu_module1_1_v1.jpg" width="300"/>](images/slvu_module1-2_1.jpg)
-[<img src="images/slvu_module1_2_v1.jpg" width="305"/>](images/slvu_module1-2_2.jpg)
-[<img src="images/slvu_module1_3_v1.jpg" width="292"/>](images/slvu_module1-2_3.jpg)
+[<img src="images/slvu_module1.2_1.jpg" width="350"/>](images/slvu_module1-2_1.jpg)
+[<img src="images/slvu_module1.2_2.jpg" width="295"/>](images/slvu_module1-2_2.jpg)
+[<img src="images/slvu_module1.2_3.jpg" width="340"/>](images/slvu_module1-2_3.jpg)
+[<img src="images/slvu_module1.2_4.jpg" width="469"/>](images/slvu_module1-2_4.jpg)
+[<img src="images/slvu_module1.2_5.jpg" width="312"/>](images/slvu_module1-2_5.jpg)
+[<img src="images/slvu_module1.2_6.jpg" width="326"/>](images/slvu_module1-2_6.jpg)

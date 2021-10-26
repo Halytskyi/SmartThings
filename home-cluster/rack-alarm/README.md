@@ -30,24 +30,24 @@
 
 | Arduino PIN | Component | Notes |
 | --- | --- | --- |
-| D2 (Ext. Int.) | flame sensor ||
-| D3 (PWM) | flame sensor ||
-| D4 | flame sensor ||
-| D5 (PWM) | flame sensor ||
-| D6 (PWM) | flame sensor ||
-| D7 | flame sensor ||
-| D8 | flame sensor ||
-| D9 (PWM) | flame sensor ||
+| D2 (Ext. Int.) | flame sensor | Front side, sensor #1 |
+| D3 (PWM) | flame sensor | Front side, sensor #2 |
+| D4 | flame sensor | Left door, sensor #1 |
+| D5 (PWM) | flame sensor | Left door, sensor #2 |
+| D6 (PWM) | flame sensor | Back side, sensor #1 |
+| D7 | flame sensor | Back side, sensor #2 |
+| D8 | flame sensor | Right door, sensor #1 |
+| D9 (PWM) | flame sensor | Right door, sensor #2 |
 | D10 (PWM) | buzzer ||
-| D11 (PWM) | external flame sensor ||
+| D11 (PWM) | flame sensor | External |
 | D12 | [PJON v13.0](https://github.com/gioblu/PJON/tree/13.0/src/strategies/SoftwareBitBang) | Communication with Server (TX only) |
 | D13 | signal output ||
-| A0 | MQ-2 smoke sensor ||
-| A1 | MQ-2 smoke sensor ||
+| A0 | MQ-2 smoke sensor | Front side |
+| A1 | MQ-2 smoke sensor | Back side |
 | A2 | MQ-2 smoke sensor ||
 | A3 | MQ-2 smoke sensor ||
-| A4 | external MQ-2 smoke sensor ||
-| A5 | external motion sensor(s) | used with 10kΩ pull-down resistor |
+| A4 | MQ-2 smoke sensor | External |
+| A5 | Motion sensor(s) | External, used with 10kΩ pull-down resistor |
 
 ### Components photos and schematics
 

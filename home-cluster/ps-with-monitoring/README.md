@@ -157,6 +157,6 @@ T-4 - 18V 20A PS<br>
 ### Monitoring board version 1
 
 [<img src="images/ps-monitoring_1_v1.jpg" alt="PS monitoring" width="300"/>](images/ps-monitoring_1_v1.jpg)
-[<img src="images/ps-monitoring_2_v1.jpg" alt="PS monitoring" width="310"/>](images/ps-monitoring_2_v1.jpg)
+[<img src="images/ps-monitoring_2_v1.jpeg" alt="PS monitoring" width="310"/>](images/ps-monitoring_2_v1.jpeg)
 [<img src="images/ps-monitoring_3_v1.jpg" alt="PS monitoring" width="346"/>](images/ps-monitoring_3_v1.jpg)
 [<img src="images/ps-monitoring_4_v1.jpg" alt="PS monitoring" width="326"/>](images/ps-monitoring_4_v1.jpg)

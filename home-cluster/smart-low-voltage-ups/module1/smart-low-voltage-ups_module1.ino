@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2020 Oleh Halytskyi
+* Copyright (C) 2021 Oleh Halytskyi
 *
 * This software may be modified and distributed under the terms
 * of the Apache license. See the LICENSE file for details.
@@ -31,43 +31,42 @@ const unsigned int autoPushInterval = 60000; // auto-push interval for each sens
 unsigned long prevMillisAutoPush = 0;
 unsigned long lastUpdateMillisAutoPush = 0;
 
-// For Auto charge mode
-const unsigned int chargerAutomodeInterval = 60000; // interval for autocharge mode
-unsigned long prevMillisChargerAutomode = 4294952295; // after start delay 45s (4294967295 - 15000 = 4294952295)
-const unsigned long chargerAutomodePSInterval = 3600000; // 1h interval for enable PS charger in autocharge mode after fail
-unsigned long prevMillisChargerAutomodePS = chargerAutomodePSInterval; // to start without waiting 1h
-
-// Charger
-const byte chargerTypePin = 5;
-const byte chargerPSPin = 4;
-byte chargerAutomode = 1;
-const byte eepromChargerAutomodeAddr = 1;
-byte chargerAutomodeMessages = 0;
-const byte eepromChargerAutomodeMessagesAddr = 2;
-
-// Batteries switches
-const byte batSwitchesNum = 2;
+// DC chargers
+const byte dcChargersNum = 2;
 // {"command"}
-const char *const batSwitchCmd[batSwitchesNum] = {"B-1", "B-2"};
-// {"pin"}
-const byte batSwitchPin[batSwitchesNum] = {2, 3};
+const char *const dcChargerCmd[dcChargersNum] = {"C-1", "C-2"};
+// {"switch pin"}
+const byte dcChargerSwitchPin[dcChargersNum] = {11, 8};
+// {"status led pin"}
+const byte dcChargerStatusLedPin[dcChargersNum] = {10, 9};
+// {"automode"}
+byte dcChargerAutomode[dcChargersNum] = {1, 1};
+// {"EEProm automode"}
+const byte eepromDcChargerAutomodeAddr[dcChargersNum] = {1, 2};
+// Automode messages
+byte dcChargersAutomodeMessages = 0;
+const byte eepromDcChargersAutomodeMessagesAddr = 3;
+// Autocharge start mode
+const unsigned int chargerAutomodeInterval = 60000; // interval for autocharge mode
+unsigned long prevMillisChargerAutomodeStart = 4294937295; // after start delay 30s (4294967295 - 30000 = 4294937295)
+unsigned long prevMillisChargerAutomodeStop = 4294952295; // after start delay 45s (4294967295 - 15000 = 4294952295)
 
 // Outputs
 const byte outputsNum = 4;
 // {"command"}
 const char *const outputCmd[outputsNum] = {"O-1", "O-2", "O-3", "O-4"};
 // {"pin"}
-const byte outputPin[outputsNum] = {13, 11, 10, 9};
+const byte outputPin[outputsNum] = {2, 3, 4, 5};
 // Outputs control automode
 byte outputsAutomode = 1;
-const byte eepromOutputsAutomodeAddr = 3;
+const byte eepromOutputsAutomodeAddr = 4;
 byte outputsAutomodeMessages = 0;
-const byte eepromOutputsAutomodeMessagesAddr = 4;
+const byte eepromOutputsAutomodeMessagesAddr = 5;
 const unsigned int outputsAutomodeInterval = 60000; // interval for outputs autocharge mode
 unsigned long prevMillisOutputsAutomode = 4294937295; // after start delay 30s (4294967295 - 30000 = 4294937295)
 
 // Voltage params
-const float arduinoVoltage = 5.014;
+const float arduinoVoltage = 5.012;
 
 // Voltage sensors
 const byte voltageNum = 4;
@@ -78,7 +77,7 @@ byte voltageAutoPush[voltageNum] = {0, 0, 0, 0};
 // {"auto-push last update"}
 unsigned long voltageAutoPushLU[voltageNum] = {0, 0, 0, 0};
 // {"EEProm auto-push"}
-const byte eepromVoltageAutoPushAddr[voltageNum] = {5, 6, 7, 8};
+const byte eepromVoltageAutoPushAddr[voltageNum] = {6, 7, 8, 9};
 
 // Current sensors
 const byte currentNum = 4;
@@ -89,7 +88,7 @@ byte currentAutoPush[currentNum] = {0, 0, 0, 0};
 // {"auto-push last update"}
 unsigned long currentAutoPushLU[currentNum] = {0, 0, 0, 0};
 // {"EEProm auto-push"}
-const byte eepromCurrentAutoPushAddr[currentNum] = {9, 10, 11, 12};
+const byte eepromCurrentAutoPushAddr[currentNum] = {10, 11, 12, 13};
 
 // Power consumption
 const byte powerNum = 4;
@@ -100,31 +99,30 @@ byte powerAutoPush[powerNum] = {0, 0, 0, 0};
 // {"auto-push last update"}
 unsigned long powerAutoPushLU[powerNum] = {0, 0, 0, 0};
 // {"EEProm auto-push"}
-const byte eepromPowerAutoPushAddr[powerNum] = {13, 14, 15, 16};
+const byte eepromPowerAutoPushAddr[powerNum] = {14, 15, 16, 17};
 
 // Temperature sensors
-const byte tSensorsNum = 3;
+const byte tSensorsNum = 2;
 OneWire oneWire(6);
 DallasTemperature sensors(&oneWire);
 // {"command"}
-const char *const tSensorCmd[tSensorsNum] = {"T-1", "T-2", "T-3"};
+const char *const tSensorCmd[tSensorsNum] = {"T-1", "T-2"};
 // {"auto-push"}
-byte tSensorAutoPush[tSensorsNum] = {0, 0, 0};
+byte tSensorAutoPush[tSensorsNum] = {0, 0};
 // {"auto-push last update"}
-unsigned long tSensorAutoPushLU[tSensorsNum] = {0, 0, 0};
+unsigned long tSensorAutoPushLU[tSensorsNum] = {0, 0};
 // {"EEProm auto-push"}
-const byte eepromTSensorAutoPushAddr[tSensorsNum] = {17, 18, 19};
+const byte eepromTSensorAutoPushAddr[tSensorsNum] = {18, 19};
 const DeviceAddress tSensorAddr[tSensorsNum] = {
-  {0x28, 0x7E, 0xBB, 0xC6, 0x38, 0x19, 0x01, 0x61}, // Battery 1
-  {0x28, 0x3C, 0x7C, 0x5E, 0x39, 0x19, 0x01, 0x5F}, // Battery 2
-  {0x28, 0x68, 0x90, 0x64, 0x39, 0x19, 0x01, 0x05}}; // PS charger
+  {0x28, 0x7E, 0xBB, 0xC6, 0x38, 0x19, 0x01, 0x61},  // Battery 1
+  {0x28, 0x3C, 0x7C, 0x5E, 0x39, 0x19, 0x01, 0x5F}}; // Battery 2
 
 // Temperature control
 // {"command"}
-const char *const temperatureControlCmd[tSensorsNum] = {"T-c-1", "T-c-2", "T-c-3"};
+const char *const temperatureControlCmd[tSensorsNum] = {"T-c-1", "T-c-2"};
 // {"value"}
-byte temperatureControl[tSensorsNum] = {1, 1, 1};
-const byte eepromTemperatureControlAddr[tSensorsNum] = {20, 21, 22};
+byte temperatureControl[tSensorsNum] = {1, 1};
+const byte eepromTemperatureControlAddr[tSensorsNum] = {20, 21};
 
 
 float get_voltage(const char command[]) {
@@ -135,21 +133,21 @@ float get_voltage(const char command[]) {
   const byte voltageCountValues = 50; // how many values must be averaged
 
   if (strcmp(command, "V-1") == 0) {
-    voltagePin = 3; // Power supply charger
-    r1 = 101000; // R1 = 100k
-    r2 = 9800; // R2 = 10k
+    voltagePin = 4; // Battery #1
+    r1 = 99000; // R1 = 100k
+    r2 = 9732; // R2 = 10k
   } else if (strcmp(command, "V-2") == 0) {
-    voltagePin = 1; // Solar charger
-    r1 = 101500; // R1 = 100k
-    r2 = 9830; // R2 = 10k
+    voltagePin = 5; // Battery #2
+    r1 = 99700; // R1 = 100k
+    r2 = 9853; // R2 = 10k
   } else if (strcmp(command, "V-3") == 0) {
-    voltagePin = 7; // Battery 1
-    r1 = 101500; // R1 = 100k
-    r2 = 9860; // R2 = 10k
+    voltagePin = 6; // DC charger #1
+    r1 = 100300; // R1 = 100k
+    r2 = 9869; // R2 = 10k
   } else if (strcmp(command, "V-4") == 0) {
-    voltagePin = 5; // Battery 2
-    r1 = 99510; // R1 = 100k
-    r2 = 9900; // R2 = 10k
+    voltagePin = 7; // DC charger #2
+    r1 = 99000; // R1 = 100k
+    r2 = 10880; // R2 = 10k
   }
 
   for (byte i = 0; i < voltageCountValues; i++) {
@@ -173,20 +171,20 @@ float get_current(const char command[]) {
   const byte currentCountValues = 50; // how many values must be averaged
 
   if (strcmp(command, "I-1") == 0) {
-    currentPin = 2; // Power supply charger
-    offsetVoltage = 2.480;
+    currentPin = 1; // Battery #1
+    offsetVoltage = 2.504;
     direction = 0;
   } else if (strcmp(command, "I-2") == 0) {
-    currentPin = 0; // Solar charger
-    offsetVoltage = 2.503;
+    currentPin = 2; // Battery #2
+    offsetVoltage = 2.511;
     direction = 1;
   } else if (strcmp(command, "I-3") == 0) {
-    currentPin = 6; // Battery 1
-    offsetVoltage = 2.501;
-    direction = 1;
+    currentPin = 0; // DC charger #1
+    offsetVoltage = 2.488;
+    direction = 0;
   } else if (strcmp(command, "I-4") == 0) {
-    currentPin = 4; // Battery 2
-    offsetVoltage = 2.499;
+    currentPin = 3; // DC charger #2
+    offsetVoltage = 2.518;
     direction = 1;
   }
 
@@ -320,86 +318,58 @@ void receiver_function(uint8_t *payload, uint16_t length, const PJON_Packet_Info
   }
   const byte value_int = atoi(value);
 
-  // Chargers type/state
-  if (strcmp(command, "C") == 0) {
-    if (valueLength == 0) {
-      itoa(digitalRead(chargerTypePin), tmpBuf, 10);
-      busA_reply(request, tmpBuf);
-      return;
-    } else {
-      if (value_int == 0 or value_int == 1) {
-        digitalWrite(chargerTypePin, value_int);
-        busA_reply(request, goodCommandReply);
-        return;
-      } else {
-        busA_reply(request, badCommandReply);
-        return;
-      }
-    }
-  } else if (strcmp(command, "C-p") == 0) {
-    if (valueLength == 0) {
-      itoa(digitalRead(chargerPSPin), tmpBuf, 10);
-      busA_reply(request, tmpBuf);
-      return;
-    } else {
-      if (value_int == 0 or value_int == 1) {
-        digitalWrite(chargerPSPin, value_int);
-        busA_reply(request, goodCommandReply);
-        return;
-      } else {
-        busA_reply(request, badCommandReply);
-        return;
-      }
-    }
-  } else if (strcmp(command, "C-a") == 0) {
-    if (valueLength == 0) {
-      itoa(chargerAutomode, tmpBuf, 10);
-      busA_reply(request, tmpBuf);
-      return;
-    } else {
-      if (value_int == 0 or value_int == 1) {
-        chargerAutomode = value_int;
-        EEPROM.update(eepromChargerAutomodeAddr, value_int);
-        busA_reply(request, goodCommandReply);
-        return;
-      } else {
-        busA_reply(request, badCommandReply);
-        return;
-      }
-    }
-  } else if (strcmp(command, "C-a-m") == 0) {
-    if (valueLength == 0) {
-      itoa(chargerAutomodeMessages, tmpBuf, 10);
-      busA_reply(request, tmpBuf);
-      return;
-    } else {
-      if (value_int == 0 or value_int == 1 or value_int == 2) {
-        chargerAutomodeMessages = value_int;
-        EEPROM.update(eepromChargerAutomodeMessagesAddr, value_int);
-        busA_reply(request, goodCommandReply);
-        return;
-      } else {
-        busA_reply(request, badCommandReply);
-        return;
-      }
-    }
-  }
-  // Batteries switches
-  for (byte i = 0; i < batSwitchesNum; i += 1) {
-    if (strcmp(command, batSwitchCmd[i]) == 0) {
+  // DC chargers state
+  for (byte i = 0; i < dcChargersNum; i += 1) {
+    if (strcmp(command, dcChargerCmd[i]) == 0) {
       if (valueLength == 0) {
-        itoa(digitalRead(batSwitchPin[i]), tmpBuf, 10);
+        itoa(digitalRead(dcChargerSwitchPin[i]), tmpBuf, 10);
         busA_reply(request, tmpBuf);
         return;
       } else {
         if (value_int == 0 or value_int == 1) {
-          digitalWrite(batSwitchPin[i], value_int);
+          digitalWrite(dcChargerSwitchPin[i], value_int);
           busA_reply(request, goodCommandReply);
           return;
         } else {
           busA_reply(request, badCommandReply);
           return;
         }
+      }
+    }
+    strcpy(tmpBuf, dcChargerCmd[i]);
+    strcat(tmpBuf, "-a");
+    if (strcmp(command, tmpBuf) == 0) {
+      if (valueLength == 0) {
+        itoa(dcChargerAutomode[i], tmpBuf, 10);
+        busA_reply(request, tmpBuf);
+        return;
+      } else {
+        if (value_int == 0 or value_int == 1 or value_int == 2) {
+          dcChargerAutomode[i] = value_int;
+          EEPROM.update(eepromDcChargerAutomodeAddr[i], value_int);
+          busA_reply(request, goodCommandReply);
+          return;
+        } else {
+          busA_reply(request, badCommandReply);
+          return;
+        }
+      }
+    }
+  }
+  if (strcmp(command, "C-a-m") == 0) {
+    if (valueLength == 0) {
+      itoa(dcChargersAutomodeMessages, tmpBuf, 10);
+      busA_reply(request, tmpBuf);
+      return;
+    } else {
+      if (value_int >= 0 and value_int <= 3) {
+        dcChargersAutomodeMessages = value_int;
+        EEPROM.update(eepromDcChargersAutomodeMessagesAddr, value_int);
+        busA_reply(request, goodCommandReply);
+        return;
+      } else {
+        busA_reply(request, badCommandReply);
+        return;
       }
     }
   }
@@ -445,7 +415,7 @@ void receiver_function(uint8_t *payload, uint16_t length, const PJON_Packet_Info
       busA_reply(request, tmpBuf);
       return;
     } else {
-      if (value_int == 0 or value_int == 1 or value_int == 2) {
+      if (value_int >= 0 and value_int <= 3) {
         outputsAutomodeMessages = value_int;
         EEPROM.update(eepromOutputsAutomodeMessagesAddr, value_int);
         busA_reply(request, goodCommandReply);
@@ -669,45 +639,34 @@ void autopush() {
   }
 }
 
-void non_block_delay(const unsigned int delayMs) {
-  const unsigned long curMillis = millis(); // time now in ms
-  unsigned long prevMillis = millis();
-  while (prevMillis - curMillis <= delayMs) {
-    busA.receive(receiveTimeBusA);
-    autopush();
-    prevMillis = millis();
-  }
-}
-
 void autocharge_start() {
-  if (chargerAutomode == 1 and digitalRead(chargerTypePin) == 0 and digitalRead(chargerPSPin) == 0) {
-    unsigned long curMillis = millis(); // time now in ms
-    if (curMillis - prevMillisChargerAutomode >= chargerAutomodeInterval) {
-      for (byte i = 0; i < batSwitchesNum; i += 1) {
-        float batCurrent = get_current(currentCmd[i+2]);
-        if (batCurrent > 0.1) {
-          if (chargerAutomodeMessages >= 1) {
-            char tmpBuf[14];
-            strcpy(tmpBuf, batSwitchCmd[i]);
-            strcat(tmpBuf, ":");
-            strcat(tmpBuf, currentCmd[i+2]);
-            strcat(tmpBuf, "=");
-            char tmpBuf2[6];
-            dtostrf(batCurrent, 0, 2, tmpBuf2);
-            strcat(tmpBuf, tmpBuf2);
-            busB_send("C-a-m", tmpBuf);
+  unsigned long curMillis = millis(); // time now in ms
+  if (curMillis - prevMillisChargerAutomodeStart >= chargerAutomodeInterval) {
+    for (byte i = 0; i < dcChargersNum; i += 1) {
+      if (dcChargerAutomode[i] >= 1 and digitalRead(dcChargerSwitchPin[i]) == 0) {
+        float batVoltage = get_voltage(voltageCmd[i]);
+        if (batVoltage > 5 and batVoltage < 12.5) {
+          float batCurrent = get_current(currentCmd[i]);
+          if (batCurrent > 0.1) {
+            if (dcChargersAutomodeMessages == 1 or dcChargersAutomodeMessages == 3) {
+              char tmpBuf[14];
+              strcpy(tmpBuf, dcChargerCmd[i]);
+              strcat(tmpBuf, ":");
+              strcat(tmpBuf, currentCmd[i]);
+              strcat(tmpBuf, "=");
+              char tmpBuf2[6];
+              dtostrf(batCurrent, 0, 2, tmpBuf2);
+              strcat(tmpBuf, tmpBuf2);
+              busB_send("C-a-m", tmpBuf);
+            }
+            continue;
           }
-          continue;
-        }
-
-        float batVoltage = get_voltage(voltageCmd[i+2]);
-        if (batVoltage > 5 and batVoltage < 12.8) {
           if (temperatureControl[i] == 1) {
             float batTemperature = get_temperature(i);
             if (batTemperature > 42) {
-              if (chargerAutomodeMessages >= 1) {
+              if (dcChargersAutomodeMessages == 1 or dcChargersAutomodeMessages == 3) {
                 char tmpBuf[16];
-                strcpy(tmpBuf, batSwitchCmd[i]);
+                strcpy(tmpBuf, dcChargerCmd[i]);
                 strcat(tmpBuf, ":");
                 strcat(tmpBuf, tSensorCmd[i]);
                 strcat(tmpBuf, "=");
@@ -719,154 +678,99 @@ void autocharge_start() {
               continue;
             }
           }
-          if (temperatureControl[2] == 1) {
-            float chargerTemperature = get_temperature(2);
-            if (chargerTemperature > 50) {
-              if (chargerAutomodeMessages >= 1) {
-                char tmpBuf[16];
-                strcpy(tmpBuf, batSwitchCmd[i]);
-                strcat(tmpBuf, ":");
-                strcat(tmpBuf, tSensorCmd[2]);
-                strcat(tmpBuf, "=");
-                char tmpBuf2[8];
-                dtostrf(chargerTemperature, 0, 2, tmpBuf2);
-                strcat(tmpBuf, tmpBuf2);
-                busB_send("C-a-m", tmpBuf);
-              }
-              continue;
+          float inputChargerVoltage = get_voltage(voltageCmd[i+2]);
+          if (inputChargerVoltage < 15) {
+            if (dcChargersAutomodeMessages == 1 or dcChargersAutomodeMessages == 3) {
+              char tmpBuf[6];
+              strcpy(tmpBuf, dcChargerCmd[i]);
+              strcat(tmpBuf, ":2");
+              busB_send("C-a-m", tmpBuf);
             }
+            continue;
           }
-          float solarVoltage = get_voltage(voltageCmd[1]);
-          if (solarVoltage >= 13) {
-            digitalWrite(chargerTypePin, HIGH);
-            if (chargerAutomodeMessages == 2) {
-              busB_send("C-a-m", "C=1");
-            }
-          } else {
-            if (curMillis - prevMillisChargerAutomodePS >= chargerAutomodePSInterval) {
-              digitalWrite(chargerPSPin, HIGH);
-              non_block_delay(2000); // 2 seconds
-              float chargerVoltage = get_voltage(voltageCmd[0]);
-              if (chargerVoltage < 13.0) {
-                // disable PS charger and wait for 1h
-                digitalWrite(chargerPSPin, LOW);
-                prevMillisChargerAutomodePS = curMillis;
-                if (chargerAutomodeMessages >= 1) {
-                  char tmpBuf[10];
-                  strcpy(tmpBuf, batSwitchCmd[i]);
-                  strcat(tmpBuf, ":C-p=2"); // "C-p=2" mean no output from PS charger
-                  busB_send("C-a-m", tmpBuf);
-                }
-                continue;
-              }
-              if (chargerAutomodeMessages == 2) {
-                busB_send("C-a-m", "C-p=1");
-              }
-              prevMillisChargerAutomodePS = curMillis + chargerAutomodePSInterval;
-            } else {
-              continue;
-            }
-          }
-          digitalWrite(batSwitchPin[i], HIGH);
-          if (chargerAutomodeMessages >= 1) {
+          digitalWrite(dcChargerSwitchPin[i], HIGH);
+          if (dcChargersAutomodeMessages == 1 or dcChargersAutomodeMessages == 3) {
             char tmpBuf[6];
-            strcpy(tmpBuf, batSwitchCmd[i]);
+            strcpy(tmpBuf, dcChargerCmd[i]);
             strcat(tmpBuf, ":1");
             busB_send("C-a-m", tmpBuf);
-            if (chargerAutomodeMessages == 2) {
+            if (dcChargersAutomodeMessages >= 2) {
               char tmpBuf[6];
-              strcpy(tmpBuf, batSwitchCmd[i]);
+              strcpy(tmpBuf, dcChargerCmd[i]);
               strcat(tmpBuf, "=1");
               busB_send("C-a-m", tmpBuf);
             }
           }
-          break;
         }
       }
-      prevMillisChargerAutomode = curMillis;
     }
+    prevMillisChargerAutomodeStart = curMillis;
   }
 }
 
 void autocharge_stop() {
-  if (chargerAutomode == 1 and (digitalRead(chargerTypePin) == 1 or digitalRead(chargerPSPin) == 1)) {
-    unsigned long curMillis = millis(); // time now in ms
-    if (curMillis - prevMillisChargerAutomode >= chargerAutomodeInterval) {
-      for (byte i = 0; i < batSwitchesNum; i += 1) {
-        if (digitalRead(batSwitchPin[i]) == 1) {
-          float chargerCurrent = get_current(currentCmd[digitalRead(chargerTypePin)]);
-          float batCurrent = get_current(currentCmd[i+2]);
-          float batTemperature = 0.0;
-          if (temperatureControl[i] == 1) {
-            batTemperature = get_temperature(i);
-          }
-          float chargerTemperature = 0.0;
-          if (temperatureControl[2] == 1) {
-            chargerTemperature = get_temperature(2);
-          }
-          if (chargerCurrent < 0.15 or batCurrent > 0.1 or batTemperature > 45 or chargerTemperature > 60) {
-            digitalWrite(batSwitchPin[i], LOW);
-            if (chargerAutomodeMessages >= 1) {
-              if (batCurrent > 0.1) {
-                char tmpBuf[14];
-                strcpy(tmpBuf, batSwitchCmd[i]);
-                strcat(tmpBuf, ":");
-                strcat(tmpBuf, currentCmd[i+2]);
-                strcat(tmpBuf, "=");
-                char tmpBuf2[6];
-                dtostrf(batCurrent, 0, 2, tmpBuf2);
-                strcat(tmpBuf, tmpBuf2);
-                busB_send("C-a-m", tmpBuf);
-              } else if (batTemperature > 45) {
-                char tmpBuf[16];
-                strcpy(tmpBuf, batSwitchCmd[i]);
-                strcat(tmpBuf, ":");
-                strcat(tmpBuf, tSensorCmd[i]);
-                strcat(tmpBuf, "=");
-                char tmpBuf2[8];
-                dtostrf(batTemperature, 0, 2, tmpBuf2);
-                strcat(tmpBuf, tmpBuf2);
-                busB_send("C-a-m", tmpBuf);
-              } else if (chargerTemperature > 60) {
-                char tmpBuf[16];
-                strcpy(tmpBuf, batSwitchCmd[i]);
-                strcat(tmpBuf, ":");
-                strcat(tmpBuf, tSensorCmd[2]);
-                strcat(tmpBuf, "=");
-                char tmpBuf2[8];
-                dtostrf(chargerTemperature, 0, 2, tmpBuf2);
-                strcat(tmpBuf, tmpBuf2);
-                busB_send("C-a-m", tmpBuf);
-              } else {
-                char tmpBuf[6];
-                strcpy(tmpBuf, batSwitchCmd[i]);
-                strcat(tmpBuf, ":1");
-                busB_send("C-a-m", tmpBuf);
-              }
-              if (chargerAutomodeMessages == 2) {
-                char tmpBuf[6];
-                strcpy(tmpBuf, batSwitchCmd[i]);
-                strcat(tmpBuf, "=0");
-                busB_send("C-a-m", tmpBuf);
-              }
+  unsigned long curMillis = millis(); // time now in ms
+  if (curMillis - prevMillisChargerAutomodeStop >= chargerAutomodeInterval) {
+    for (byte i = 0; i < dcChargersNum; i += 1) {
+      if (dcChargerAutomode[i] >= 1 and digitalRead(dcChargerSwitchPin[i]) == 1) {
+        float inputChargerVoltage = get_voltage(voltageCmd[i+2]);
+        float chargerCurrent = get_current(currentCmd[i+2]);
+        byte chargerStatus = 1;
+        float batCurrent = get_current(currentCmd[i]);
+        float batTemperature = 0.0;
+        if (dcChargerAutomode[i] == 2) {
+          chargerStatus = digitalRead(dcChargerStatusLedPin[i]); // 0 - charged, 1 - charging
+        }
+        if (temperatureControl[i] == 1) {
+          batTemperature = get_temperature(i);
+        }
+        if (inputChargerVoltage < 15 or chargerCurrent < 0.15 or chargerStatus == 0 or batCurrent > 0.1 or batTemperature > 45) {
+          digitalWrite(dcChargerSwitchPin[i], LOW);
+          if (dcChargersAutomodeMessages == 1 or dcChargersAutomodeMessages == 3) {
+            if (batCurrent > 0.1) {
+              char tmpBuf[14];
+              strcpy(tmpBuf, dcChargerCmd[i]);
+              strcat(tmpBuf, ":");
+              strcat(tmpBuf, currentCmd[i]);
+              strcat(tmpBuf, "=");
+              char tmpBuf2[6];
+              dtostrf(batCurrent, 0, 2, tmpBuf2);
+              strcat(tmpBuf, tmpBuf2);
+              busB_send("C-a-m", tmpBuf);
             }
-            if (digitalRead(chargerTypePin) == 1) {
-              digitalWrite(chargerTypePin, LOW);
-              if (chargerAutomodeMessages == 2) {
-                busB_send("C-a-m", "C=0");
-              }
+            if (batTemperature > 45) {
+              char tmpBuf[16];
+              strcpy(tmpBuf, dcChargerCmd[i]);
+              strcat(tmpBuf, ":");
+              strcat(tmpBuf, tSensorCmd[i]);
+              strcat(tmpBuf, "=");
+              char tmpBuf2[8];
+              dtostrf(batTemperature, 0, 2, tmpBuf2);
+              strcat(tmpBuf, tmpBuf2);
+              busB_send("C-a-m", tmpBuf);
+            }
+            if (inputChargerVoltage < 15) {
+              char tmpBuf[6];
+              strcpy(tmpBuf, dcChargerCmd[i]);
+              strcat(tmpBuf, ":2");
+              busB_send("C-a-m", tmpBuf);
             } else {
-              digitalWrite(chargerPSPin, LOW);
-              if (chargerAutomodeMessages == 2) {
-                busB_send("C-a-m", "C-p=0");
-              }
+              char tmpBuf[6];
+              strcpy(tmpBuf, dcChargerCmd[i]);
+              strcat(tmpBuf, ":1");
+              busB_send("C-a-m", tmpBuf);
             }
-            break;
+            if (dcChargersAutomodeMessages >= 2) {
+              char tmpBuf[6];
+              strcpy(tmpBuf, dcChargerCmd[i]);
+              strcat(tmpBuf, "=0");
+              busB_send("C-a-m", tmpBuf);
+            }
           }
         }
       }
-      prevMillisChargerAutomode = curMillis;
     }
+    prevMillisChargerAutomodeStop = curMillis;
   }
 }
 
@@ -874,8 +778,8 @@ void autooutputs_control() {
   if (outputsAutomode == 1) {
     unsigned long curMillis = millis(); // time now in ms
     if (curMillis - prevMillisOutputsAutomode >= outputsAutomodeInterval) {
-      for (byte i = 0; i < batSwitchesNum; i += 1) {
-        float batVoltage = get_voltage(voltageCmd[i+2]);
+      for (byte i = 0; i < 2; i += 1) {
+        float batVoltage = get_voltage(voltageCmd[i]);
         float batTemperature = 0.0;
         if (temperatureControl[i] == 1) {
           batTemperature = get_temperature(i);
@@ -892,15 +796,18 @@ void autooutputs_control() {
           for (byte j = k; j < outputsNumJ; j += 1) {
             if (digitalRead(outputPin[j]) == 0) {
               digitalWrite(outputPin[j], HIGH);
-              if (outputsAutomodeMessages >= 1) {
+              if (outputsAutomodeMessages == 1 or outputsAutomodeMessages == 3) {
                 if (msgSent == 0) {
                   char tmpBuf[6];
-                  strcpy(tmpBuf, batSwitchCmd[i]);
+                  char tmpBuf2[2];
+                  strcpy(tmpBuf, "B-");
+                  itoa(i+1, tmpBuf2, 10);
+                  strcat(tmpBuf, tmpBuf2);
                   strcat(tmpBuf, ":1");
                   busB_send("O-a-m", tmpBuf);
                   msgSent = 1;
                 }
-                if (outputsAutomodeMessages == 2) {
+                if (outputsAutomodeMessages >= 2) {
                   char tmpBuf[6];
                   strcpy(tmpBuf, outputCmd[j]);
                   strcat(tmpBuf, "=1");
@@ -921,62 +828,45 @@ void autooutputs_control() {
           for (byte j = k; j < outputsNumJ; j += 1) {
             if (digitalRead(outputPin[j]) == 1) {
               digitalWrite(outputPin[j], LOW);
-              if (outputsAutomodeMessages >= 1) {
+              if (outputsAutomodeMessages == 1 or outputsAutomodeMessages == 3) {
                 if (msgSent == 0) {
                   if (batVoltage < 11.5) {
                     char tmpBuf[14];
-                    strcpy(tmpBuf, batSwitchCmd[i]);
-                    strcat(tmpBuf, ":");
-                    strcat(tmpBuf, voltageCmd[i+2]);
-                    strcat(tmpBuf, "=");
-                    char tmpBuf2[6];
-                    dtostrf(batVoltage, 0, 2, tmpBuf2);
+                    char tmpBuf2[2];
+                    char tmpBuf3[6];
+                    strcpy(tmpBuf, "B-");
+                    itoa(i+1, tmpBuf2, 10);
                     strcat(tmpBuf, tmpBuf2);
+                    strcat(tmpBuf, ":");
+                    strcat(tmpBuf, voltageCmd[i]);
+                    strcat(tmpBuf, "=");
+                    dtostrf(batVoltage, 0, 2, tmpBuf3);
+                    strcat(tmpBuf, tmpBuf3);
                     busB_send("O-a-m", tmpBuf);
-                  } else if (batTemperature > 45) {
+                  }
+                  if (batTemperature > 45) {
                     char tmpBuf[16];
-                    strcpy(tmpBuf, batSwitchCmd[i]);
+                    char tmpBuf2[2];
+                    char tmpBuf3[8];
+                    strcpy(tmpBuf, "B-");
+                    itoa(i+1, tmpBuf2, 10);
+                    strcat(tmpBuf, tmpBuf2);
                     strcat(tmpBuf, ":");
                     strcat(tmpBuf, tSensorCmd[i]);
                     strcat(tmpBuf, "=");
-                    char tmpBuf2[8];
-                    dtostrf(batTemperature, 0, 2, tmpBuf2);
-                    strcat(tmpBuf, tmpBuf2);
+                    dtostrf(batTemperature, 0, 2, tmpBuf3);
+                    strcat(tmpBuf, tmpBuf3);
                     busB_send("O-a-m", tmpBuf);
                   }
                   msgSent = 1;
                 }
-                if (outputsAutomodeMessages == 2) {
+                if (outputsAutomodeMessages >= 2) {
                   char tmpBuf[6];
                   strcpy(tmpBuf, outputCmd[j]);
                   strcat(tmpBuf, "=0");
                   busB_send("O-a-m", tmpBuf);
                 }
               }
-            }
-          }
-        } else {
-          if (outputsAutomodeMessages >= 1) {
-            if (batVoltage <= 12.0) {
-              char tmpBuf[14];
-              strcpy(tmpBuf, batSwitchCmd[i]);
-              strcat(tmpBuf, ":");
-              strcat(tmpBuf, voltageCmd[i+2]);
-              strcat(tmpBuf, "=");
-              char tmpBuf2[6];
-              dtostrf(batVoltage, 0, 2, tmpBuf2);
-              strcat(tmpBuf, tmpBuf2);
-              busB_send("O-a-m", tmpBuf);
-            } else if (batTemperature > 42) {
-              char tmpBuf[16];
-              strcpy(tmpBuf, batSwitchCmd[i]);
-              strcat(tmpBuf, ":");
-              strcat(tmpBuf, tSensorCmd[i]);
-              strcat(tmpBuf, "=");
-              char tmpBuf2[8];
-              dtostrf(batTemperature, 0, 2, tmpBuf2);
-              strcat(tmpBuf, tmpBuf2);
-              busB_send("O-a-m", tmpBuf);
             }
           }
         }
@@ -997,8 +887,10 @@ void loop() {
 
 void setup() {
   if (EEPROM.read(ADDR_VERSION) != CURRENT_EEPROM_VERSION) { //EEprom is wrong version or was not programmed, write default values to the EEprom
-    EEPROM.update(eepromChargerAutomodeAddr, chargerAutomode);
-    EEPROM.update(eepromChargerAutomodeMessagesAddr, chargerAutomodeMessages);
+    for (byte i = 0; i < dcChargersNum; i += 1) {
+      EEPROM.update(eepromDcChargerAutomodeAddr[i], dcChargerAutomode[i]);
+    }
+    EEPROM.update(eepromDcChargersAutomodeMessagesAddr, dcChargersAutomodeMessages);
     EEPROM.update(eepromOutputsAutomodeAddr, outputsAutomode);
     EEPROM.update(eepromOutputsAutomodeMessagesAddr, outputsAutomodeMessages);
     for (byte i = 0; i < voltageNum; i += 1) {
@@ -1016,8 +908,10 @@ void setup() {
     }
     EEPROM.update(ADDR_VERSION, CURRENT_EEPROM_VERSION); // update software version
   } else {
-    chargerAutomode = EEPROM.read(eepromChargerAutomodeAddr);
-    chargerAutomodeMessages = EEPROM.read(eepromChargerAutomodeMessagesAddr);
+    for (byte i = 0; i < dcChargersNum; i += 1) {
+      dcChargerAutomode[i] = EEPROM.read(eepromDcChargerAutomodeAddr[i]);
+    }
+    dcChargersAutomodeMessages = EEPROM.read(eepromDcChargersAutomodeMessagesAddr);
     outputsAutomode = EEPROM.read(eepromOutputsAutomodeAddr);
     outputsAutomodeMessages = EEPROM.read(eepromOutputsAutomodeMessagesAddr);
     for (byte i = 0; i < voltageNum; i += 1) {
@@ -1035,19 +929,14 @@ void setup() {
     }
   }
 
-  // Set relays state
-  pinMode(chargerTypePin, OUTPUT);
-  digitalWrite(chargerTypePin, LOW);
-  pinMode(chargerPSPin, OUTPUT);
-  digitalWrite(chargerPSPin, LOW);
-
-  // Set Batteries switches state
-  for (byte i = 0; i < batSwitchesNum; i += 1) {
-    pinMode(batSwitchPin[i], OUTPUT);
-    digitalWrite(batSwitchPin[i], LOW);
+  // Set chargers Switch and LED PINs state
+  for (byte i = 0; i < dcChargersNum; i += 1) {
+    pinMode(dcChargerSwitchPin[i], OUTPUT);
+    digitalWrite(dcChargerSwitchPin[i], LOW);
+    pinMode(dcChargerStatusLedPin[i], INPUT);
   }
 
-  // Set outputs state
+  // Set outputs PINs state
   for (byte i = 0; i < outputsNum; i += 1) {
     pinMode(outputPin[i], OUTPUT);
     digitalWrite(outputPin[i], LOW);

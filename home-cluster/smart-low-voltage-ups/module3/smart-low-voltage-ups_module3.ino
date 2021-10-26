@@ -80,15 +80,15 @@ float get_voltage(const char command[]) {
   } else if (strcmp(command, "V-2") == 0) {
     voltagePin = 1; // UPS output #2
     r1 = 99470; // R1 = 100k
-    r2 = 9870; // R2 = 10k //9700
+    r2 = 9920; // R2 = 10k //9700
   } else if (strcmp(command, "V-3") == 0) {
     voltagePin = 2; // UPS output #3
     r1 = 100900; // R1 = 100k //97600
-    r2 = 9700; // R2 = 10k //10100
+    r2 = 9754; // R2 = 10k //10100
   } else if (strcmp(command, "V-4") == 0) {
     voltagePin = 3; // UPS output #4
     r1 = 100500; // R1 = 100k
-    r2 = 9717; // R2 = 10k
+    r2 = 9765; // R2 = 10k
   }
 
   for (byte i = 0; i < voltageCountValues; i++) {
@@ -113,11 +113,11 @@ float get_current(const char command[]) {
 
   if (strcmp(command, "I-1") == 0) {
     currentPin = 6; // UPS output #1
-    offsetVoltage = 2.457;
+    offsetVoltage = 2.469;
     direction = 0;
   } else if (strcmp(command, "I-2") == 0) {
     currentPin = 7; // UPS output #2
-    offsetVoltage = 2.459;
+    offsetVoltage = 2.465;
     direction = 0;
   } else if (strcmp(command, "I-3") == 0) {
     currentPin = 4; // UPS output #3
@@ -125,7 +125,7 @@ float get_current(const char command[]) {
     direction = 1;
   } else if (strcmp(command, "I-4") == 0) {
     currentPin = 5; // UPS output #4
-    offsetVoltage = 2.475; //2.486
+    offsetVoltage = 2.471; //2.486
     direction = 1;
   }
 
