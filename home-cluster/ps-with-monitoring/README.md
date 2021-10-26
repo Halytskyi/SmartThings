@@ -123,11 +123,13 @@ T-4 - 18V 20A PS<br>
 ### UPS schema and common photo
 
 [<img src="images/ps-monitoring_schema.jpeg" width="300"/>](images/ps-monitoring_schema.jpeg)
+
 [<img src="images/ps-monitoring_common_1.jpeg" width="350"/>](images/ps-monitoring_common_1.jpeg)
 [<img src="images/ps-monitoring_common_2.jpeg" width="408"/>](images/ps-monitoring_common_2.jpeg)
 [<img src="images/ps-monitoring_common_3.jpeg" width="179"/>](images/ps-monitoring_common_3.jpeg)
 [<img src="images/ps-monitoring_common_4.jpeg" width="350"/>](images/ps-monitoring_common_4.jpeg)
 [<img src="images/ps-monitoring_common_5.jpeg" width="152"/>](images/ps-monitoring_common_5.jpeg)
+
 [<img src="images/ps-monitoring_common_6.jpeg" width="700"/>](images/ps-monitoring_common_6.jpeg)
 
 ### PS diodes
