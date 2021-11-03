@@ -6,10 +6,10 @@
 - two batteries can be charged simultaneously;
 - start batteries charge if voltage >5V and <12.5V;
 - charging will be enabled if input voltage to charger >=15.0V;
-- stop charge batteries if current consumption from them >0.1A;
+- stop charge batteries if current consumption from them >0.2A;
 - stop charge batteries if input voltage <15V or charging current <0.15A or was received signal from charger status LED;
 - measuring batteries temperature, don't start batteries charge if temperature >42°C and stop charge if >45°C;
-- enable batteries outputs if voltage >12.0V, disable if batteries discharged (less 11.5V)
+- enable batteries outputs if voltage >12.0V, disable if batteries discharged (less 11.1V)
 - measuring batteries temperature, don't enable outputs if batteries temperature >42°C and disable outputs if >45°C;
 - measuring voltage, current and power consumption on batteries and chargers with ability sending data to server via [PJON protocol](https://github.com/gioblu/PJON);
 - module and outputs can be configured and controlled from server via [PJON protocol](https://github.com/gioblu/PJON)
@@ -142,13 +142,13 @@ Heatmap during charging battery by 1.5A current (73.8℃)
 | C-[1-2]=[0,1] | Disable/enable DC charger | - | - | 0 - disable<br>1 - enable<br>default: 0 |
 | C-[1-2]-a | Read value of charger automode | - | - | 0 - disabled<br>1 - enabled (by current)<br>2 - enabled (by current/LED) |
 | C-[1-2]-a=[0-2] | Disable/enable charger automode | + | - | 0 - disable<br>1 - enable (by current)<br>2 - enable (by current/LED)<br>default: 1 |
-| C-a-m | Read value of charger automode messages | - | - | 0 - disabled<br>1 - "status" messages only<br>2 - "state" messages only<br>3 - "status" and "state" messages<br>Status template:<br>"C-a-m<C-[1-2]:\<status>"<br>Possible "status":<br>1 - everything is ok<br>2 - input voltage to DC charger less 15V<br>"I-[1,2]=value" - battery current consumption >0.1A<br>"T-[1-2]=value" - temperature on batteries >42℃<br>State template:<br>"C-a-m<C-[1-2]=[0,1]"|
+| C-a-m | Read value of charger automode messages | - | - | 0 - disabled<br>1 - "status" messages only<br>2 - "state" messages only<br>3 - "status" and "state" messages<br>Status template:<br>"C-a-m<C-[1-2]:\<status>"<br>Possible "status":<br>1 - everything is ok<br>2 - input voltage to DC charger less 15V<br>"I-[1,2]=value" - battery current consumption >0.2A<br>"T-[1-2]=value" - temperature on batteries >42℃<br>State template:<br>"C-a-m<C-[1-2]=[0,1]"|
 | C-a-m=[0-3] | Disable/enable charger automode messages | + | - | 0 - disable<br>1 - "status" messages only<br>2 - "state" messages only<br>3 - "status" and "state" messages<br>default: 0 |
 | O-[1-4] | Read value of outputs status | - | - | 0 - disabled<br>1 - enabled |
 | O-[1-4]=[0,1] | Disable/enable outputs | - | - | 0 - disable<br>1 - enable<br>default: 0 |
 | O-a | Read value of outputs control automode | - | - | 0 - disabled<br>1 - enabled |
 | O-a=[0,1] | Disable/enable outputs control automode | + | - | 0 - disable<br>1 - enable<br>default: 1 |
-| O-a-m | Read value of outputs control automode messages | - | - | 0 - disabled<br>1 - "status" messages only<br>2 - "state" messages only<br>3 - "status" and "state" messages<br>Status template:<br>"O-a-m<B-[1-2]:\<status>"<br>Possible "status:"<br>1 - everything is ok<br>"V-[1,2]=value" - batteries voltage < 11.5V<br>"T-[1-2]=value" - temperature on batteries >45℃<br>State template:<br>"O-a-m<O-[1-4]=[0,1]" |
+| O-a-m | Read value of outputs control automode messages | - | - | 0 - disabled<br>1 - "status" messages only<br>2 - "state" messages only<br>3 - "status" and "state" messages<br>Status template:<br>"O-a-m<B-[1-2]:\<status>"<br>Possible "status:"<br>1 - everything is ok<br>"V-[1,2]=value" - batteries voltage < 11.1V<br>"T-[1-2]=value" - temperature on batteries >45℃<br>State template:<br>"O-a-m<O-[1-4]=[0,1]" |
 | O-a-m=[0-3] | Disable/enable outputs control automode messages | + | - | 0 - disable<br>1 - "status" messages only<br>2 - "state" messages only<br>3 - "status" and "state" messages<br>default: 0 |
 | T-c-[1-2] | Read value of temperature control | - | - | 0 - disabled<br>1 - enabled |
 | T-c-[1-2]=[0,1] | Disable/enable temperature control | + | - | 0 - disable<br>1 - enable<br>default: 1<br>where:<br>T-c-1 - Battery 1<br>T-c-2 - Battery 2<br> |

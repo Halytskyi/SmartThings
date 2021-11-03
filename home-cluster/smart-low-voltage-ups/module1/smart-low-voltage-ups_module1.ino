@@ -647,7 +647,7 @@ void autocharge_start() {
         float batVoltage = get_voltage(voltageCmd[i]);
         if (batVoltage > 5 and batVoltage < 12.5) {
           float batCurrent = get_current(currentCmd[i]);
-          if (batCurrent > 0.1) {
+          if (batCurrent > 0.2) {
             if (dcChargersAutomodeMessages == 1 or dcChargersAutomodeMessages == 3) {
               char tmpBuf[14];
               strcpy(tmpBuf, dcChargerCmd[i]);
@@ -724,10 +724,10 @@ void autocharge_stop() {
         if (temperatureControl[i] == 1) {
           batTemperature = get_temperature(i);
         }
-        if (inputChargerVoltage < 15 or chargerCurrent < 0.15 or chargerStatus == 0 or batCurrent > 0.1 or batTemperature > 45) {
+        if (inputChargerVoltage < 15 or chargerCurrent < 0.15 or chargerStatus == 0 or batCurrent > 0.2 or batTemperature > 45) {
           digitalWrite(dcChargerSwitchPin[i], LOW);
           if (dcChargersAutomodeMessages == 1 or dcChargersAutomodeMessages == 3) {
-            if (batCurrent > 0.1) {
+            if (batCurrent > 0.2) {
               char tmpBuf[14];
               strcpy(tmpBuf, dcChargerCmd[i]);
               strcat(tmpBuf, ":");
@@ -816,7 +816,7 @@ void autooutputs_control() {
               }
             }
           }
-        } else if (batVoltage < 11.5 or batTemperature > 45) {
+        } else if (batVoltage < 11.1 or batTemperature > 45) {
           byte k = 0;
           byte outputsNumJ = outputsNum - 2;
           byte msgSent = 0;
@@ -830,7 +830,7 @@ void autooutputs_control() {
               digitalWrite(outputPin[j], LOW);
               if (outputsAutomodeMessages == 1 or outputsAutomodeMessages == 3) {
                 if (msgSent == 0) {
-                  if (batVoltage < 11.5) {
+                  if (batVoltage < 11.1) {
                     char tmpBuf[14];
                     char tmpBuf2[2];
                     char tmpBuf3[6];

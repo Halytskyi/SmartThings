@@ -133,6 +133,13 @@ Module of distribution input lines and fuses for 1-4 modules
 - 2 x 8A fuse for output to board #3
 - 2 x 5A fuse for output to board #4
 
+To line #2 connected:  
+
+- Master01
+- Ethernet switch
+- External device #1
+- External device #3
+
 ### Arduino connections
 
 | Cmd | Arduino PIN | Component | Notes |

@@ -95,7 +95,7 @@ Rack Cooling System was developed for rack fans control depends from temperature
 
 ## Device Photos
 
-[<img src="images/rack-cooling_1.jpeg" width="252"/>](images/rack-cooling_1.jpg)
-[<img src="images/rack-cooling_2.jpeg" width="252"/>](images/rack-cooling_2.jpg)
-[<img src="images/rack-cooling_3.jpeg" width="250"/>](images/rack-cooling_3.jpg)
-[<img src="images/rack-cooling_4.jpeg" width="346"/>](images/rack-cooling_4.jpg)
+[<img src="images/rack-cooling_1.jpeg" width="252"/>](images/rack-cooling_1.jpeg)
+[<img src="images/rack-cooling_2.jpeg" width="252"/>](images/rack-cooling_2.jpeg)
+[<img src="images/rack-cooling_3.jpeg" width="250"/>](images/rack-cooling_3.jpeg)
+[<img src="images/rack-cooling_4.jpeg" width="346"/>](images/rack-cooling_4.jpeg)

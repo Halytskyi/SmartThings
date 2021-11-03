@@ -22,7 +22,7 @@
 - 1(2) x HC-SR501 pir sensor(s)
 - 1 x buzzer
 - 1 x 10kΩ resistor
-- 1 x 100kΩ resistor (for external two motion sensors, can be omitted as 10kΩ resistor already exists as pull-down resistor for that sensor PIN)
+- 1 x 100kΩ resistor (for external two motion sensors on the "external sensors" board)
 - 1 x 1MΩ resistor
 - 3 x 1N4001 diode (2 of them for external two motion sensors)
 - HW-613 Mini DC-DC 3A Step Down Power Supply Module (for Arduino and sensors, 5V output)
@@ -75,7 +75,6 @@
 [<img src="images/rack-alarm_2.jpeg" width="300"/>](images/rack-alarm_2.jpeg)
 [<img src="images/rack-alarm_3.jpeg" width="310"/>](images/rack-alarm_3.jpeg)
 [<img src="images/rack-alarm_4.jpeg" width="306"/>](images/rack-alarm_4.jpeg)
-[<img src="images/rack-alarm_5.jpeg" width="310"/>](images/rack-alarm_5.jpeg)
 
 ## Sensors photos
 
