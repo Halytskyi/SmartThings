@@ -105,7 +105,7 @@ After long searching the charger which should cover all my requirements I found 
 [<img src="images/DD30CRTA_1.jpeg" width="220"/>](images/DD30CRTA_1.jpeg)
 [<img src="images/DD30CRTA_2.jpeg" width="387"/>](images/DD30CRTA_2.jpeg)
 
-It came with configured 3A charge current which is too much for my 9Ah AGM batteries. A rule of thumb for gel and AGM batteries states that the charging current should be 15 to 25 % of the battery capacity, which mean in my case 1.35 - 2.25A.  
+It came with configured 3A charge current which is too many for my 9Ah AGM batteries. A rule of thumb for gel and AGM batteries states that the charging current should be 15 to 25 % of the battery capacity, which mean in my case 1.35 - 2.25A.  
 I fixed that by solder out one of the two resistors R080 (0.08 Ohm) and in result I got 1.5A on output which is excellent for my batteries:
 
 [<img src="images/DD30CRTA_3.jpeg" width="300"/>](images/DD30CRTA_3.jpeg)

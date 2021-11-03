@@ -20,7 +20,7 @@ This is version 3 for input voltage 18-24V.
 
 ## Description
 
-This UPS was designed for smart home with two separate power supply lines and batteries for each line which include two chargers for each battery. Maximum continuous output for each line about 150W. For almost each inputs and outputs has been implemented measuring voltage, current and power consumption with ability to send data to server via [PJON protocol](https://github.com/gioblu/PJON).
+This UPS was designed for smart home with two separate power supply lines and batteries for each line which include two chargers for each battery. Maximum continuous output for each line about 150W. For almost each inputs and outputs has been implemented measuring voltage, current and power consumption with ability send data to server via [PJON protocol](https://github.com/gioblu/PJON).
 
 ## Main functions
 
