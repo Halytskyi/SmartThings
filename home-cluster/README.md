@@ -52,7 +52,8 @@ Some other software which I use:
 
 #### Monitoring
 
-For hardware level, almost each line has a monitoring of voltage, current and power consumption. Also, it has 12 temperature sensors, 8 flame sensors and 2 smoke detection sensors. From all these components data sending to cluster via [PJON protocol](hhttps://github.com/gioblu/PJON) and storing it in the DB for visualization via [Prometheus](https://prometheus.io) / [Grafana](https://grafana.com) with alerting about abhormal situations via [Prometheus Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager) / [Telegram](https://telegram.org) / [Slack](https://slack.com).  
+For hardware level, almost each line has a monitoring of voltage, current and power consumption. Also, it has 12 temperature sensors, 8 flame sensors and 2 smoke detection sensors. From all these components data sending to cluster via [PJON protocol](hhttps://github.com/gioblu/PJON) and storing it in the DB for visualization via [Prometheus](https://prometheus.io) / [Grafana](https://grafana.com) with alerting about abhormal situations via [Prometheus Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager) / [Telegram](https://telegram.org) / [Slack](https://slack.com).
+
 For software level monitoring and alerting used the same software stack: [Prometheus](https://prometheus.io) / [Grafana](https://grafana.com) / [Prometheus Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager) / [Telegram](https://telegram.org) / [Slack](https://slack.com).
 
 ## Cluster rack design
