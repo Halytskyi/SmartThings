@@ -3,7 +3,7 @@
 ## Description
 
 This is fully autonomous and automated high availability "micro data center" for home. All critical components has been reserved both on the hardware level and on the software level.  
-This is the 2nd version on 24V. A year ago I built [1st version] (old-versions/version-1) on 12V which was unstable when all 6 computers were turned on. It's a long story, but in a few words from electronics "axioms" - if you want to eliminate issues with power - power your electronics with proper voltage and power.
+This is the 2nd version on 24V. A year ago I built [1st version](old-versions/version-1) on 12V which was unstable when all 6 computers were turned on. It's a long story, but in a few words from electronics "axioms" - if you want to eliminate issues with power - power your electronics with proper voltage and power.
 
 ### Hardware level reservation
 
