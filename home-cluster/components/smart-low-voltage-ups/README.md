@@ -15,6 +15,7 @@
       - [Heatmap photos (9A output current)](#heatmap-photos-9a-output-current)
   - [Device circuit](#device-circuit)
   - [Assembled device photos](#assembled-device-photos)
+  - [Debug, configuration and load testing process](#debug-configuration-and-load-testing-process)
 
 This is version 3 for input voltage 18-24V.
 
@@ -114,3 +115,9 @@ Where to buy: https://www.aliexpress.com/item/1005001354297652.html?spm=a2g0s.90
 [<img src="images/slvu_3.jpeg" width="352"/>](images/slvu_3.jpeg)
 
 [<img src="images/slvu_4.jpeg" width="650"/>](images/slvu_4.jpeg)
+
+## Debug, configuration and load testing process
+
+[<img src="images/slvu_debug_1.jpeg" width="390"/>](images/slvu_debug_1.jpeg)
+[<img src="images/slvu_debug_2.jpeg" width="334"/>](images/slvu_debug_2.jpeg)
+[<img src="images/slvu_debug_3.jpeg" width="328"/>](images/slvu_debug_3.jpeg)

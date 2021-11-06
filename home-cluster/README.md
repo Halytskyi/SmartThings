@@ -1,47 +1,88 @@
-# Home cluster for smart things control
+# Home Cluster
 
-## Cluster components
+## Description
 
-| Device | Communication protocol | Address | Notes |
-|---|---|---|---|
-| [Cluster case and hardware](cluster-case-and-hardware) | - | - ||
-| [IP-KVM](ip-kvm) | Ethernet | Private IP ||
-| [PJON routers](pjon-routers) | PJON | 1, 6 ||
-| [Power Supply with Monitoring](ps-with-monitoring) | PJON | 15 ||
-| [Low voltage UPS for smart home](smart-low-voltage-ups) | PJON | 16, 17, 18 ||
-| [Rack Alarm System](rack-alarm)| PJON | 19 ||
-| [Rack Cooling System](rack-cooling) | PJON | 20 ||
-| [Power Supply boards and USB HUBs](power-supply-usb-hubs) | I2C | 0x03 ||
-| [Cluster cooling](cluster-cooling) | PJON | 22 ||
+This is fully autonomous and automated high availability "micro data center" for home. All critical components has been reserved both on the hardware level and on the software level.  
+This is the 2nd version on 24V. A year ago I built [1st version] (old-versions/version-1) on 12V which was unstable when all 6 computers were turned on. It's a long story, but in a few words from electronics "axioms" - if you want to eliminate issues with power - power your electronics with proper voltage and power.
 
-## Cluster and power supply rack
+### Hardware level reservation
 
-For cluster rack I chose [TUFFIOM 9U Network Cabinet Enclosure](https://www.amazon.com/gp/product/B079ZZ8Y6X/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) and added connectors to it to avoid pull wires from outside through holes, i.e. isolated it from outside.
-Holes for mounting closed by [3M Fire Barrier](https://www.amazon.com/gp/product/B002FYAMPM/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1).<br>
-This rack come with 2 x 110V fans which I replaced by 2 x 120mm 12V fans. Also was added 2 x 120mm 12V to each rack side.<br>
-In the inside I put 2 x automatic fire suppressor [StoveTop FireStop Rangehood](https://stovetopfirestop.com/product/rangehood/). This is "class K" fire suppression which supposed to use on the kitchen but from reviews I found that is also works for electronics as it dry-chemical fire extinguisher. Once I will find good alterntive it will be changed to "class C".
+- reservation by power with `two separate power supplies` which can be connected to different lines, `two separate batteries lines` for backup power when no power from lines and has `3rd input` for direct connect to solar panels or other renewable energy with 24V on output (see details: [Low voltage UPS for smart home](components/smart-low-voltage-ups));
+- cluster hardware has `3 x arm SBCs` and `3 x x64 mini PCs` which totally enough for building HA Kubernetes cluster (see details: [Cluster case and hardware](components/cluster-case-and-hardware));
+- 2 x [USB 3.0 KVM Switcher 2 Port PCs Sharing 4 Devices](https://www.aliexpress.com/item/4001215985508.html?spm=a2g0s.9042311.0.0.27424c4dnp0HBe) used for reservation connection of USB devices;
+- IoT devices which controlled via [PJON protocol](https://www.pjon.org) also has reservation by additional Arduinos (see [PJON routers](components/pjon-routers));
+- availability to use multiple internet providers include mobile and satellite internet providers (rack has all necessary outside connectors which can be easily connected to internal cluster components) for full reservation of internet connection.
 
-[<img src="images/rack_1.jpg" alt="Rack" width="288"/>](images/rack_1.jpg)
-[<img src="images/rack_2.jpg" alt="Rack" width="320"/>](images/rack_2.jpg)
-[<img src="images/rack_3.jpg" alt="Rack" width="318"/>](images/rack_3.jpg)
-[<img src="images/rack_4.jpg" alt="Rack" width="311"/>](images/rack_4.jpg)
-[<img src="images/rack_5.jpg" alt="Rack" width="402"/>](images/rack_5.jpg)
-[<img src="images/rack_6.jpg" alt="Rack" width="254"/>](images/rack_6.jpg)
+### Software level reservation
 
-On front side plate was placed [UPS](smart-low-voltage-ups), [rack-cooling](rack-cooling) and reserved place for other electronics like [fire-alarm](fire-alarm), security alarm, etc.
+- HA Kubernetes cluster: 3 x arm SBCs for Master nodes and 3 x x64 mini PCs for Workers;
+- Each Worker node has additional 1TB disk which used for data storage based on [OpenEBS](https://openebs.io) and [MinIO](https://min.io);
+- Full remote access to Masters and Workers via [IP-KVM](ip-kvm) for example to easily access in BIOS or remote manual OS installation.
 
-[<img src="images/rack_inside_front_1.jpg" alt="Rack" width="300"/>](images/rack_inside_front_1.jpg)
-[<img src="images/rack_inside_front_2.jpg" alt="Rack" width="286"/>](images/rack_inside_front_2.jpg)
-[<img src="images/rack_inside_front_3.jpg" alt="Rack" width="322"/>](images/rack_inside_front_3.jpg)
-[<img src="images/rack_inside_front_4.jpg" alt="Rack" width="370"/>](images/rack_inside_front_4.jpg)
+### Automation and monitoring
 
-On back side plate was placed Power supply modules with 5 x 50mm 12V fans and [power supplies with monitoring module](ps-with-monitoring) and other sensors.
+As electronics are just my hobby and my primary job/position is SRE I clearly understand that repeatable things should be automated and critical components should be monitored.  
 
-[<img src="images/rack_inside_back_1.jpg" alt="Rack" width="330"/>](images/rack_inside_back_1.jpg)
-[<img src="images/rack_inside_back_2.jpg" alt="Rack" width="300"/>](images/rack_inside_back_2.jpg)
+#### Automation
 
-## Device Photos
+At first sight, what can be repeatable for a home cluster where hardware for the years can be unchangeable? Yes, with one server - it's can be ok, but when you have 6 servers and time to time they should be upgraded both on hardware and on software levels - manual deployment and configuration become to pain, therefore, I trying to keep everything automated.
 
-[<img src="images/home-cluster_1.jpg" alt="Photo-1" width="300"/>](images/home-cluster_1.jpg)
-[<img src="images/home-cluster_2.jpg" alt="Photo-2" width="219"/>](images/home-cluster_2.jpg)
-[<img src="images/home-cluster_3.jpg" alt="Photo-3" width="365"/>](images/home-cluster_3.jpg)
+- OS deployment on all nodes (includes arm SBCs) I making via PXE and process fully automated. [IP-KVM](ip-kvm) is used only when need make some correction in configuration files for the new OS version of automated deployment;
+- for automate configuration of hardware nodes, some LXD containers and applications like [HashiCorp Vault](https://www.vaultproject.io) I use [terraform](https://www.terraform.io/) and [ansible](https://www.ansible.com/);
+- Kubernetes deployment, include building docker containers via [bazel](https://bazel.build).
+
+Some other software which I use:
+
+- [MetalLB](https://metallb.universe.tf) - network load balancer for bare-metal clusters;
+- [Traefik](https://doc.traefik.io/traefik) - as Kubernetes ingress controller;
+- [Docker-registry](https://docs.docker.com/registry) - for storing my containers;
+- [OpenVPN](https://openvpn.net) - access into private network from anywhere (I have everything closed for public internet);
+- [GitLab](https://about.gitlab.com) - for storing my projects code and docs in git, also, for CI-CD, tickets system (sometimes it useful create tickets for my self :) );
+- [Home Assistant](https://www.home-assistant.io) - main component for IoT things;
+- [Frigate](https://github.com/blakeblackshear/frigate) - NVR With Realtime Object Detection for IP Cameras.
+
+#### Monitoring
+
+For hardware level, almost each line has a monitoring of voltage, current and power consumption with sending data to cluster via [PJON protocol](hhttps://github.com/gioblu/PJON) and storing it in the DB for visualization via [Prometheus](https://prometheus.io)/[Grafana](https://grafana.com) with alerting about abhormal situations via [Prometheus Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager)/[Telegram](https://telegram.org)/[Slack](https://slack.com).  
+For software level monitoring and alerting used the same software stack: [Prometheus](https://prometheus.io)/[Grafana](https://grafana.com)/[Prometheus Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager)/[Telegram](https://telegram.org)/[Slack](https://slack.com).
+
+## Cluster rack design
+
+For cluster rack I chose [TUFFIOM 9U Network Cabinet Enclosure](https://www.amazon.com/gp/product/B079ZZ8Y6X/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) and added connectors to it to avoid pulling wires from outside through holes, i.e. isolated it from outside.
+Holes for mounting closed by [3M Fire Barrier](https://www.amazon.com/gp/product/B002FYAMPM/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1).  
+This rack comes with 2 x 110V fans which I replaced by 2 x 120mm 12V fans. Also was added 2 x 120mm 12V to each rack side.  
+On the inside (near the largest congestion of wires) I put 2 x automatic fire suppressor [StoveTop FireStop Rangehood](https://stovetopfirestop.com/product/rangehood/). This is "class K" fire suppression which supposed to use in the kitchen but from reviews I found that is also works for electronics as its dry-chemical fire extinguisher. It's more correct and better to use with "class C", but for that time I didn't find a good alternative.
+
+[<img src="images/cluster_rack_1.jpeg" width="288"/>](images/cluster_rack_1.jpeg)
+[<img src="images/cluster_rack_2.jpeg" width="304"/>](images/cluster_rack_2.jpeg)
+[<img src="images/cluster_rack_3.jpeg" width="298"/>](images/cluster_rack_3.jpeg)
+[<img src="images/cluster_rack_4.jpeg" width="458"/>](images/cluster_rack_4.jpeg)
+[<img src="images/cluster_rack_5.jpeg" width="350"/>](images/cluster_rack_5.jpeg)
+[<img src="images/cluster_rack_6.jpeg" width="320"/>](images/cluster_rack_6.jpeg)
+[<img src="images/cluster_rack_7.jpeg" width="216"/>](images/cluster_rack_7.jpeg)
+[<img src="images/cluster_rack_8.jpeg" width="305"/>](images/cluster_rack_8.jpeg)
+[<img src="images/cluster_rack_9.jpeg" width="210"/>](images/cluster_rack_9.jpeg)
+[<img src="images/cluster_rack_10.jpeg" width="364"/>](images/cluster_rack_10.jpeg)
+
+On the front side plate was placed [UPS](components/smart-low-voltage-ups), [rack-cooling](components/rack-cooling), [rack-alarm](components/rack-alarm) and reserved place for other electronics.
+
+[<img src="images/cluster_rack_inside_front_1.jpeg" width="350"/>](images/cluster_rack_inside_front_1.jpeg)
+[<img src="images/cluster_rack_inside_front_2.jpeg" width="372"/>](images/cluster_rack_inside_front_2.jpeg)
+[<img src="images/cluster_rack_inside_front_3.jpeg" width="200"/>](images/cluster_rack_inside_front_3.jpeg)
+[<img src="images/cluster_rack_inside_front_4.jpeg" width="350"/>](images/cluster_rack_inside_front_4.jpeg)
+[<img src="images/cluster_rack_inside_front_5.jpeg" width="372"/>](images/cluster_rack_inside_front_5.jpeg)
+[<img src="images/cluster_rack_inside_front_6.jpeg" width="422"/>](images/cluster_rack_inside_front_6.jpeg)
+
+On the back side plate was placed Power Supply modules with 5 x 50mm 12V fans and [power supplies with monitoring module](components/ps-with-monitoring) and other sensors.
+
+[<img src="images/cluster_rack_inside_back_1.jpeg" width="330"/>](images/cluster_rack_inside_back_1.jpeg)
+[<img src="images/cluster_rack_inside_back_2.jpeg" width="353"/>](images/cluster_rack_inside_back_2.jpeg)
+
+## Heatmap
+
+[<img src="images/cluster_rack_heatmap_1.jpeg" width="354"/>](images/cluster_rack_heatmap_1.jpeg)
+[<img src="images/cluster_rack_heatmap_2.jpeg" width="200"/>](images/cluster_rack_heatmap_2.jpeg)
+[<img src="images/cluster_rack_heatmap_3.jpeg" width="200"/>](images/cluster_rack_heatmap_3.jpeg)
+[<img src="images/cluster_rack_heatmap_4.jpeg" width="356"/>](images/cluster_rack_heatmap_4.jpeg)
+
+As it too much electronics inside 9U rack it should be very good cooled, therefore, inside this rack I placed 20 fans (11 for rack cooling and 9 for cluster cooling). Fans turn on only when temperatures higher than normal and controlled by module [rack-cooling](rack-cooling) and [Cluster cooling](cluster-cooling).

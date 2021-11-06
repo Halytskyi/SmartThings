@@ -88,7 +88,7 @@ Other components listed here: [ip-kvm](../ip-kvm/README.md)
 
 ### Master0[1-3] (arm64)
 
-3 x [Rock64 single board computer (4G RAM)](https://www.pine64.org/devices/single-board-computers/rock64/)  
+3 x [Rock64 single board computer (4G RAM)](https://www.pine64.org/devices/single-board-computers/rock64/) - I recommend use Raspberry Pi 4 instead.  
 3 x [Samsung 64GB 100MB/s (U3) MicroSDXC Evo Select Memory Card with Adapter (MB-ME64GA/AM)](https://www.amazon.com/gp/product/B06XX29S9Q/ref=oh_aui_detailpage_o00_s00?ie=UTF8&th=1)
 
 ### Worker01 (x64)
