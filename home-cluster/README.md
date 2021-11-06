@@ -17,7 +17,7 @@ This is the 2nd version on 24V. A year ago I built [1st version] (old-versions/v
 
 - HA Kubernetes cluster: 3 x arm SBCs for Master nodes and 3 x x64 mini PCs for Workers;
 - Each Worker node has additional 1TB disk which used for data storage based on [OpenEBS](https://openebs.io) and [MinIO](https://min.io);
-- Full remote access to Masters and Workers via [IP-KVM](ip-kvm) for example to easily access in BIOS or remote manual OS installation.
+- Full remote access to Masters and Workers via [IP-KVM](components/ip-kvm) for example to easily access in BIOS or remote manual OS installation.
 
 ### Automation and monitoring
 
@@ -27,7 +27,7 @@ As electronics are just my hobby and my primary job/position is SRE I clearly un
 
 At first sight, what can be repeatable for a home cluster where hardware for the years can be unchangeable? Yes, with one server - it's can be ok, but when you have 6 servers and time to time they should be upgraded both on hardware and on software levels - manual deployment and configuration become to pain, therefore, I trying to keep everything automated.
 
-- OS deployment on all nodes (includes arm SBCs) I making via PXE and process fully automated. [IP-KVM](ip-kvm) is used only when need make some correction in configuration files for the new OS version of automated deployment;
+- OS deployment on all nodes (includes arm SBCs) I making via PXE and process fully automated. [IP-KVM](components/ip-kvm) is used only when need make some correction in configuration files for the new OS version of automated deployment;
 - for automate configuration of hardware nodes, some LXD containers and applications like [HashiCorp Vault](https://www.vaultproject.io) I use [terraform](https://www.terraform.io/) and [ansible](https://www.ansible.com/);
 - Kubernetes deployment, include building docker containers via [bazel](https://bazel.build).
 
@@ -64,7 +64,7 @@ On the inside (near the largest congestion of wires) I put 2 x automatic fire su
 [<img src="images/cluster_rack_9.jpeg" width="210"/>](images/cluster_rack_9.jpeg)
 [<img src="images/cluster_rack_10.jpeg" width="364"/>](images/cluster_rack_10.jpeg)
 
-On the front side plate was placed [UPS](components/smart-low-voltage-ups), [rack-cooling](components/rack-cooling), [rack-alarm](components/rack-alarm) and reserved place for other electronics.
+On the front side plate was placed [UPS](components/smart-low-voltage-ups), [rack cooling](components/rack-cooling), [rack alarm](components/rack-alarm) and reserved place for other electronics.
 
 [<img src="images/cluster_rack_inside_front_1.jpeg" width="350"/>](images/cluster_rack_inside_front_1.jpeg)
 [<img src="images/cluster_rack_inside_front_2.jpeg" width="372"/>](images/cluster_rack_inside_front_2.jpeg)
@@ -85,4 +85,4 @@ On the back side plate was placed Power Supply modules with 5 x 50mm 12V fans an
 [<img src="images/cluster_rack_heatmap_3.jpeg" width="200"/>](images/cluster_rack_heatmap_3.jpeg)
 [<img src="images/cluster_rack_heatmap_4.jpeg" width="356"/>](images/cluster_rack_heatmap_4.jpeg)
 
-As it too much electronics inside 9U rack it should be very good cooled, therefore, inside this rack I placed 20 fans (11 for rack cooling and 9 for cluster cooling). Fans turn on only when temperatures higher than normal and controlled by module [rack-cooling](rack-cooling) and [Cluster cooling](cluster-cooling).
+As it too much electronics inside 9U rack it should be very good cooled, therefore, inside this rack I placed 20 fans (11 for rack cooling and 9 for cluster cooling). Fans turn on only when temperatures higher than normal and controlled by module [rack cooling](components/rack-cooling) and [cluster cooling](components/cluster-cooling).
