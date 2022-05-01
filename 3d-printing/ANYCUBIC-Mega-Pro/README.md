@@ -48,7 +48,7 @@ For connecting printer with Power Supply I used wire 14 AWG.
 ### Printed details
 
 - 1 x Base Front Right
-- 2 x Base_Rear and 1 x Base Front_Left
+- 2 x Base Rear and 1 x Base Front Left
 - 1 x Door Handle
 - 1 x Door Stop
 - 2 x Hinge Bracket
@@ -95,8 +95,8 @@ For almost all details I used [Overture PETG filament](https://www.amazon.com/dp
 
 [<img src="images/enclosure_6.jpeg" width="250"/>](images/enclosure_6.jpeg)
 [<img src="images/enclosure_7.jpeg" width="330"/>](images/enclosure_7.jpeg)
-[<img src="images/enclosure_8.jpeg" width="176"/>](images/enclosure_8.jpeg)
-[<img src="images/enclosure_9.jpeg" width="128"/>](images/enclosure_9.jpeg)
+[<img src="images/enclosure_8.jpeg" width="130"/>](images/enclosure_8.jpeg)
+[<img src="images/enclosure_9.jpeg" width="164"/>](images/enclosure_9.jpeg)
 [<img src="images/enclosure_10.jpeg" width="162"/>](images/enclosure_10.jpeg)
 [<img src="images/enclosure_11.jpeg" width="126"/>](images/enclosure_11.jpeg)
 [<img src="images/enclosure_12.jpeg" width="168"/>](images/enclosure_12.jpeg)
