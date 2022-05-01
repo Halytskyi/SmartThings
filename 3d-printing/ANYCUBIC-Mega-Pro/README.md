@@ -126,3 +126,7 @@ For almost all details I used [Overture PETG filament](https://www.amazon.com/dp
 - LED Lights
 - Internal and external thermometers
 - Other sensors like smoke, motion, etc.
+
+## URLs
+
+[https://www.thingiverse.com/thing:5374571](https://www.thingiverse.com/thing:5374571)
