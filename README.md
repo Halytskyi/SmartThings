@@ -19,6 +19,8 @@ Repository for storing code, schemas and docs for smart devices
   - [Smart Hallway](automation-devices/smart-hallway)
   - [Cameras and lamps control](automation-devices/cameras-lamps-control)
   - [Smart UPS Luxeon 1000ZD](automation-devices/smart-ups-luxeon)
+- [3D Printing](3d-printing)
+  - [ANYCUBIC Mega Pro improvements](3d-printing/ANYCUBIC-Mega-Pro)
 - [Tools](tools)
   - [Arduino](tools/arduino)
     - [Finding addresses of DS18B20s](tools/arduino/ds18b20-find-addr)
