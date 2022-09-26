@@ -93,23 +93,21 @@ Other components listed here: [ip-kvm](../ip-kvm/README.md)
 
 ### Worker01 (x64)
 
-1 x [Mini PC HTPC Celeron N3150 Quad Core 1.6~2.08GHz WiFi Dual HDMI Dual LAN TV Box (6W)](https://www.aliexpress.com/item/32824210413.html?spm=a2g0s.9042311.0.0.ecfe4c4d3PjvMY)  
-1 x [WEIJINTO mSATA SSD 128GB Mini SATA Internal Solid StateHard Drive](https://www.aliexpress.com/item/1000005925897.html?spm=a2g0s.12269583.0.0.24d4621bBo4hUw)  
-1 x [Samsung RAM 8GB DDR3 PC3L-12800,1600MHz, 204 PIN SODIMM for laptops](https://www.amazon.com/gp/product/B00KEAEX54/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)  
-1 x [Silicon Power 128GB SSD 3D NAND A55 SLC Cache](https://www.amazon.com/gp/product/B07D7VTDNB/ref=od_aui_detailpages00?ie=UTF8&psc=1)  
-1 x [Seagate BarraCuda 1TB 2.5 Inch SATA 6 Gb/s 5400 RPM 128MB Cache](https://www.amazon.com/gp/product/B07H28QRKN/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)
+1 x [Pentium N6005 4 Intel i226-V 2500M Network Card (10W)](https://www.aliexpress.com/item/3256804440929471.html?spm=a2g0o.order_list.0.0.21ef1802ZA71Me)  
+1 x [Crucial RAM 32GB Kit (2x16GB) DDR4 3200MHz CL22 (or 2933MHz or 2666MHz) Laptop Memory CT2K16G4SFRA32A](https://www.amazon.com/dp/B08C4X9VR5?psc=1&ref=ppx_yo2ov_dt_b_product_details)  
+1 x [Crucial MX500 1TB 3D NAND SATA 2.5 Inch Internal SSD, up to 560MB/s - CT1000MX500SSD1](https://www.amazon.com/dp/B078211KBB?psc=1&ref=ppx_yo2ov_dt_b_product_details)
 
 ### Worker02 (x64)
 
-1 x [Mini PC Fanless Intel Celeron Processor N4120 (up to 2.6GHz), 8GB DDR4 128GB SSD (6W)](https://www.amazon.com/gp/product/B08DXRVD8Z/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)  
-1 x [Silicon Power 128GB SSD 3D NAND A55 SLC Cache](https://www.amazon.com/gp/product/B07D7VTDNB/ref=od_aui_detailpages00?ie=UTF8&psc=1)  
-1 x [Seagate BarraCuda 1TB 2.5 Inch SATA 6 Gb/s 5400 RPM 128MB Cache](https://www.amazon.com/gp/product/B07H28QRKN/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)
+1 x [Pentium N6005 4 Intel i226-V 2500M Network Card (10W)](https://www.aliexpress.com/item/3256804440929471.html?spm=a2g0o.order_list.0.0.21ef1802ZA71Me)  
+1 x [Crucial RAM 16GB DDR4 3200MHz CL22 (or 2933MHz or 2666MHz) Laptop Memory CT16G4SFRA32A](https://www.amazon.com/dp/B08C511GQH?psc=1&ref=ppx_yo2ov_dt_b_product_details)  
+1 x [Crucial MX500 1TB 3D NAND SATA 2.5 Inch Internal SSD, up to 560MB/s - CT1000MX500SSD1](https://www.amazon.com/dp/B078211KBB?psc=1&ref=ppx_yo2ov_dt_b_product_details)
 
 ### Worker03 (x64)
 
 1 x [Mini PC Intel Celeron N4100 Dual Gigabit Ethernet, 8GB DDR4 128GB SSD (6W)](https://www.aliexpress.com/item/32832914936.html?spm=a2g0s.9042311.0.0.27424c4dorKW6d)  
-1 x [Silicon Power 128GB SSD 3D NAND A55 SLC Cache](https://www.amazon.com/gp/product/B07D7VTDNB/ref=od_aui_detailpages00?ie=UTF8&psc=1)  
-1 x [Seagate BarraCuda 1TB 2.5 Inch SATA 6 Gb/s 5400 RPM 128MB Cache](https://www.amazon.com/gp/product/B07H28QRKN/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)
+1 x [A-Tech 16GB DDR4 2400 MHz SODIMM PC4-19200 (PC4-2400T) CL17 2Rx8 Non-ECC Laptop RAM Memory Module](https://www.amazon.com/gp/product/B07KGM4W57/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)  
+1 x [Crucial MX500 1TB 3D NAND SATA 2.5 Inch Internal SSD, up to 560MB/s - CT1000MX500SSD1](https://www.amazon.com/dp/B078211KBB?psc=1&ref=ppx_yo2ov_dt_b_product_details)
 
 ### Other
 
@@ -117,8 +115,9 @@ Other components listed here: [ip-kvm](../ip-kvm/README.md)
 2 x [USB 3.0 KVM Switcher 2 Port PCs Sharing 4 Devices](https://www.aliexpress.com/item/4001215985508.html?spm=a2g0s.9042311.0.0.27424c4dnp0HBe) - for two masters and two workers  
 1 x [Coral USB Accelerator](https://coral.ai/products/accelerator/) - for NVR and other machine learning things  
 1 x [ZigBee Sniffer CC2531](https://www.aliexpress.com/item/1005001973376896.html?spm=a2g0s.9042311.0.0.27424c4d2JSjAN) - for connecting smart devices via ZigBee protocol, check [Zigbee2MQTT](https://www.zigbee2mqtt.io/)  
-3 x [22 Pin SATA To USB 3.0 2.5 Inch Hard Drive Adapter Cable Converter](https://www.aliexpress.com/item/32979975057.html?gps-id=detail404&scm=1007.16891.96945.0&scm_id=1007.16891.96945.0&scm-url=1007.16891.96945.0&pvid=e359805e-0030-4529-a268-ba953892b73f)  
-1 x [TP-Link 8-Port Gigabit Ethernet Easy Smart Switch (TL-SG108E)](https://www.amazon.com/gp/product/B00K4DS5KU/ref=oh_aui_detailpage_o03_s00?ie=UTF8&psc=1)
+1 x [GoControl CECOMINOD016164 HUSBZB-1 USB Hub](https://www.amazon.com/dp/B01GJ826F8?psc=1&ref=ppx_yo2ov_dt_b_product_details) - Z-Wave + ZigBee  
+1 x [TP-Link 8-Port Gigabit Ethernet Easy Smart Switch (TL-SG108E)](https://www.amazon.com/gp/product/B00K4DS5KU/ref=oh_aui_detailpage_o03_s00?ie=UTF8&psc=1)  
+1 x [NETGEAR 5 Port PoE Gigabit Ethernet Plus Switch (GS305EP) - with 4 x PoE+ @ 63W](https://www.amazon.com/dp/B08LR18SC4?psc=1&ref=ppx_yo2ov_dt_b_product_details)
 
 ## Simple circuit of connections hardware
 

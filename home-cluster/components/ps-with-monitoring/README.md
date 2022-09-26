@@ -23,7 +23,7 @@ Power Supply Monitoring module was developed for measure voltage, current and po
 ## Requirements and components for Power Supply
 
 - 1 x Power supply 18V 20A (model: JC-360-18)
-- 1 x Power supply 24V 10A (model: S-240-24)
+- 1 x Power supply 24V 15A (model: Alito, ALT-1220T)
 - 2 x 300W 20A DC-DC Buck Converter Step Down Modules
 - 2 x MBR6045PT diodes (for mixing lines from 3 inputs)
 - 2 x MBR60100CT diodes (for chargers)
@@ -32,7 +32,7 @@ Power Supply Monitoring module was developed for measure voltage, current and po
 - 2 x 34x12x30mm heatsink for MBR60100CT diodes (19.1V -> 18.4V, 3A (~55W) - 48℃; 22.6V -> 21.8V, 3A (~65W) - 50℃)
 - 1 x 34x12x30mm heatsink for MBR4045CT diode (12.6V -> 12.05V, 5A (~60W) - 60℃)
 
-### Modification power supply 24V 10A (model: S-240-24)
+### Modification power supply 24V 10A (model: S-240-24) - _was upgraded to 24V 15A_
 
 This power supply came with ability adjusting output voltage within 22.7 - 28.77V limits. For building my UPS the lowwer limit is little bit high, therefore, was decided to descrease it to 22.0V. This is was done by simple changing RSS1 resistor (located near ajustable resistor) from 820 Om to 1.5 kOm. As I didn't have one 1.5 kOm resistor I took 2 resistors on 1 kOm and 510 Om and connected them in series. Check the photo below:
 
@@ -66,11 +66,11 @@ After this modification adjusting output voltage limits became: 21.3V - 28.77V w
 | D11 (PWM) | - ||
 | D12 | [PJON v13.0](https://github.com/gioblu/PJON/tree/13.0/src/strategies/SoftwareBitBang) | Communication with Server (Tx only) |
 | D13 | - ||
-| A0 | Voltmeter: r1=100k, r2=10k | 24V 10A PS output (V-1) |
+| A0 | Voltmeter: r1=100k, r2=10k | 24V 15A PS output (V-1) |
 | A1 | Voltmeter: r1=100k, r2=10k | 24V Solar Battaries output (V-2) |
 | A2 | Voltmeter: r1=100k, r2=10k | 12V DC-DC (from UPS 2+3) output (V-3) |
 | A3 | Voltmeter: r1=100k, r2=10k | 18V 20A PS output (V-4) |
-| A4 | ACS712-20A | 24V 10A PS output (I-1) |
+| A4 | ACS712-20A | 24V 15A PS output (I-1) |
 | A5 | ACS712-20A | 24V Solar Battaries output (I-2) |
 | A6 | ACS712-20A | 12V DC-DC (from UPS 2+3) output (I-3) |
 | A7 | ACS712-20A | 18V 20A PS output (I-4) |
@@ -107,12 +107,12 @@ After this modification adjusting output voltage limits became: 21.3V - 28.77V w
 | L-[v,c,p,e,f,pf]-a=[0,1] | Disable/enable auto-push for read values of AC line parameters | + | - | 0 - disable<br>1 - enable<br>default: 0 |
 
 where,<br>
-[V,I,P]-1 - 24V 10A PS output<br>
+[V,I,P]-1 - 24V 15A PS output<br>
 [V,I,P]-2 - 24V Solar Battaries output<br>
 [V,I,P]-3 - 12V DC-DC (from UPS 2+3) output<br>
 [V,I,P]-4 - 18V 20A PS output<br>
-T-1 - 24V 10A PS<br>
-T-2 - 12V DC-DC2 (from UPS 2+3), near 24V 10A PS<br>
+T-1 - 24V 15A PS<br>
+T-2 - 12V DC-DC2 (from UPS 2+3), near 24V 15A PS<br>
 T-3 - 12V DC-DC1 (from UPS 2+3), near 18V 20A PS<br>
 T-4 - 18V 20A PS<br>
 ***EEPROM*** - memory values are kept when the board is turned off<br>
@@ -123,6 +123,15 @@ T-4 - 18V 20A PS<br>
 ### UPS schema and common photo
 
 [<img src="images/ps-monitoring_schema.jpeg" width="300"/>](images/ps-monitoring_schema.jpeg)
+
+Upgraded 24V 15A PS version:
+
+[<img src="images/ps-monitoring_common_24v15a_1.jpeg" width="350"/>](images/ps-monitoring_common_24v15a_1.jpeg)
+[<img src="images/ps-monitoring_common_24v15a_2.jpeg" width="350"/>](images/ps-monitoring_common_24v15a_2.jpeg)
+[<img src="images/ps-monitoring_common_24v15a_3.jpeg" width="350"/>](images/ps-monitoring_common_24v15a_3.jpeg)
+[<img src="images/ps-monitoring_common_24v15a_4.jpeg" width="350"/>](images/ps-monitoring_common_24v15a_4.jpeg)
+
+Old 24V 10A PS version:
 
 [<img src="images/ps-monitoring_common_1.jpeg" width="350"/>](images/ps-monitoring_common_1.jpeg)
 [<img src="images/ps-monitoring_common_2.jpeg" width="408"/>](images/ps-monitoring_common_2.jpeg)
