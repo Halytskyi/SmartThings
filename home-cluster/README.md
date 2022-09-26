@@ -58,7 +58,7 @@ For software level monitoring and alerting used the same software stack: [Promet
 
 How overview cluster dashboard looks:
 
-[<img src="images/overview_dashboard.jpeg" width="600"/>](images/overview_dashboard.jpeg)
+[<img src="images/overview_dashboard.jpeg" width="700"/>](images/overview_dashboard.jpeg)
 
 ## Cluster rack design
 
