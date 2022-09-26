@@ -56,6 +56,10 @@ For hardware level, almost each line has a monitoring of voltage, current and po
 
 For software level monitoring and alerting used the same software stack: [Prometheus](https://prometheus.io) / [Grafana](https://grafana.com) / [Prometheus Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager) / [Telegram](https://telegram.org) / [Slack](https://slack.com).
 
+How overview cluster dashboard looks:
+
+[<img src="images/overview_dashboard.jpeg" width="600"/>](images/overview_dashboard.jpeg)
+
 ## Cluster rack design
 
 For cluster rack I chose [TUFFIOM 9U Network Cabinet Enclosure](https://www.amazon.com/gp/product/B079ZZ8Y6X/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) and added connectors to it to avoid pulling wires from outside through holes, i.e. isolated it from outside.
@@ -106,7 +110,7 @@ As it too much electronics inside 9U rack it should be very good cooled, therefo
 
 ## Upgrade
 
-Added 12U rack. For now it using for UPS ([APC BE600M1](https://www.amazon.com/dp/B01FWAZEIU?psc=1&ref=ppx_yo2ov_dt_b_product_details)) and PoE Switch ([NETGEAR GS305EP](https://www.amazon.com/dp/B08LR18SC4?psc=1&ref=ppx_yo2ov_dt_b_product_details)) which I need for my cameras, but in the future can be added more devices (as this rack have plenty free space). To be sure that top 9U rack won't overweight native 12U legs I added [4 x adjustable legs](https://www.amazon.com/dp/B0B9J482TM?psc=1&ref=ppx_yo2ov_dt_b_product_details).
+Added [12U rack](https://www.amazon.com/dp/B07JB9YCJF?psc=1&ref=ppx_yo2ov_dt_b_product_details). For now it using for UPS ([APC BE600M1](https://www.amazon.com/dp/B01FWAZEIU?psc=1&ref=ppx_yo2ov_dt_b_product_details)) and PoE Switch ([NETGEAR GS305EP](https://www.amazon.com/dp/B08LR18SC4?psc=1&ref=ppx_yo2ov_dt_b_product_details)) which I need for my cameras, but in the future can be added more devices (as this rack have plenty free space). To be sure that top 9U rack won't overweight native 12U legs I added [4 x adjustable legs](https://www.amazon.com/dp/B0B9J482TM?psc=1&ref=ppx_yo2ov_dt_b_product_details).
 
 Also was added 2 smoke detectors: 1 x [X-Sense SC06-W Smoke and Carbon Monoxide Detector](https://www.amazon.com/dp/B09FXXXG95?psc=1&ref=ppx_yo2ov_dt_b_product_details) which paired with other smoke detectors (if one will be triggered - all will be activated) and 1 x [First Alert Z-Wave Smoke Detector & Carbon Monoxide Alarm](https://www.amazon.com/dp/B08FFB233Y?psc=1&ref=ppx_yo2ov_dt_b_product_details) which I use for notifications on mobile. Inside 12U rack I put 1 x [Automatic Fire Extinguisher](https://www.amazon.com/dp/B095S3L4GT?psc=1&ref=ppx_yo2ov_dt_b_product_details). All external wires was placed in [fiberglass tube](https://www.aliexpress.us/item/2255800366654895.html?spm=a2g0o.order_list.0.0.21ef1802x8n4oh&gatewayAdapt=glo2usa&_randl_shipto=US) which is totally non flammable.
 
