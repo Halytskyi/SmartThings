@@ -1,7 +1,7 @@
-ARDUINO_LIBS = PJON EEPROM OneWire DallasTemperature PZEM004Tv30 SoftwareSerial
+ARDUINO_LIBS = Wire EEPROM OneWire DallasTemperature PZEM004Tv30 SoftwareSerial
 BOARD_TAG = pro
 BOARD_SUB = 16MHzatmega328
-MONITOR_PORT = /dev/ttyUSB2
+MONITOR_PORT = /dev/ttyUSB0
 CXXFLAGS_STD = -std=c++11
 AVR_TOOLS_DIR = /opt/arduino/hardware/tools/avr
 ARDMK_DIR = /opt/Arduino-Makefile

@@ -6,7 +6,7 @@
   - [Components](#components)
   - [Cluster hardware](#cluster-hardware)
     - [IP-KVM (arm64)](#ip-kvm-arm64)
-    - [Master0[1-3] (arm64)](#master01-3-arm64)
+    - [Master0\[1-3\] (arm64)](#master01-3-arm64)
     - [Worker01 (x64)](#worker01-x64)
     - [Worker02 (x64)](#worker02-x64)
     - [Worker03 (x64)](#worker03-x64)
@@ -17,7 +17,8 @@
     - [Worker01](#worker01)
     - [Worker02](#worker02)
     - [Worker03](#worker03)
-    - [Assembled case](#assembled-case)
+    - [Assembled case (Version 2)](#assembled-case-version-2)
+    - [Assembled case (version 1)](#assembled-case-version-1)
 
 ## Prehistory
 
@@ -88,8 +89,8 @@ Other components listed here: [ip-kvm](../ip-kvm/README.md)
 
 ### Master0[1-3] (arm64)
 
-3 x [Rock64 single board computer (4G RAM)](https://www.pine64.org/devices/single-board-computers/rock64/) - I recommend use Raspberry Pi 4 instead.  
-3 x [Samsung 64GB 100MB/s (U3) MicroSDXC Evo Select Memory Card with Adapter (MB-ME64GA/AM)](https://www.amazon.com/gp/product/B06XX29S9Q/ref=oh_aui_detailpage_o00_s00?ie=UTF8&th=1)
+3 x [Orange Pi 5 (16G RAM)](http://www.orangepi.org/html/hardWare/computerAndMicrocontrollers/details/Orange-Pi-5.html)  
+3 x [128GB Samsung PRO Plus microSDXC Up to 160MB/s UHS-I, U3, A2, V30, (MB-MD128KA/AM)](https://www.amazon.com/gp/product/B06XX29S9Q/ref=oh_aui_detailpage_o00_s00?ie=UTF8&th=1)
 
 ### Worker01 (x64)
 
@@ -116,6 +117,7 @@ Other components listed here: [ip-kvm](../ip-kvm/README.md)
 1 x [Coral USB Accelerator](https://coral.ai/products/accelerator/) - for NVR and other machine learning things  
 1 x [ZigBee Sniffer CC2531](https://www.aliexpress.com/item/1005001973376896.html?spm=a2g0s.9042311.0.0.27424c4d2JSjAN) - for connecting smart devices via ZigBee protocol, check [Zigbee2MQTT](https://www.zigbee2mqtt.io/)  
 1 x [GoControl CECOMINOD016164 HUSBZB-1 USB Hub](https://www.amazon.com/dp/B01GJ826F8?psc=1&ref=ppx_yo2ov_dt_b_product_details) - Z-Wave + ZigBee  
+1 x [TP-Link 5-Port Gigabit Ethernet Easy Smart Switch (TL-SG105E)](https://www.amazon.com/dp/B00N0OHEMA?ref=ppx_yo2ov_dt_b_product_details&th=1)  
 1 x [TP-Link 8-Port Gigabit Ethernet Easy Smart Switch (TL-SG108E)](https://www.amazon.com/gp/product/B00K4DS5KU/ref=oh_aui_detailpage_o03_s00?ie=UTF8&psc=1)  
 1 x [NETGEAR 5 Port PoE Gigabit Ethernet Plus Switch (GS305EP) - with 4 x PoE+ @ 63W](https://www.amazon.com/dp/B08LR18SC4?psc=1&ref=ppx_yo2ov_dt_b_product_details)
 
@@ -125,7 +127,11 @@ Other components listed here: [ip-kvm](../ip-kvm/README.md)
 
 ## Case drawing
 
-[<img src="images/cluster-drawing.jpeg"/>](images/cluster-drawing.jpeg)
+Version 2 (current)
+![Version 2](images/cluster-drawing-v2.jpeg)
+
+Version 1
+![Version 1](images/cluster-drawing-v1.jpeg)
 
 Original in draw.io format here: [Cluster-case.drawio.xml](draw.io/Cluster-case.drawio.xml)
 
@@ -148,7 +154,11 @@ Original in draw.io format here: [Cluster-case.drawio.xml](draw.io/Cluster-case.
 [<img src="images/cluster-case-worker03_1.jpeg" width="300"/>](images/cluster-case-worker03_1.jpeg)
 [<img src="images/cluster-case-worker03_2.jpeg" width="288"/>](images/cluster-case-worker03_2.jpeg)
 
-### Assembled case
+### Assembled case (Version 2)
+
+[<img src="images/cluster-case_1_v2.jpeg" width="300"/>](images/cluster-case_1_v2.jpeg)
+
+### Assembled case (version 1)
 
 [<img src="images/cluster-case_1.jpeg" width="300"/>](images/cluster-case_1.jpeg)
 [<img src="images/cluster-case_2.jpeg" width="296"/>](images/cluster-case_2.jpeg)

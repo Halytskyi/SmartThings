@@ -14,7 +14,7 @@
     - [Arduino connections](#arduino-connections)
     - [Components](#components)
   - [Commands](#commands)
-  - [Connect SPI with two Master SBCs](#connect-spi-with-two-master-sbcs)
+  - [Connect I2C with two Master SBCs](#connect-i2c-with-two-master-sbcs)
   - [Tests](#tests)
     - [DC-DC 5A Step-down Converter XL4015E1](#dc-dc-5a-step-down-converter-xl4015e1)
       - [Load tests](#load-tests)
@@ -47,11 +47,11 @@
 - High Availability: control board connected with two SBC Masters;
 - Button outputs control: turn On devices by buttons (on case if remote control for some reasons not available). Devices can't be turned off by button;
 - Remote reading voltage, current and power for all outputs;
-- Choosing input power source from 2 x 14-24V lines for any output: one line from "power line" and "solar" sources (UPS output #4), another one with additional backup (UPS output #2 + #3)
+- Choosing input power source from 2 x 18,24V lines for any output: one line from "PS2" and "solar" sources, another one with additional backup (PS1).
 
 ### Specification
 
-- **i2c address**: *0x03*
+- **i2c address**: *0x11*
 
 ### Tools
 
@@ -125,9 +125,9 @@ Module for control power for Ethernet switch (internal) and 3 external devices (
 
 Module of distribution input lines and fuses for 1-4 modules
 
-- input (line #1) from "UPS output #4"
-- input (line #2) from "UPS output #2 + #3" (additional backup)
-- input (line #3) from '"UPS output #2 + #3" -> "DC-DC convertor to 12V"'
+- input (line #1) from "PS2" and "solar"
+- input (line #2) from "PS2" and "solar" + "PS1"
+- input (line #3) from "DC-DC convertor to 12V"
 - 1 x 2A fuse for output to board #1 and "Cluster Cooling Board"
 - 2 x 5A fuse for output to board #2
 - 2 x 8A fuse for output to board #3
@@ -136,6 +136,11 @@ Module of distribution input lines and fuses for 1-4 modules
 To line #2 connected:  
 
 - Master01
+- Master02
+- USB switch selector #1
+- Worker01
+- Worker02
+- USB switch selector #2
 - Ethernet switch
 - External device #1
 - External device #3
@@ -212,47 +217,37 @@ To line #2 connected:
 - status `1`: command accepted for change state to `enabled`, need make 2nd call `us[1-2]` within 3 seconds to verify if state changed (works only for verifying output #1);
 - status `2`: (only if was 2nd call `us[1-2]` within 3 seconds) means that output wasn't swithched (works only for verifying output #1)
 
-## Connect SPI with two Master SBCs
+## Connect I2C with two Master SBCs
 
-For High Availability (to be able control outputs even if one of the control SBC is unavailable) I need connect the control board #1 with two SBC Masters. The simple connection both Masters on the same SPI is not working, therefore, I used relay and by signal from Master02 I can switch SPI from Master01 to Master02 (when Master01 has issues).
+For High Availability (to be able control outputs even if one of the control SBC is unavailable) I need connect the control board #1 and INA219 sensors (which should be on separate i2c line) with two SBC Masters. The simple connection both Masters on the same I2C is not working, therefore, I used 2 x relays and by signal from Master02 I can switch 2 x I2C from Master01 to Master02 (when Master01 has issues).
 
-DR21A01 Mini DC 5V relay:
+DR21A01 Mini DC 5V relays:
 
-[<img src="images/dr21a01_mini_5v_relay_1.jpeg" width="150"/>](images/dr21a01_mini_5v_relay_1.jpeg)
-[<img src="images/dr21a01_mini_5v_relay_2.jpeg" width="152"/>](images/dr21a01_mini_5v_relay_2.jpeg)
-[<img src="images/dr21a01_mini_5v_relay_3.jpeg" width="137"/>](images/dr21a01_mini_5v_relay_3.jpeg)
+[<img src="images/dr21a01_mini_5v_relays_1.jpeg" width="150"/>](images/dr21a01_mini_5v_relays_1.jpeg)
+[<img src="images/dr21a01_mini_5v_relays_2.jpeg" width="200"/>](images/dr21a01_mini_5v_relays_2.jpeg)
+[<img src="images/dr21a01_mini_5v_relays_3.jpeg" width="200"/>](images/dr21a01_mini_5v_relays_3.jpeg)
+[<img src="images/dr21a01_mini_5v_relays_4.jpeg" width="200"/>](images/dr21a01_mini_5v_relays_4.jpeg)
+[<img src="images/dr21a01_mini_5v_relays_5.jpeg" width="315"/>](images/dr21a01_mini_5v_relays_5.jpeg)
 
 Connections:
 
-**GND:** Master02, P20 Gnd  
-**VCC:** Master02, P2 5.0V  
-**IN:** Master02, P16 101 GPIO3_A5  
-**COM1:** board #1, A4, i2c SDA  
-**COM2:** board #1, A5, i2c SCL  
-**NC1:** Master01, P27 68 GPIO2_A4 I2C1_SDA_PMIC  
-**NC2:** Master01, P28 69 GPIO2_A5 I2C1_SLC_PMIC  
-**NO1:** Master02, P27 68 GPIO2_A4 I2C1_SDA_PMIC  
-**NO2:** Master02, P28 69 GPIO2_A5 I2C1_SLC_PMIC
+**GND:** Master02, Gnd (Pin 3, right side)  
+**VCC:** Master02, 5.0V (Pin 2, right side)  
+**IN:** Master02, GPIO2_D4 (Pin 11, right side) / GPIO1_A3 (Pin 13, right side)  
+**COM1:** board #1, A4 / INA219, i2c SDA  
+**COM2:** board #1, A5 / INA219, i2c SCL  
+**NC1:** Master01, GPIO1_B6 I2C5_SLC_M3 (left side) / GPIO1_C0 I2C3_SDA_M0 (left side)  
+**NC2:** Master01, GPIO1_B7 I2C5_SDA_M3 (left side) / GPIO1_C1 I2C3_SLC_M0 (left side)  
+**NO1:** Master02, GPIO1_B6 I2C5_SLC_M3 (left side) / GPIO1_C0 I2C3_SDA_M0 (left side)  
+**NO2:** Master02, GPIO1_B7 I2C5_SDA_M3 (left side) / GPIO1_C1 I2C3_SLC_M0 (left side)
 
-Rock64 pinouts:
+Orange Pi 5 pinouts:
 
-<img src="images/rock64-pinouts.jpeg"/>
+<img src="images/orange-pi-5-pinouts.png"/>
 
-Example script of GPIO configuration on Master02:
+Example script of GPIO configuration on Master02: [scripts/pins-init.sh](scripts/pins-init.sh)
 
-```bash
-# Relay control (PIN16 - GPIO3_A5)
-# Check if gpio is already exported
-if [ ! -d /sys/class/gpio/gpio101 ]
-then
-  echo 101 > /sys/class/gpio/export
-  sleep 1 # Short delay while GPIO permissions are set up
-fi
-echo "out" > /sys/class/gpio/gpio101/direction
-echo 0 > /sys/class/gpio/gpio101/value
-```
-
-Relay can be enabled/disabled by writing `1 or 0` to `/sys/class/gpio/gpio101/value`
+Example script of switching i2c: [scripts/i2c-switch.sh](scripts/i2c-switch.sh)
 
 ## Tests
 

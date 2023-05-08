@@ -1,37 +1,32 @@
 /*
-* Copyright (C) 2021 Oleh Halytskyi
+* Copyright (C) 2023 Oleh Halytskyi
 *
 * This software may be modified and distributed under the terms
 * of the Apache license. See the LICENSE file for details.
 *
 */
 
-#define PJON_INCLUDE_PACKET_ID
-#include <PJONSoftwareBitBang.h>
+#include <Wire.h>
 #include <EEPROM.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <PZEM004Tv30.h>
 #include <SoftwareSerial.h>
 
-const byte deviceID = 15;
-PJONSoftwareBitBang busA(deviceID); // TxRx bus
-PJONSoftwareBitBang busB(deviceID); // Tx bus
-const byte pinBusA = 7;
-const byte pinBusB = 12;
-const byte masterIdBusB = 6;
-const int receiveTimeBusA = 7000;
-const byte maxRequestLength = 15;
+#define SLAVE_ADDRESS 0x14
 
-// EEProm configuration
-const byte ADDR_VERSION = 255; //location of the software version in EEPROM
-const byte CURRENT_EEPROM_VERSION = 1; //we are on revision 1 of the EEPROM storage structure (0xFF or 255 is never a valid value for version)
+const byte ADDR_VERSION = 255;         // Location of the software version in EEPROM
+const byte CURRENT_EEPROM_VERSION = 1; // We are on revision 1 of the EEPROM storage structure (0xFF or 255 is never a valid value for version)
 
-// For auto-push
-const unsigned int minAutoPushInterval = 2000; // interval between push data to master
-const unsigned int autoPushInterval = 60000; // auto-push interval for each sensor
-unsigned long prevMillisAutoPush = 0;
-unsigned long lastUpdateMillisAutoPush = 0;
+const byte debugMode = 0;
+char answerData[38];
+byte index = 0;
+byte receivingData = 0;
+
+// Solar or DC-DC source
+byte solarDcSrc = 0;
+// EEProm solar or DC-DC source
+const byte eepromSolarDcSrcAddr = 1;
 
 // Voltage params
 const float arduinoVoltage = 4.92;
@@ -39,91 +34,80 @@ const float arduinoVoltage = 4.92;
 // Voltage sensors
 const byte voltageNum = 4;
 // {"command"}
-const char *const voltageCmd[voltageNum] = {"V-1", "V-2", "V-3", "V-4"};
-// {"auto-push"}
-byte voltageAutoPush[voltageNum] = {0, 0, 0, 0};
-// {"auto-push last update"}
-unsigned long voltageAutoPushLU[voltageNum] = {0, 0, 0, 0};
-// {"EEProm auto-push"}
-const byte eepromVoltageAutoPushAddr[voltageNum] = {1, 2, 3, 4};
+const char *const voltageCmd[voltageNum] = {"v1", "v2", "v3", "v4"};
 
 // Current sensors
 const byte currentNum = 4;
 // {"command"}
-const char *const currentCmd[currentNum] = {"I-1", "I-2", "I-3", "I-4"};
-// {"auto-push"}
-byte currentAutoPush[currentNum] = {0, 0, 0, 0};
-// {"auto-push last update"}
-unsigned long currentAutoPushLU[currentNum] = {0, 0, 0, 0};
-// {"EEProm auto-push"}
-const byte eepromCurrentAutoPushAddr[currentNum] = {5, 6, 7, 8};
+const char *const currentCmd[currentNum] = {"i1", "i2", "i3", "i4"};
 
 // Power consumption
 const byte powerNum = 4;
 // {"command"}
-const char *const powerCmd[powerNum] = {"P-1", "P-2", "P-3", "P-4"};
-// {"auto-push"}
-byte powerAutoPush[powerNum] = {0, 0, 0, 0};
-// {"auto-push last update"}
-unsigned long powerAutoPushLU[powerNum] = {0, 0, 0, 0};
-// {"EEProm auto-push"}
-const byte eepromPowerAutoPushAddr[powerNum] = {9, 10, 11, 12};
+const char *const powerCmd[powerNum] = {"p1", "p2", "p3", "p4"};
 
 // Temperature sensors
 const byte tSensorsNum = 4;
 OneWire oneWire(10);
 DallasTemperature sensors(&oneWire);
 // {"command"}
-const char *const tSensorCmd[tSensorsNum] = {"T-1", "T-2", "T-3", "T-4"};
-// {"auto-push"}
-byte tSensorAutoPush[tSensorsNum] = {0, 0, 0, 0};
-// {"auto-push last update"}
-unsigned long tSensorAutoPushLU[tSensorsNum] = {0, 0, 0, 0};
-// {"EEProm auto-push"}
-const byte eepromTSensorAutoPushAddr[tSensorsNum] = {13, 14, 15, 16};
+const char *const tSensorCmd[tSensorsNum] = {"t1", "t2", "t3", "t4"};
 const DeviceAddress tSensorAddr[tSensorsNum] = {
-  {0x28, 0x4E, 0xD9, 0x5E, 0x39, 0x19, 0x01, 0x48}, // 24V 10A PS (T-1)
-  {0x28, 0x70, 0x3B, 0x1B, 0x39, 0x19, 0x01, 0x8E}, // 12V DC-DC2 (from UPS 2+3), near 24V 10A PS(T-2)
-  {0x28, 0xDE, 0xF9, 0x5D, 0x39, 0x19, 0x01, 0x89}, // 12V DC-DC1 (from UPS 2+3), near 18V 20A PS (T-3)
-  {0x28, 0xEF, 0xC7, 0x11, 0x39, 0x19, 0x01, 0x87}}; // 18V 20A PS (T-4)
+  {0x28, 0x4E, 0xD9, 0x5E, 0x39, 0x19, 0x01, 0x48}, // 24V 15A PS (t1)
+  {0x28, 0xEF, 0xC7, 0x11, 0x39, 0x19, 0x01, 0x87}, // 18V 20A PS (t2)
+  {0x28, 0x70, 0x3B, 0x1B, 0x39, 0x19, 0x01, 0x8E}, // 12V DC-DC2, from 24V 10A PS(t3)
+  {0x28, 0xDE, 0xF9, 0x5D, 0x39, 0x19, 0x01, 0x89}}; // 12V DC-DC1, from 18V 20A PS (t4)
+// {"value"}
+float temperatureValue[tSensorsNum] = {0.0, 0.0, 0.0, 0.0};
+// Temperature auto mode
+byte temperatureAutoMode = 0;
+// EEProm temperature auto mode
+const byte eepromTemperatureAutoModeAddr = 2;
+unsigned long lastTemperatureAutoModeTime = 0;
 
 // PZEM004T v3.0
 SoftwareSerial pzemSWSerial(2, 3);
 PZEM004Tv30 pzem;
 const byte acLineParamsNum = 6;
 // {"command"}
-const char *const acLineParamCmd[acLineParamsNum] = {"L-v", "L-c", "L-p", "L-e", "L-f", "L-pf"};
-// {"auto-push"}
-byte acLineParamAutoPush[acLineParamsNum] = {0, 0, 0, 0, 0, 0};
-// {"auto-push last update"}
-unsigned long acLineParamAutoPushLU[acLineParamsNum] = {0, 0, 0, 0, 0, 0};
-// {"EEProm auto-push"}
-const byte eepromACLineParamAutoPushAddr[acLineParamsNum] = {17, 18, 19, 20, 21, 22};
-
+const char *const acLineParamCmd[acLineParamsNum] = {"lv", "lc", "lp", "le", "lf", "lpf"};
+// {"value"}
+float acLineParamValue[acLineParamsNum] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+// Line auto mode
+byte lineAutoMode = 0;
+// EEProm line auto mode
+const byte eepromLineAutoModeAddr = 3;
+unsigned long lastLineAutoModeTime = 0; 
 
 float get_voltage(const char command[]) {
+  if (strcmp(command, "v3") == 0 && solarDcSrc == 1) {
+    return sqrt(-1);
+  } else if (strcmp(command, "v4") == 0 && solarDcSrc == 0) {
+    return sqrt(-1);
+  }
+
   float voltageValue = 0.0;
   byte voltagePin = 0;
   float r1 = 0.0;
   float r2 = 0.0;
   const byte voltageCountValues = 50; // how many values must be averaged
 
-  if (strcmp(command, "V-1") == 0) {
-    voltagePin = 0; // 24V 10A PS output
+  if (strcmp(command, "v1") == 0) {
+    voltagePin = 0; // 24V 15A PS output
     r1 = 101300; // R1 = 100k
     r2 = 9700; // R2 = 10k
-  } else if (strcmp(command, "V-2") == 0) {
-    voltagePin = 1; // 24V Solar Battaries output
-    r1 = 100000; // R1 = 100k
-    r2 = 9700; // R2 = 10k
-  } else if (strcmp(command, "V-3") == 0) {
-    voltagePin = 2; // 12V DC-DC (from UPS 2+3) output
-    r1 = 100000; // R1 = 100k
-    r2 = 9610; // R2 = 10k
-  } else if (strcmp(command, "V-4") == 0) {
+  } else if (strcmp(command, "v2") == 0) {
     voltagePin = 3; // 18V 20A PS output
     r1 = 99650; // R1 = 100k
     r2 = 9700; // R2 = 10k
+  } else if (strcmp(command, "v3") == 0) {
+    voltagePin = 6; // 24V Solar Battaries output
+    r1 = 100000; // R1 = 100k
+    r2 = 9700; // R2 = 10k
+  } else if (strcmp(command, "v4") == 0) {
+    voltagePin = 6; // 12V DC-DC output
+    r1 = 100000; // R1 = 100k
+    r2 = 9610; // R2 = 10k
   }
 
   for (byte i = 0; i < voltageCountValues; i++) {
@@ -139,6 +123,12 @@ float get_voltage(const char command[]) {
 }
 
 float get_current(const char command[]) {
+  if (strcmp(command, "i3") == 0 && solarDcSrc == 1) {
+    return sqrt(-1);
+  } else if (strcmp(command, "i4") == 0 && solarDcSrc == 0) {
+    return sqrt(-1);
+  }
+
   float currentValue = 0.0;
   byte currentPin = 0;
   byte direction = 0; // 1 - direct, 0 - revert
@@ -146,21 +136,21 @@ float get_current(const char command[]) {
   const float sensitivity = 0.1; // 5A: 0.185; 20A: 0.1; 30A: 0.066
   const byte currentCountValues = 50; // how many values must be averaged
 
-  if (strcmp(command, "I-1") == 0) {
-    currentPin = 6; // 24V 10A PS output
+  if (strcmp(command, "i1") == 0) {
+    currentPin = 1; // 24V 15A PS output
     offsetVoltage = 2.461;
     direction = 1;
-  } else if (strcmp(command, "I-2") == 0) {
+  } else if (strcmp(command, "i2") == 0) {
+    currentPin = 2; // 18V 20A PS output
+    offsetVoltage = 2.443;
+    direction = 0;
+  } else if (strcmp(command, "i3") == 0) {
     currentPin = 7; // 24V Solar Battaries output
     offsetVoltage = 2.465;
     direction = 1;
-  } else if (strcmp(command, "I-3") == 0) {
-    currentPin = 4; // 12V DC-DC (from UPS 2+3) output
+  } else if (strcmp(command, "i4") == 0) {
+    currentPin = 7; // 12V DC-DC output
     offsetVoltage = 2.450;
-    direction = 0;
-  } else if (strcmp(command, "I-4") == 0) {
-    currentPin = 5; // 18V 20A PS output
-    offsetVoltage = 2.443;
     direction = 0;
   }
 
@@ -187,6 +177,12 @@ float get_current(const char command[]) {
 }
 
 float get_power_consumption(const char command[]) {
+  if (strcmp(command, "p3") == 0 && solarDcSrc == 1) {
+    return sqrt(-1);
+  } else if (strcmp(command, "p4") == 0 && solarDcSrc == 0) {
+    return sqrt(-1);
+  }
+
   float powerConsumptionValue = 0.0;
   for (byte i = 0; i < powerNum; i += 1) {
     if (strcmp(command, powerCmd[i]) == 0) {
@@ -197,68 +193,63 @@ float get_power_consumption(const char command[]) {
   return powerConsumptionValue;
 }
 
-float get_temperature(const byte i) {
-  sensors.requestTemperaturesByAddress(tSensorAddr[i]);
-  float tempC = sensors.getTempC(tSensorAddr[i]);
-  if (tempC == DEVICE_DISCONNECTED_C) {
-    tempC = sqrt(-1);
+void read_temperature() {
+  sensors.requestTemperatures();
+  for (int i = 0; i < tSensorsNum; i += 1) {
+    float tempC = sensors.getTempC(tSensorAddr[i]);
+    if (tempC == DEVICE_DISCONNECTED_C) {
+      tempC = sqrt(-1);
+    }
+    temperatureValue[i] = tempC;
   }
-  return tempC;
 }
 
-float get_ac_line_param(const char command[]) {
-  float acLineParamValue = 0.0;
-  if (strcmp(command, "L-v") == 0) {
-    acLineParamValue = pzem.voltage();
-  } else if (strcmp(command, "L-c") == 0) {
-    acLineParamValue = pzem.current();
-  } else if (strcmp(command, "L-p") == 0) {
-    acLineParamValue = pzem.power();
-  } else if (strcmp(command, "L-e") == 0) {
-    acLineParamValue = pzem.energy();
-  } else if (strcmp(command, "L-f") == 0) {
-    acLineParamValue = pzem.frequency();
-  } else if (strcmp(command, "L-pf") == 0) {
-    acLineParamValue = pzem.pf();
+void read_ac_line_params() {
+  acLineParamValue[0] = pzem.voltage();
+  acLineParamValue[1] = pzem.current();
+  acLineParamValue[2] = pzem.power();
+  acLineParamValue[3] = pzem.energy();
+  acLineParamValue[4] = pzem.frequency();
+  acLineParamValue[5] = pzem.pf();
+}
+
+void answer(const char *const data) {
+  strcpy(answerData, data);
+  strcat(answerData, ";");
+}
+
+void sendData() {
+  Wire.write(answerData[index]);
+  ++index;
+  if (index >= strlen(answerData)) {
+    index = 0;
   }
-  return acLineParamValue;
+  receivingData = 0;
 }
 
-void busA_reply(const char request[], const char response[]) {
-  char responseFull[maxRequestLength + 5];
-  strcpy(responseFull, request);
-  strcat(responseFull, ">");
-  strcat(responseFull, response);
-  busA.reply_blocking(responseFull, strlen(responseFull));
-}
+void receiveData(int length) {
+  receivingData = 1;
+  if (debugMode == 1) {
+    Serial.println("--- Received data ---");
+  }
 
-void busB_send(const char command[], const char response[]) {
-  char responseFull[22]; // 21 charters + 1 NULL termination
-  strcpy(responseFull, command);
-  strcat(responseFull, "<");
-  strcat(responseFull, response);
-  busB.send_packet_blocking(masterIdBusB, responseFull, strlen(responseFull));
-}
-
-void receiver_function(uint8_t *payload, uint16_t length, const PJON_Packet_Info &packet_info) {
   char tmpBuf[8]; // for able storing number like "-127.00" + 1 NULL termination
+  char tmpBuf2[37] = {0}; // for able to store all sensor values (5*6+6 + 1 NULL termination)
   const char goodCommandReply[] = "ok";
   const char badCommandReply[] = "err";
-  // Check if request not too long
-  if (length > maxRequestLength) {
-    char response[14] = "max_req_is_"; // Length string + 2 digits + 1 NULL termination
-    itoa(maxRequestLength, tmpBuf, 10);
-    strcat(response, tmpBuf);
-    busA_reply(badCommandReply, response);
-    return;
-  }
 
   // Copy full request to new char array
   char request[length + 1];
   for (byte i = 0; i != length; i++) {
-    request[i] = (char)payload[i];
+    request[i] = Wire.read();
   }
   request[length] = 0;
+  if (debugMode == 1) {
+    Serial.print("Length: ");
+    Serial.println(length);
+    Serial.print("Request: ");
+    Serial.println(request);
+  }
 
   const char delimiter[2] = "=";
   byte delimiterAddr = 0;
@@ -266,10 +257,18 @@ void receiver_function(uint8_t *payload, uint16_t length, const PJON_Packet_Info
   byte valueLength = 0;
 
   for (byte i = 0; i != length; i++) {
-    if ((char)payload[i] == delimiter[0]) {
+    if (request[i] == delimiter[0]) {
       delimiterAddr = i;
       commandLength = i;
       valueLength = length - i - 1;
+      if (debugMode == 1) {
+        Serial.print("Delimiter address: ");
+        Serial.println(delimiterAddr);
+        Serial.print("Command length: ");
+        Serial.println(commandLength);
+        Serial.print("Value length: ");
+        Serial.println(valueLength);
+      }
       break;
     }
   }
@@ -277,320 +276,313 @@ void receiver_function(uint8_t *payload, uint16_t length, const PJON_Packet_Info
   char command[commandLength + 1];
   char value[valueLength + 1];
   if (delimiterAddr == 0) {
+    if (debugMode == 1) {
+      Serial.println("Delimiter not found");
+    }
     for (byte i = 0; i != length; i++) {
-      command[i] = (char)payload[i];
+      command[i] = request[i];
     }
     command[commandLength] = 0;
     value[0] = 0;
   } else {
+    if (debugMode == 1) {
+      Serial.println("Delimiter found");
+    }
     for (byte i = 0; i != delimiterAddr; i++) {
-      command[i] = (char)payload[i];
+      command[i] = request[i];
     }
     command[commandLength] = 0;
     for (byte i = 0; i != valueLength; i++) {
-      value[i] = (char)payload[delimiterAddr + 1 + i];
+      value[i] = request[delimiterAddr + 1 + i];
     }
     value[valueLength] = 0;
+  }
+  if (debugMode == 1) {
+    Serial.print("Command: ");
+    Serial.println(command);
+    Serial.print("Value: ");
+    Serial.println(value);
   }
 
   // Return "err" if defined "delimiter" but no "value"
   if (delimiterAddr != 0 and valueLength == 0) {
-    busA_reply(request, badCommandReply);
+    answer(badCommandReply);
+    if (debugMode == 1) {
+      Serial.println("Error: Delimiter found but no value");
+    }
     return;
   }
 
-  // Check if "value" contain no more 3 symbols and if it's consists only digits
+  // Check if "value" contains only digits and not more than 3 digits
   if (valueLength > 3) {
-    busA_reply(request, badCommandReply);
+    answer(badCommandReply);
+    if (debugMode == 1) {
+      Serial.println("Error: Value length more than 3");
+    }
     return;
   }
   for (byte i = 0; i != valueLength; i++) {
     if (! isDigit(value[i])) {
-      busA_reply(request, badCommandReply);
+      answer(badCommandReply);
+      if (debugMode == 1) {
+        Serial.println("Error: Value contains not only digits");
+      }
       return;
     }
   }
   const byte value_int = atoi(value);
 
+  // Source: Solar Battaries or DC-DC converter
+  if (strcmp(command, "sd") == 0) {
+    if (valueLength == 0) {
+      itoa(solarDcSrc, tmpBuf, 10);
+      answer(tmpBuf);
+      return;
+    } else {
+      if (value_int == 0 or value_int == 1) {
+        solarDcSrc = value_int;
+        EEPROM.update(eepromSolarDcSrcAddr, value_int);
+        answer(goodCommandReply);
+        return;
+      } else {
+        answer(badCommandReply);
+        return;
+      }
+    }
+  }
   // Voltage sensors
+  if (strcmp(command, "v") == 0) {
+    if (valueLength == 0) {
+      for (int i = 0; i < voltageNum; i += 1) {
+        dtostrf(get_voltage(voltageCmd[i]), 0, 2, tmpBuf);
+        strcat(tmpBuf2, tmpBuf);
+        strcat(tmpBuf2, ",");
+      }
+      answer(tmpBuf2);
+      return;
+    } else {
+      answer(badCommandReply);
+      return;
+    }
+  }
   for (byte i = 0; i < voltageNum; i += 1) {
     if (strcmp(command, voltageCmd[i]) == 0) {
       if (valueLength == 0) {
         dtostrf(get_voltage(voltageCmd[i]), 0, 2, tmpBuf);
-        busA_reply(request, tmpBuf);
+        answer(tmpBuf);
         return;
       } else {
-        busA_reply(request, badCommandReply);
+        answer(badCommandReply);
         return;
-      }
-    }
-    strcpy(tmpBuf, voltageCmd[i]);
-    strcat(tmpBuf, "-a");
-    if (strcmp(command, tmpBuf) == 0) {
-      if (valueLength == 0) {
-        itoa(voltageAutoPush[i], tmpBuf, 10);
-        busA_reply(request, tmpBuf);
-        return;
-      } else {
-        if (value_int == 0 or value_int == 1) {
-          voltageAutoPush[i] = value_int;
-          EEPROM.update(eepromVoltageAutoPushAddr[i], value_int);
-          busA_reply(request, goodCommandReply);
-          return;
-        } else {
-          busA_reply(request, badCommandReply);
-          return;
-        }
       }
     }
   }
   // Current sensors
+  if (strcmp(command, "i") == 0) {
+    if (valueLength == 0) {
+      for (int i = 0; i < currentNum; i += 1) {
+        dtostrf(get_current(currentCmd[i]), 0, 2, tmpBuf);
+        strcat(tmpBuf2, tmpBuf);
+        strcat(tmpBuf2, ",");
+      }
+      answer(tmpBuf2);
+      return;
+    } else {
+      answer(badCommandReply);
+      return;
+    }
+  }
   for (byte i = 0; i < currentNum; i += 1) {
     if (strcmp(command, currentCmd[i]) == 0) {
       if (valueLength == 0) {
         dtostrf(get_current(currentCmd[i]), 0, 2, tmpBuf);
-        busA_reply(request, tmpBuf);
+        answer(tmpBuf);
         return;
       } else {
-        busA_reply(request, badCommandReply);
+        answer(badCommandReply);
         return;
-      }
-    }
-    strcpy(tmpBuf, currentCmd[i]);
-    strcat(tmpBuf, "-a");
-    if (strcmp(command, tmpBuf) == 0) {
-      if (valueLength == 0) {
-        itoa(currentAutoPush[i], tmpBuf, 10);
-        busA_reply(request, tmpBuf);
-        return;
-      } else {
-        if (value_int == 0 or value_int == 1) {
-          currentAutoPush[i] = value_int;
-          EEPROM.update(eepromCurrentAutoPushAddr[i], value_int);
-          busA_reply(request, goodCommandReply);
-          return;
-        } else {
-          busA_reply(request, badCommandReply);
-          return;
-        }
       }
     }
   }
   // Power consumption
+  if (strcmp(command, "p") == 0) {
+    if (valueLength == 0) {
+      for (int i = 0; i < powerNum; i += 1) {
+        dtostrf(get_power_consumption(powerCmd[i]), 0, 2, tmpBuf);
+        strcat(tmpBuf2, tmpBuf);
+        strcat(tmpBuf2, ",");
+      }
+      answer(tmpBuf2);
+      return;
+    } else {
+      answer(badCommandReply);
+      return;
+    }
+  }
   for (byte i = 0; i < powerNum; i += 1) {
     if (strcmp(command, powerCmd[i]) == 0) {
       if (valueLength == 0) {
         dtostrf(get_power_consumption(powerCmd[i]), 0, 2, tmpBuf);
-        busA_reply(request, tmpBuf);
+        answer(tmpBuf);
         return;
       } else {
-        busA_reply(request, badCommandReply);
+        answer(badCommandReply);
         return;
-      }
-    }
-    strcpy(tmpBuf, powerCmd[i]);
-    strcat(tmpBuf, "-a");
-    if (strcmp(command, tmpBuf) == 0) {
-      if (valueLength == 0) {
-        itoa(powerAutoPush[i], tmpBuf, 10);
-        busA_reply(request, tmpBuf);
-        return;
-      } else {
-        if (value_int == 0 or value_int == 1) {
-          powerAutoPush[i] = value_int;
-          EEPROM.update(eepromPowerAutoPushAddr[i], value_int);
-          busA_reply(request, goodCommandReply);
-          return;
-        } else {
-          busA_reply(request, badCommandReply);
-          return;
-        }
       }
     }
   }
   // Temperature sensors
-  for (byte i = 0; i < tSensorsNum; i += 1) {
-    if (strcmp(command, tSensorCmd[i]) == 0) {
-      if (valueLength == 0) {
-        dtostrf(get_temperature(i), 0, 2, tmpBuf);
-        busA_reply(request, tmpBuf);
+  if (strcmp(command, "t") == 0) {
+    if (valueLength == 0) {
+      for (int i = 0; i < tSensorsNum; i += 1) {
+        if (temperatureAutoMode > 0) {
+          dtostrf(temperatureValue[i], 0, 2, tmpBuf);
+        } else {
+          dtostrf(sqrt(-1), 0, 2, tmpBuf);
+        }
+        strcat(tmpBuf2, tmpBuf);
+        strcat(tmpBuf2, ",");
+      }
+      answer(tmpBuf2);
+      return;
+    } else {
+      answer(badCommandReply);
+      return;
+    }
+  }
+  if (strcmp(command, "ta") == 0) {
+    if (valueLength == 0) {
+      itoa(temperatureAutoMode, tmpBuf, 10);
+      answer(tmpBuf);
+      return;
+    } else {
+      if (value_int == 0 || (value_int >= 10 && value_int <= 120)) {
+        temperatureAutoMode = value_int;
+        EEPROM.update(eepromTemperatureAutoModeAddr, value_int);
+        answer(goodCommandReply);
         return;
       } else {
-        busA_reply(request, badCommandReply);
+        answer(badCommandReply);
         return;
       }
     }
-    strcpy(tmpBuf, tSensorCmd[i]);
-    strcat(tmpBuf, "-a");
-    if (strcmp(command, tmpBuf) == 0) {
+  }
+  for (byte i = 0; i < tSensorsNum; i += 1) {
+    if (strcmp(command, tSensorCmd[i]) == 0) {
       if (valueLength == 0) {
-        itoa(tSensorAutoPush[i], tmpBuf, 10);
-        busA_reply(request, tmpBuf);
+        if (temperatureAutoMode > 0) {
+          dtostrf(temperatureValue[i], 0, 2, tmpBuf);
+        } else {
+          dtostrf(sqrt(-1), 0, 2, tmpBuf);
+        }
+        answer(tmpBuf);
         return;
       } else {
-        if (value_int == 0 or value_int == 1) {
-          tSensorAutoPush[i] = value_int;
-          EEPROM.update(eepromTSensorAutoPushAddr[i], value_int);
-          busA_reply(request, goodCommandReply);
-          return;
-        } else {
-          busA_reply(request, badCommandReply);
-          return;
-        }
+        answer(badCommandReply);
+        return;
       }
     }
   }
   // AC line params
+  if (strcmp(command, "l") == 0) {
+    if (valueLength == 0) {
+      for (int i = 0; i < acLineParamsNum; i += 1) {
+        if (lineAutoMode > 0) {
+          dtostrf(acLineParamValue[i], 0, 2, tmpBuf);
+        } else {
+          dtostrf(sqrt(-1), 0, 2, tmpBuf);
+        }
+        strcat(tmpBuf2, tmpBuf);
+        strcat(tmpBuf2, ",");
+      }
+      answer(tmpBuf2);
+      return;
+    } else {
+      answer(badCommandReply);
+      return;
+    }
+  }
+  if (strcmp(command, "la") == 0) {
+    if (valueLength == 0) {
+      itoa(lineAutoMode, tmpBuf, 10);
+      answer(tmpBuf);
+      return;
+    } else {
+      if (value_int == 0 || (value_int >= 10 && value_int <= 120)) {
+        lineAutoMode = value_int;
+        EEPROM.update(eepromLineAutoModeAddr, value_int);
+        answer(goodCommandReply);
+        return;
+      } else {
+        answer(badCommandReply);
+        return;
+      }
+    }
+  }
   for (byte i = 0; i < acLineParamsNum; i += 1) {
     if (strcmp(command, acLineParamCmd[i]) == 0) {
       if (valueLength == 0) {
-        dtostrf(get_ac_line_param(acLineParamCmd[i]), 0, 2, tmpBuf);
-        busA_reply(request, tmpBuf);
-        return;
-      } else {
-        busA_reply(request, badCommandReply);
-        return;
-      }
-    }
-    strcpy(tmpBuf, acLineParamCmd[i]);
-    strcat(tmpBuf, "-a");
-    if (strcmp(command, tmpBuf) == 0) {
-      if (valueLength == 0) {
-        itoa(acLineParamAutoPush[i], tmpBuf, 10);
-        busA_reply(request, tmpBuf);
-        return;
-      } else {
-        if (value_int == 0 or value_int == 1) {
-          acLineParamAutoPush[i] = value_int;
-          EEPROM.update(eepromACLineParamAutoPushAddr[i], value_int);
-          busA_reply(request, goodCommandReply);
-          return;
+        if (lineAutoMode > 0) {
+          dtostrf(acLineParamValue[i], 0, 2, tmpBuf);
         } else {
-          busA_reply(request, badCommandReply);
-          return;
+          dtostrf(sqrt(-1), 0, 2, tmpBuf);
         }
+        answer(tmpBuf);
+        return;
+      } else {
+        answer(badCommandReply);
+        return;
       }
     }
   }
-  busA_reply(request, badCommandReply);
+  answer(badCommandReply);
 }
-
-void autopush() {
-  unsigned long curMillis = millis(); // time now in ms
-  if (curMillis - prevMillisAutoPush >= minAutoPushInterval) {
-    byte msgPushed = 0;
-    for (byte i = 0; i < voltageNum; i += 1) {
-      if (voltageAutoPush[i] == 1) {
-        if (curMillis - voltageAutoPushLU[i] >= autoPushInterval and curMillis - lastUpdateMillisAutoPush >= minAutoPushInterval) {
-          char tmpBuf[6];
-          dtostrf(get_voltage(voltageCmd[i]), 0, 2, tmpBuf);
-          busB_send(voltageCmd[i], tmpBuf);
-          voltageAutoPushLU[i] = curMillis;
-          lastUpdateMillisAutoPush = curMillis;
-          msgPushed = 1;
-        }
-      }
-    }
-    if (msgPushed == 0) {
-      for (byte i = 0; i < currentNum; i += 1) {
-        if (currentAutoPush[i] == 1) {
-          if (curMillis - currentAutoPushLU[i] >= autoPushInterval and curMillis - lastUpdateMillisAutoPush >= minAutoPushInterval) {
-            char tmpBuf[6];
-            dtostrf(get_current(currentCmd[i]), 0, 2, tmpBuf);
-            busB_send(currentCmd[i], tmpBuf);
-            currentAutoPushLU[i] = curMillis;
-            lastUpdateMillisAutoPush = curMillis;
-            msgPushed = 1;
-          }
-        }
-      }
-    }
-    if (msgPushed == 0) {
-      for (byte i = 0; i < powerNum; i += 1) {
-        if (powerAutoPush[i] == 1) {
-          if (curMillis - powerAutoPushLU[i] >= autoPushInterval and curMillis - lastUpdateMillisAutoPush >= minAutoPushInterval) {
-            char tmpBuf[7];
-            dtostrf(get_power_consumption(powerCmd[i]), 0, 2, tmpBuf);
-            busB_send(powerCmd[i], tmpBuf);
-            powerAutoPushLU[i] = curMillis;
-            lastUpdateMillisAutoPush = curMillis;
-            msgPushed = 1;
-          }
-        }
-      }
-    }
-    if (msgPushed == 0) {
-      for (byte i = 0; i < tSensorsNum; i += 1) {
-        if (tSensorAutoPush[i] == 1) {
-          if (curMillis - tSensorAutoPushLU[i] >= autoPushInterval and curMillis - lastUpdateMillisAutoPush >= minAutoPushInterval) {
-            char tmpBuf[8];
-            dtostrf(get_temperature(i), 0, 2, tmpBuf);
-            busB_send(tSensorCmd[i], tmpBuf);
-            tSensorAutoPushLU[i] = curMillis;
-            lastUpdateMillisAutoPush = curMillis;
-            msgPushed = 1;
-          }
-        }
-      }
-    }
-    if (msgPushed == 0) {
-      for (byte i = 0; i < acLineParamsNum; i += 1) {
-        if (acLineParamAutoPush[i] == 1) {
-          if (curMillis - acLineParamAutoPushLU[i] >= autoPushInterval and curMillis - lastUpdateMillisAutoPush >= minAutoPushInterval) {
-            char tmpBuf[6];
-            dtostrf(get_ac_line_param(acLineParamCmd[i]), 0, 2, tmpBuf);
-            busB_send(acLineParamCmd[i], tmpBuf);
-            acLineParamAutoPushLU[i] = curMillis;
-            lastUpdateMillisAutoPush = curMillis;
-            msgPushed = 1;
-          }
-        }
-      }
-    }
-    prevMillisAutoPush = curMillis;
-  }
-}
-
 
 void loop() {
-  busA.receive(receiveTimeBusA);
-  autopush();
+  if (lineAutoMode > 0) {
+    unsigned long curMillis = millis(); // time now in ms
+    if (curMillis - lastLineAutoModeTime > (unsigned long) lineAutoMode * 1000) {
+      if (receivingData == 0) {
+        read_ac_line_params();
+        if (debugMode == 1) {
+          for (int i = 0; i < acLineParamsNum; i += 1) {
+            Serial.print(acLineParamCmd[i]);
+            Serial.print(": ");
+            Serial.println(acLineParamValue[i]);
+          }
+        }
+        lastLineAutoModeTime = curMillis;
+      }
+    }
+  }
+  if (temperatureAutoMode > 0) {
+    unsigned long curMillis = millis(); // time now in ms
+    if (curMillis - lastTemperatureAutoModeTime > (unsigned long) temperatureAutoMode * 1000) {
+      if (receivingData == 0) {
+        read_temperature();
+        if (debugMode == 1) {
+          for (int i = 0; i < tSensorsNum; i += 1) {
+            Serial.print(tSensorCmd[i]);
+            Serial.print(": ");
+            Serial.println(temperatureValue[i]);
+          }
+        }
+        lastTemperatureAutoModeTime = curMillis;
+      }
+    }
+  }
 }
 
 void setup() {
   if (EEPROM.read(ADDR_VERSION) != CURRENT_EEPROM_VERSION) { //EEprom is wrong version or was not programmed, write default values to the EEprom
-    for (byte i = 0; i < voltageNum; i += 1) {
-      EEPROM.update(eepromVoltageAutoPushAddr[i], voltageAutoPush[i]);
-    }
-    for (byte i = 0; i < currentNum; i += 1) {
-      EEPROM.update(eepromCurrentAutoPushAddr[i], currentAutoPush[i]);
-    }
-    for (byte i = 0; i < powerNum; i += 1) {
-      EEPROM.update(eepromPowerAutoPushAddr[i], powerAutoPush[i]);
-    }
-    for (byte i = 0; i < tSensorsNum; i += 1) {
-      EEPROM.update(eepromTSensorAutoPushAddr[i], tSensorAutoPush[i]);
-    }
-    for (byte i = 0; i < acLineParamsNum; i += 1) {
-      EEPROM.update(eepromACLineParamAutoPushAddr[i], acLineParamAutoPush[i]);
-    }
+    EEPROM.update(eepromSolarDcSrcAddr, solarDcSrc);
+    EEPROM.update(eepromTemperatureAutoModeAddr, temperatureAutoMode);
+    EEPROM.update(eepromLineAutoModeAddr, lineAutoMode);
     EEPROM.update(ADDR_VERSION, CURRENT_EEPROM_VERSION); // update software version
   } else {
-    for (byte i = 0; i < voltageNum; i += 1) {
-      voltageAutoPush[i] = EEPROM.read(eepromVoltageAutoPushAddr[i]);
-    }
-    for (byte i = 0; i < currentNum; i += 1) {
-      currentAutoPush[i] = EEPROM.read(eepromCurrentAutoPushAddr[i]);
-    }
-    for (byte i = 0; i < powerNum; i += 1) {
-      powerAutoPush[i] = EEPROM.read(eepromPowerAutoPushAddr[i]);
-    }
-    for (byte i = 0; i < tSensorsNum; i += 1) {
-      tSensorAutoPush[i] = EEPROM.read(eepromTSensorAutoPushAddr[i]);
-    }
-    for (byte i = 0; i < acLineParamsNum; i += 1) {
-      acLineParamAutoPush[i] = EEPROM.read(eepromACLineParamAutoPushAddr[i]);
-    }
+    solarDcSrc = EEPROM.read(eepromSolarDcSrcAddr);
+    temperatureAutoMode = EEPROM.read(eepromTemperatureAutoModeAddr);
+    lineAutoMode = EEPROM.read(eepromLineAutoModeAddr);
   }
 
   // Set temperature sensor resolution, valid values are 9, 10, 11 or 12 bit.
@@ -598,19 +590,22 @@ void setup() {
   for (byte i = 0; i < tSensorsNum; i += 1) {
     sensors.setResolution(tSensorAddr[i], 11);
   }
+  if (temperatureAutoMode > 0) {
+    read_temperature();
+  }
 
   pzem = PZEM004Tv30(pzemSWSerial);
+  if (lineAutoMode > 0) {
+    read_ac_line_params();
+  }
 
-  busA.strategy.set_pin(pinBusA);
-  busA.set_receiver(receiver_function);
-  busA.set_acknowledge(true);
-  busA.set_crc_32(true);
-  busA.set_packet_id(true);
-  busA.begin();
+  // Join I2C bus as slave
+  Wire.begin(SLAVE_ADDRESS);
+  Wire.onReceive(receiveData);
+  Wire.onRequest(sendData);
 
-  busB.strategy.set_pin(pinBusB);
-  busB.set_acknowledge(true);
-  busB.set_crc_32(true);
-  busB.set_packet_id(true);
-  busB.begin();
+  // Start Serial (for debug)
+  if (debugMode == 1) {
+    Serial.begin(115200);
+  }
 };

@@ -25,7 +25,7 @@
 
 ## Description
 
-IP-KVM based on Raspberry Pi, for x64 architecture uses PiKVM: [https://github.com/pikvm/pikvm](https://github.com/pikvm/pikvm) - [hardware for v2](https://github.com/pikvm/pikvm#hardware-for-v2), for arm architecture (single board computers) uses serial console via PL2303 UART TTL Cables.
+IP-KVM based on Raspberry Pi, for x64 architecture uses PiKVM: [https://github.com/pikvm/pikvm](https://github.com/pikvm/pikvm) - [hardware for v2](https://github.com/pikvm/pikvm#hardware-for-v2), for arm architecture (single board computers) uses serial console via CH340 UART TTL modules.
 
 ### Main functions
 
@@ -72,7 +72,7 @@ IP-KVM based on Raspberry Pi, for x64 architecture uses PiKVM: [https://github.c
 - 2 x 90cm HDMI to HDMI cables for connect Worker01 node and input of the "CSI-2 bridge" to the output of "HDMI Splitter"
 - 1 x 30cm HDMI to HDMI cable for connect KVM switch output with "HDMI Splitter" input
 - 6 x self-made 4 pin cables for connection 3 x Worker nodes and KVM switch(3 channels) to the board (leds/buttons)
-- 3 x USB to PL2303 UART TTL Cables for connect board with Master SBCs
+- 3 x USB to CH340 UART TTL modules for connect board with Master SBCs
 - 1 x [4 Ports KVM Switcher 4K HDMI-compatible Video Display 4 IN 1 Out Type USB-C with EDID/HDCP decryption](https://www.aliexpress.com/item/1005001873550202.html?spm=a2g0s.9042311.0.0.49584c4dNbLu7M)
 - 1 x HDMI Splitter 1 in 2 Out - Techole 4K Aluminum Ver1.4 HDCP, Powered HDMI Splitter Supports 3D 4K@30Hz Full Hd1080p
 

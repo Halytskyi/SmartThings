@@ -6,14 +6,14 @@
 # of the Apache license. See the LICENSE file for details.
 
 import sys
-import struct
 import time
 from smbus import SMBus
 from ina219 import INA219
 from ina219 import DeviceRangeError
 
-i2cBusAddr = 1             # indicates /dev/i2c-1
-arduinoSlaveAddress = 0x03 # Arduino bus address
+i2cIna219BusAddr = 3       # indicates /dev/i2c-3
+i2cArduinoBusAddr = 5      # indicates /dev/i2c-5
+arduinoSlaveAddress = 0x11 # Arduino bus address
 
 # Control outputs
 controlOutputs = [
@@ -70,7 +70,7 @@ def convert_string_to_bytes(src):
 
 def get_status(command, value):
   status = ""
-  bus = SMBus(i2cBusAddr)
+  bus = SMBus(i2cArduinoBusAddr)
   BytesToSend = convert_string_to_bytes(value)
   bus.write_i2c_block_data(arduinoSlaveAddress, ord(command), BytesToSend)
   time.sleep(0.001)
@@ -156,7 +156,7 @@ def ps_control(command, value):
       print(usbSwitchSelector, "output #" + str(valueInt2), answerMid, answer_end)
 
 def read_sensor(ina219Sensor, ina219Address, shuntOhm):
-    ina = INA219(shuntOhm, busnum=i2cBusAddr, address=ina219Address)
+    ina = INA219(shuntOhm, busnum=i2cIna219BusAddr, address=ina219Address)
     try:
       ina.configure()
     except:
